@@ -3,18 +3,19 @@ from threading import Event
 from PySide6.QtCore import QObject, QThread, Signal, Slot
 from PySide6.QtWidgets import QApplication,QFileDialog,QFormLayout,QHBoxLayout,QLabel,QLineEdit,QMainWindow,QMessageBox,QProgressBar,QPushButton,QCheckBox,QWidget
 from textmarker.application.controller import process
+from textmarker.application.fsm import Workflow, State
 
 class Worker(QObject):
-    progress=Signal(int); done=Signal(object); error=Signal(str)
+    progress=Signal(int); done=Signal(object); error=Signal(str); cancelled=Signal()
     def __init__(self,args): super().__init__(); self.args=args; self.cancel=Event()
     @Slot()
     def run(self):
-        try: self.done.emit(process(*self.args,cancel=self.cancel,progress=self.progress.emit))
+        try: self.done.emit(process(*self.args,case_sensitive=self.args_options[0],whole_words=self.args_options[1],cancel=self.cancel,progress=self.progress.emit))
         except Exception as e: self.error.emit(str(e))
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        super().__init__(); self.setWindowTitle('TextMarker v0.1'); self.thread=None; self.worker=None
+        super().__init__(); self.setWindowTitle('TextMarker v0.1'); self.thread=None; self.worker=None; self.workflow=Workflow()
         form=QFormLayout(); self.source=QLineEdit(); self.terms=QLineEdit(); self.output=QLineEdit(); self.case=QCheckBox('Skelningsfølsom'); self.whole=QCheckBox('Kun hele ord'); self.whole.setChecked(True)
         for label,edit,filters in [('Manuskript',self.source,'Dokumenter (*.docx *.txt)'),('Termliste',self.terms,'Lister (*.csv *.md *.txt)'),('Output',self.output,'Word (*.docx)')]:
             b=QPushButton('Vælg…'); b.clicked.connect(lambda _,e=edit,f=filters:self.choose(e,f)); row=QHBoxLayout(); row.addWidget(edit); row.addWidget(b); form.addRow(label,row)
@@ -29,11 +30,15 @@ class MainWindow(QMainWindow):
         out=self.output.text() or str(Path(self.source.text()).with_name(Path(self.source.text()).stem+'_marked.docx'))
         if Path(out).resolve()==Path(self.source.text()).resolve(): QMessageBox.warning(self,'Ugyldig output','Output må ikke være samme fil som kilden.'); return
         self.output.setText(out); self.start.setEnabled(False); self.cancel.setEnabled(True); self.status.setText('Arbejder…')
-        self.thread=QThread(); self.worker=Worker((self.source.text(),self.terms.text(),out)); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.done.connect(self.finished); self.worker.error.connect(self.failed); self.thread.start()
+        self.workflow.state=State.READY; self.workflow.event('start')
+        self.thread=QThread(); self.worker=Worker((self.source.text(),self.terms.text(),out)); self.worker.args_options=(self.case.isChecked(),self.whole.isChecked()); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.done.connect(self.finished); self.worker.error.connect(self.failed); self.thread.start()
     def cancel_job(self):
-        if self.worker: self.worker.cancel.set()
+        if self.worker: self.worker.cancel.set(); self.workflow.event('cancel')
     def finished(self,result):
-        self.cleanup(); n=len(result[1]) if result else 0; self.status.setText(f'Færdig: {n} markeringer.'); QMessageBox.information(self,'TextMarker',self.status.text())
+        if result is None: self.cancelled(); return
+        self.cleanup(); self.workflow.event('complete'); n=len(result[1]); self.status.setText(f'Færdig: {n} markeringer.'); QMessageBox.information(self,'TextMarker',self.status.text())
+    def cancelled(self):
+        self.cleanup(); self.status.setText('Annulleret. Ingen output blev gemt.'); QMessageBox.information(self,'TextMarker',self.status.text())
     def failed(self,msg): self.cleanup(); self.status.setText('Fejl'); QMessageBox.critical(self,'Fejl',msg)
     def cleanup(self):
         self.start.setEnabled(True); self.cancel.setEnabled(False)

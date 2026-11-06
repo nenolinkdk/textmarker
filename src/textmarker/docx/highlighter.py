@@ -52,18 +52,17 @@ def mark_docx(source, output, terms, *, case_sensitive=False, whole_words=True, 
     if source.resolve()==output.resolve(): raise ValueError("Output må ikke være samme fil som kilden")
     with ZipFile(source) as zin:
         files={n:zin.read(n) for n in zin.namelist()}
-    total=[]
-    processed=0
+    total=[]; processed=0
     for name,data in list(files.items()):
         if not name.endswith(".xml") or "word/document" not in name: continue
-        root=etree.fromstring(data); changed=False
-        for p in root.xpath(".//w:body//w:p",namespaces=NS):
+        root=etree.fromstring(data); changed=False; paragraphs=root.xpath(".//w:body//w:p",namespaces=NS); paragraph_count=len(paragraphs)
+        for p in paragraphs:
             if cancel and cancel.is_set(): raise CancelledError()
             text,nodes=_paragraph_text(p)
             spans=find_matches(text,terms,case_sensitive=case_sensitive,whole_words=whole_words)
             if spans: _apply(p,spans,terms); total.extend(spans); changed=True
             processed += 1
-            if progress: progress(min(99,processed))
+            if progress: progress(int(processed / max(1, paragraph_count) * 100))
         if changed: files[name]=etree.tostring(root,xml_declaration=True,encoding="UTF-8",standalone=True)
     output.parent.mkdir(parents=True,exist_ok=True)
     with NamedTemporaryFile(dir=output.parent,prefix=output.name+".",suffix=".tmp",delete=False) as tmp: temp=Path(tmp.name)
