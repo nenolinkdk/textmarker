@@ -37,3 +37,12 @@ The PySide6 GUI, FSM worker/cancellation flow and regression coverage are now pr
 The review fixes now cover complete highlighting across every safe run in a phrase, fail-closed handling for runs containing breaks/drawings/multiple text nodes, conservative Unicode offset handling, cooperative cancellation before package output, save-dialog output selection and source overwrite protection.
 
 Final stabilization additionally forwards case-sensitive/whole-word settings from the GUI, treats cancellation as a normal workflow terminal state, removes both DOCX and CSV artifacts on cancellation, reports paragraph-based percentage progress, and documents that paragraphs containing ambiguous Unicode expansions are skipped conservatively without offset-unsafe edits.
+
+## Final Windows build record
+
+- Source commit: `603f166cfe2a66537ec303d037b17677aa18ae9d`
+- Build timestamp: 2026-11-06 21:01:47 (local Windows time)
+- Artifact: `dist/TextMarker-0.1-TEST.exe`
+- Size: 67,216,281 bytes
+- SHA-256: `63B263A2D69B216A2DA11245A9CA34E02BB46D9D2D990AA1167F8A566618D8AE`
+- EXE launch smoke test: passed; process remained alive for five seconds.
