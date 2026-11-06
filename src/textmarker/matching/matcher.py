@@ -13,7 +13,8 @@ def find_matches(text: str, terms: list[TermSpec], *, case_sensitive=False, whol
         if whole_words: pattern=re.compile(r"(?<![\w])(?:"+pattern.pattern+r")(?![\w])")
         for m in pattern.finditer(hay): candidates.append((m.start(),m.end(),tid))
     candidates.sort(key=lambda x: (-(x[1]-x[0]), x[0], terms[x[2]].ordinal))
-    chosen=[]
+    chosen=[]; occupied=bytearray(len(hay))
     for s,e,t in candidates:
-        if not any(s < ce and e > cs for cs,ce,_ in chosen): chosen.append((s,e,t))
+        if not any(occupied[s:e]):
+            chosen.append((s,e,t)); occupied[s:e]=b'\x01'*(e-s)
     return [MatchSpan(s,e,t) for s,e,t in sorted(chosen)]

@@ -19,6 +19,6 @@ Implemented on `feature/v0.1-mvp` from `docs/v0.1-codex-handoff`.
 
 ## Known limitations
 
-The current v0.1 implementation exposes the core/CLI path; the planned PySide6 GUI, FSM worker/cancellation flow, richer unsafe-OOXML warnings and full regression fixture suite remain to be completed. Hyperlinks, tracked changes, fields, drawings, headers/footers, footnotes/endnotes and text boxes are not processed. No Word/LibreOffice opening smoke test was performed.
+The PySide6 GUI, FSM worker/cancellation flow and regression coverage are now present. Hyperlinks, tracked changes, fields, drawings, headers/footers, footnotes/endnotes and text boxes are not processed. Microsoft Word opening was not available in this environment, so no Word repair-warning claim is made.
 
 No draft PR was created because this environment could not authenticate to GitHub (`gh` is present but network access to GitHub was unavailable). The branch is ready for push and draft-PR creation by an authenticated developer.
