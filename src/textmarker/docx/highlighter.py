@@ -5,6 +5,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from lxml import etree
 from textmarker.matching.matcher import find_matches
 from textmarker.core.models import TermSpec, ProcessingWarning
+class CancelledError(Exception): pass
 
 W="http://schemas.openxmlformats.org/wordprocessingml/2006/main"; NS={"w":W}; q=lambda n: "{"+W+"}"+n
 
@@ -17,6 +18,12 @@ def _set_highlight(run, color):
 
 def _paragraph_text(p):
     nodes=[]; text=[]
+    runs=p.xpath("./w:r",namespaces=NS)
+    # Do not clone/rewrite runs carrying non-text semantics. A paragraph with
+    # such content is skipped rather than risking loss/duplication of OOXML.
+    for run in runs:
+        children=[c for c in run if c.tag != q("rPr")]
+        if len(children)!=1 or children[0].tag != q("t"): return "", []
     for t in p.xpath("./w:r/w:t",namespaces=NS):
         value=t.text or ""; start=len(text); text.extend(value); nodes.append((start,start+len(value),t))
     return "".join(text),nodes
@@ -38,23 +45,25 @@ def _apply(p, spans, terms):
                 repl.append(nr)
             parent=run.getparent(); idx=parent.index(run); parent.remove(run)
             for nr in reversed(repl): parent.insert(idx,nr)
-            break
+            # Continue: one match may span several adjacent runs.
 
-def mark_docx(source, output, terms, *, case_sensitive=False, whole_words=True):
+def mark_docx(source, output, terms, *, case_sensitive=False, whole_words=True, cancel=None, progress=None):
     source,output=Path(source),Path(output)
     if source.resolve()==output.resolve(): raise ValueError("Output må ikke være samme fil som kilden")
     with ZipFile(source) as zin:
         files={n:zin.read(n) for n in zin.namelist()}
     total=[]
-    for name,data in files.items():
-        if not name.endswith(".xml") or ("word/document" not in name and "word/header" in name): continue
-        try: root=etree.fromstring(data)
-        except etree.XMLSyntaxError: continue
-        changed=False
+    processed=0
+    for name,data in list(files.items()):
+        if not name.endswith(".xml") or "word/document" not in name: continue
+        root=etree.fromstring(data); changed=False
         for p in root.xpath(".//w:body//w:p",namespaces=NS):
+            if cancel and cancel.is_set(): raise CancelledError()
             text,nodes=_paragraph_text(p)
             spans=find_matches(text,terms,case_sensitive=case_sensitive,whole_words=whole_words)
             if spans: _apply(p,spans,terms); total.extend(spans); changed=True
+            processed += 1
+            if progress: progress(min(99,processed))
         if changed: files[name]=etree.tostring(root,xml_declaration=True,encoding="UTF-8",standalone=True)
     output.parent.mkdir(parents=True,exist_ok=True)
     with NamedTemporaryFile(dir=output.parent,prefix=output.name+".",suffix=".tmp",delete=False) as tmp: temp=Path(tmp.name)

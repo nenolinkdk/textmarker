@@ -24,10 +24,14 @@ The PySide6 GUI, FSM worker/cancellation flow and regression coverage are now pr
 ## Verification update
 
 - Virtual environment: `.venv`, Python 3.12.14.
-- Pytest: 5 passed.
+- Pytest: 9 passed, including full split-run coverage, unsafe-run preservation and Unicode offset safety.
 - Headless GUI smoke test: passed.
 - Synthetic 150,000-word matcher: 56,250 matches, 1.587 seconds, 18,756,502 peak traced bytes.
 - Windows executable: `dist/TextMarker-0.1-TEST.exe`, 67,214,355 bytes, SHA-256 `6388C82B7074ABF5A0EF7DF795E4A6F5BCB0325A347C61C36BD35D996C4DBD87`.
 - EXE smoke test: launched and remained alive for five seconds.
 - Microsoft Word was unavailable; no Word opening/repair-warning result is claimed.
 - Draft PR: https://github.com/nenolinkdk/textmarker/pull/2
+
+## Review follow-up
+
+The review fixes now cover complete highlighting across every safe run in a phrase, fail-closed handling for runs containing breaks/drawings/multiple text nodes, conservative Unicode offset handling, cooperative cancellation before package output, save-dialog output selection and source overwrite protection.

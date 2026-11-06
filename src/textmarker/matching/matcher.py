@@ -6,6 +6,9 @@ def _pattern(expr): return re.compile(r"(?<![\w])" + r"[ \t]+".join(map(re.escap
 
 def find_matches(text: str, terms: list[TermSpec], *, case_sensitive=False, whole_words=True) -> list[MatchSpan]:
     hay=text if case_sensitive else _norm(text)
+    # Normalization/casefold must preserve a one-codepoint offset mapping.
+    # If a character expands or composes, fail closed rather than editing the wrong span.
+    if not case_sensitive and any(len(_norm(ch)) != 1 for ch in text): return []
     candidates=[]
     for tid,t in enumerate(terms):
         if not t.enabled: continue

@@ -21,11 +21,14 @@ class MainWindow(QMainWindow):
         self.start=QPushButton('Start'); self.cancel=QPushButton('Annullér'); self.cancel.setEnabled(False); self.start.clicked.connect(self.start_job); self.cancel.clicked.connect(self.cancel_job)
         self.progress=QProgressBar(); self.status=QLabel('Vælg filer for at starte.'); buttons=QHBoxLayout(); buttons.addWidget(self.start); buttons.addWidget(self.cancel); form.addRow(self.case); form.addRow(self.whole); form.addRow(buttons); form.addRow(self.progress); form.addRow(self.status); w=QWidget(); w.setLayout(form); self.setCentralWidget(w)
     def choose(self,e,filters):
-        path=QFileDialog.getOpenFileName(self,'Vælg fil','',filters)[0]
+        if e is self.output: path=QFileDialog.getSaveFileName(self,'Gem output','',filters)[0]
+        else: path=QFileDialog.getOpenFileName(self,'Vælg fil','',filters)[0]
         if path: e.setText(path)
     def start_job(self):
         if not self.source.text() or not self.terms.text(): QMessageBox.warning(self,'Mangler filer','Vælg både manuskript og termliste.'); return
-        out=self.output.text() or str(Path(self.source.text()).with_name(Path(self.source.text()).stem+'_marked.docx')); self.output.setText(out); self.start.setEnabled(False); self.cancel.setEnabled(True); self.status.setText('Arbejder…')
+        out=self.output.text() or str(Path(self.source.text()).with_name(Path(self.source.text()).stem+'_marked.docx'))
+        if Path(out).resolve()==Path(self.source.text()).resolve(): QMessageBox.warning(self,'Ugyldig output','Output må ikke være samme fil som kilden.'); return
+        self.output.setText(out); self.start.setEnabled(False); self.cancel.setEnabled(True); self.status.setText('Arbejder…')
         self.thread=QThread(); self.worker=Worker((self.source.text(),self.terms.text(),out)); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.done.connect(self.finished); self.worker.error.connect(self.failed); self.thread.start()
     def cancel_job(self):
         if self.worker: self.worker.cancel.set()
