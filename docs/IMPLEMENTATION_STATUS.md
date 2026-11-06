@@ -40,9 +40,9 @@ Final stabilization additionally forwards case-sensitive/whole-word settings fro
 
 ## Final Windows build record
 
-- Source commit: `603f166cfe2a66537ec303d037b17677aa18ae9d`
-- Build timestamp: 2026-11-06 21:01:47 (local Windows time)
+- Source commit: `57e9f7caddeab76f50ba914e73602ee69882cd06`
+- Build timestamp: 2026-11-06 21:26:36 (local Windows time)
 - Artifact: `dist/TextMarker-0.1-TEST.exe`
-- Size: 67,216,281 bytes
-- SHA-256: `63B263A2D69B216A2DA11245A9CA34E02BB46D9D2D990AA1167F8A566618D8AE`
+- Size: 67,216,939 bytes
+- SHA-256: `1E660FF837ABE41F342E20467B8C34417E7AA38AD018F158677FBC6804F71FD1`
 - EXE launch smoke test: passed; process remained alive for five seconds.
