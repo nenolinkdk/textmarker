@@ -21,4 +21,13 @@ Implemented on `feature/v0.1-mvp` from `docs/v0.1-codex-handoff`.
 
 The PySide6 GUI, FSM worker/cancellation flow and regression coverage are now present. Hyperlinks, tracked changes, fields, drawings, headers/footers, footnotes/endnotes and text boxes are not processed. Microsoft Word opening was not available in this environment, so no Word repair-warning claim is made.
 
-No draft PR was created because this environment could not authenticate to GitHub (`gh` is present but network access to GitHub was unavailable). The branch is ready for push and draft-PR creation by an authenticated developer.
+## Verification update
+
+- Virtual environment: `.venv`, Python 3.12.14.
+- Pytest: 5 passed.
+- Headless GUI smoke test: passed.
+- Synthetic 150,000-word matcher: 56,250 matches, 1.587 seconds, 18,756,502 peak traced bytes.
+- Windows executable: `dist/TextMarker-0.1-TEST.exe`, 67,214,355 bytes, SHA-256 `6388C82B7074ABF5A0EF7DF795E4A6F5BCB0325A347C61C36BD35D996C4DBD87`.
+- EXE smoke test: launched and remained alive for five seconds.
+- Microsoft Word was unavailable; no Word opening/repair-warning result is claimed.
+- Draft PR: https://github.com/nenolinkdk/textmarker/pull/2
