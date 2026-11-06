@@ -46,3 +46,15 @@ Final stabilization additionally forwards case-sensitive/whole-word settings fro
 - Size: 67,216,939 bytes
 - SHA-256: `1E660FF837ABE41F342E20467B8C34417E7AA38AD018F158677FBC6804F71FD1`
 - EXE launch smoke test: passed; process remained alive for five seconds.
+
+## Qt packaging stabilization
+
+The reported startup failure was caused by the prior build using the shared/system-site environment with an unpinned PySide6 stack, plus packaging `main_window.py` directly even though it only defined `main()` and did not invoke it. The clean build now uses isolated 64-bit Python 3.12.14, PySide6 6.7.3, shiboken6 6.7.3, PyInstaller 6.11.1, a dedicated `gui_entry.py`, and PyInstaller's native PySide6 hooks. Direct QtCore import passed in the exact build environment.
+
+- Packaging fix commit: `f15188e3ea1111497bcd0b8f0c1f5866ca661501`
+- Clean-build artifact: `dist-final/TextMarker-0.1-TEST.exe`
+- Build timestamp: 2026-11-06 21:57:55 (local Windows time)
+- Size: 50,798,288 bytes
+- SHA-256: `57F973911A9B74814A999A08313EBEE413EECF7F8D6C5DC88E04FB3F66B75DF5`
+- Actual GUI smoke: visible Windows window handle confirmed (`IsWindowVisible=True`).
+- Clean venv pytest: 12 passed; end-to-end DOCX flow passed.
