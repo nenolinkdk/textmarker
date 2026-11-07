@@ -34,3 +34,9 @@
 - Behavior: SQLite stores absolute path, size, mtime and SHA-256 as reference metadata only; no source mutation is performed.
 - Smoke test: inventory insert/update and readback passed.
 - Next: CI/PR synchronization and broader packaged end-to-end acceptance.
+
+## Windows acceptance
+
+- Checklist: `docs/V02_WINDOWS_ACCEPTANCE_CHECKLIST.md`.
+- Local packaged smoke: launcher and Word Index windows opened successfully.
+- Remaining manual gate: run Text Marker, Risk Scanner and Word Index end-to-end on Windows, then open generated DOCX files in Microsoft Word and confirm no repair warnings.
