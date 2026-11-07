@@ -34,6 +34,18 @@ The scanner now distinguishes `categories=None` (all categories) from an explici
 - Full pytest: 18 passed.
 - Packaged GUI smoke: one visible window confirmed.
 
+## RiskWorker follow-up
+
+`RiskWorker` now calls the transaction exactly once, does not write the report a second time, and never deletes outputs after a committed transaction. It preflights DOCX, report and summary paths, returns the transaction result and paths to the GUI, and reports finding/warning counts. End-to-end worker tests exercise real DOCX/CSV inputs, successful creation of all three outputs, and cancellation with no outputs.
+
+- Worker fix source commit: `1b3ac8dc1fe586c38117a2a961ff45972132b9c6`
+- Final artifact: `dist-risk-worker/Nenolink-Translation-Risk-Scanner-0.1-TEST.exe`
+- Build timestamp: 2026-11-07 11:16:24 local Windows time
+- Size: 50,361,868 bytes
+- SHA-256: `ABC14EA5E50FC684C97DDE26F96F848D405F319F47E7522206EC4ABD912A5D1F`
+- Full pytest: 22 passed.
+- Packaged GUI end-to-end: real DOCX and CSV scanned through the GUI; DOCX, occurrence report and summary report were created and readable.
+
 ## Transactional output follow-up
 
 DOCX, occurrence CSV and optional summary CSV are now produced in same-directory temporary files. Final paths are reserved with exclusive create/no-replace semantics before publication; if report generation, cancellation, or concurrent destination creation fails, temporary files and only paths reserved by this run are removed. Pre-existing files are never overwritten or deleted. Fault-injection coverage includes report errors, cancellation between DOCX/report publication, concurrent creation and optional summaries.
