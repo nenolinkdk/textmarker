@@ -1,10 +1,8 @@
 from PySide6.QtWidgets import QApplication,QLabel,QMainWindow,QPushButton,QVBoxLayout,QWidget
 from textmarker.ui.main_window import MainWindow as TextMarkerWindow
 from textmarker.risk_gui_entry import RiskWindow
-
-class WordIndexPlaceholder(QMainWindow):
-    def __init__(self):
-        super().__init__(); self.setWindowTitle('Word Index — Nenolink Text Tools v0.2'); label=QLabel('Word Index kommer i næste fase. Luk vinduet for at vende tilbage til hjem.') ; label.setWordWrap(True); self.setCentralWidget(label); self.resize(520,180)
+from textmarker.ui.word_index_window import WordIndexWindow
+WordIndexPlaceholder = WordIndexWindow
 
 class Launcher(QMainWindow):
     def __init__(self):
@@ -12,7 +10,7 @@ class Launcher(QMainWindow):
         title=QLabel('Nenolink Text Tools v0.2'); title.setStyleSheet('font-size: 20px; font-weight: bold')
         intro=QLabel('Lokale værktøjer til manuskripter og oversættelsesreview.'); intro.setWordWrap(True)
         layout=QVBoxLayout(); layout.addWidget(title); layout.addWidget(intro)
-        for text, factory in [('Text Marker',TextMarkerWindow),('Translation Risk Scanner',RiskWindow),('Word Index',WordIndexPlaceholder)]:
+        for text, factory in [('Text Marker',TextMarkerWindow),('Translation Risk Scanner',RiskWindow),('Word Index',WordIndexWindow)]:
             button=QPushButton(text); button.setMinimumHeight(42); button.clicked.connect(lambda _,f=factory:self.open_module(f)); layout.addWidget(button)
         layout.addStretch(); w=QWidget(); w.setLayout(layout); self.setCentralWidget(w)
     def open_module(self,factory):
