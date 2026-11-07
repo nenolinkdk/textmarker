@@ -7,5 +7,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
-      - run: python -m pip install -e ".[test]"
-      - run: pytest -q
+      - run: python -m pip install -e ".[test,gui-test]"
+      - name: Verify Qt and run complete suite
+        shell: pwsh
+        run: |
+          $env:QT_QPA_PLATFORM = "offscreen"
+          python -c "import PySide6, shiboken6; from PySide6.QtCore import QCoreApplication; print('PySide6', PySide6.__version__, 'shiboken6', shiboken6.__version__, 'QtCore OK')"
+          pytest -q

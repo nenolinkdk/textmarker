@@ -28,3 +28,7 @@ A local, offline Windows application for highlighting specified words and phrase
 Use Python 3.12+, PySide6, python-docx/lxml, and pytest. Package a Windows test executable with PyInstaller. See AGENTS.md for the exact definition of done.
 
 No cloud services, AI analysis, telemetry, or transmission of manuscript content. Input and output files stay on the user's computer.
+
+## Translation Risk Scanner v0.1
+
+The separate `risk_gui_entry` workflow scans literal, configurable CSV risk rules in a DOCX and writes a new highlighted DOCX plus one-row-per-occurrence revision CSV. Findings are possible risks for human review only. See `docs/RISK_SCANNER_REQUIREMENTS.md`.
