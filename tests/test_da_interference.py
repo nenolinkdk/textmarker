@@ -30,3 +30,10 @@ def test_no_overwrite_and_cancellation(tmp_path):
     try: scan_and_write(source,rules,output,tmp_path/'r.csv'); assert False
     except FileExistsError: pass
     cancelled=__import__('threading').Event(); cancelled.set(); assert scan_and_write(source,rules,tmp_path/'m.docx',tmp_path/'r.csv',cancel=cancelled) is None
+
+def test_overlap_repeated_unicode_and_run_formatting(tmp_path):
+    doc=Document(); p=doc.add_paragraph(); a=p.add_run('ikke ikke '); a.bold=True; p.add_run('eventuelt æble')
+    source=tmp_path/'source.docx'; doc.save(source); result=scan_and_write(source,load_rules(rules_file(tmp_path/'rules.csv')),tmp_path/'m.docx',tmp_path/'r.csv')
+    assert [f.matched_text for f in result.findings].count('ikke')==2
+    with ZipFile(tmp_path/'m.docx') as z:
+        xml=z.read('word/document.xml').decode('utf-8'); assert 'F4B183' in xml and 'w:b' in xml and 'æble' in xml

@@ -2,6 +2,8 @@
 
 `Launcher -> DAInterferenceWindow -> DAInterferenceWorker -> da_interference.Scanner -> shared DOCX highlighter/reporter`
 
+Phase C bruger samme worker-kontrakt som v0.2: GUI’en ejer QThread, workerens cancel-event er cooperative, og closeEvent venter på workerens afslutning før vinduet lukkes. Successful input/output paths registreres efter atomisk publicering.
+
 DA-scanneren holdes adskilt fra `textmarker.risk`. Den modtager immutable regler og valgte kategorier, returnerer deterministiske findings med stabilt rule-id og skriver først output efter komplet behandling. Workerens Qt-signaler følger samme progress/cancel-kontrakt som v0.2.
 
 ## Fremtidig Mode B
