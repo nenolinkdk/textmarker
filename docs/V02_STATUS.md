@@ -24,6 +24,6 @@
 - Status: implemented locally; pending commit and PR update.
 - Features: safe DOCX body/table paragraph extraction, Unicode NFC/casefold tokenization, Danish and Norwegian Bokmål modes, deterministic `A–Z, Æ, Ø, Å` ordering, exact 100-word editable stopword resources, CSV/TXT export, cancellation and paragraph progress.
 - Safety: outputs use exclusive creation and never replace an existing file; cancellation writes no output.
-- Tests: 27 passed locally with the repository virtual environment and offscreen Qt. The first run was blocked by a Windows TEMP ACL issue; rerun used a repository-local temporary directory.
+- Tests: 26 passed locally with the repository virtual environment and offscreen Qt. The first run was blocked by a Windows TEMP ACL issue; rerun used a repository-local temporary directory.
 - Limitation: unsupported OOXML run structures are skipped with warnings; no lemmatization is performed. Future language support is intended through the language/stopword boundary.
 - Next: Phase D persistent local file inventory, then integration/build acceptance.
