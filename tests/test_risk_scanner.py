@@ -64,7 +64,7 @@ def test_transaction_cancellation_and_concurrent_creation_preserve_external_file
     try: scan_and_write(source,parse_risk_rules(rules),out,report,cancel=cancel); assert False
     except Exception: pass
     assert not out.exists() and not report.exists()
-    def race(path):
+    def race(path, reserved=None):
         Path(path).write_text('external',encoding='utf-8'); raise FileExistsError('concurrent creator')
     monkeypatch.setattr(scanner,'_reserve',race); external=tmp_path/'race.docx'; race_report=tmp_path/'race.csv'
     try: scan_and_write(source,parse_risk_rules(rules),external,race_report); assert False

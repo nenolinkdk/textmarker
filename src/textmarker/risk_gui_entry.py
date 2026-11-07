@@ -13,13 +13,9 @@ class RiskWorker(QObject):
     def run(self):
         try:
             source,rules,output,report,summary_path,case_sensitive,whole_words,categories=self.args
-            if Path(output).exists() or Path(report).exists(): raise FileExistsError('Output eller rapport findes allerede; vælg nye filnavne.')
+            if any(Path(p).exists() for p in (output,report,summary_path)): raise FileExistsError('Output, rapport eller summary findes allerede; vælg nye filnavne.')
             rs=scan_and_write(source,parse_risk_rules(rules),output,report,summary_path=summary_path,case_sensitive=case_sensitive,whole_words=whole_words,categories=categories,cancel=self.cancel,progress=self.progress.emit)
-            if self.cancel.is_set():
-                for p in (Path(output),Path(report)):
-                    if p.exists(): p.unlink()
-                self.done.emit(None); return
-            write_risk_report(report,rs); self.done.emit(rs)
+            self.done.emit((rs,Path(output),Path(report),Path(summary_path)))
         except CancelledError: self.done.emit(None)
         except Exception as e: self.error.emit(str(e))
 
@@ -50,7 +46,7 @@ class RiskWindow(QMainWindow):
     def finished(self,summary):
         self.cleanup()
         if summary is None: self.status.setText('Annulleret. Ingen output blev gemt.'); return
-        self.status.setText(f'Færdig: {len(summary.findings)} mulige risici.'); QMessageBox.information(self,'Risk Scanner',self.status.text())
+        rs,output,report,summary_path=summary; self.status.setText(f'Færdig: {len(rs.findings)} mulige risici; {len(rs.warnings)} advarsler.\nDOCX: {output}\nRapport: {report}\nSummary: {summary_path}'); QMessageBox.information(self,'Risk Scanner',self.status.text())
     def failed(self,msg): self.cleanup(); self.status.setText('Fejl: '+msg); QMessageBox.critical(self,'Fejl',msg)
     def cleanup(self):
         self.start.setEnabled(True); self.cancel.setEnabled(False)

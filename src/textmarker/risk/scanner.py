@@ -52,9 +52,11 @@ def scan_docx(source, rules, output, *, case_sensitive=False, whole_words=True, 
         raise
     return RiskSummary(tuple(findings),tuple(warnings))
 
-def _reserve(path):
+def _reserve(path, reserved=None):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
-    fd=os.open(path,os.O_CREAT|os.O_EXCL|os.O_WRONLY); os.close(fd); return path
+    fd=os.open(path,os.O_CREAT|os.O_EXCL|os.O_WRONLY); os.close(fd)
+    if reserved is not None: reserved.append(path)
+    return path
 
 def _temp_name(path):
     with NamedTemporaryFile(dir=Path(path).parent,prefix=Path(path).name+'.',suffix='.tmp',delete=False) as f: name=Path(f.name)
@@ -71,7 +73,7 @@ def scan_and_write(source, rules, output, report, *, summary_path=None, case_sen
         if cancel and cancel.is_set(): raise CancelledError()
         write_risk_report(temp_report,summary,summary_path=temp_summary)
         if cancel and cancel.is_set(): raise CancelledError()
-        for final in finals: reserved.append(_reserve(final))
+        for final in finals: _reserve(final,reserved)
         pairs=[(temp_docx,output),(temp_report,report)]+([(temp_summary,summary_path)] if summary_path else [])
         for temp,final in pairs: os.replace(temp,final); published.append(final)
         return summary
