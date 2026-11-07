@@ -11,3 +11,12 @@
 - Phase C: `DAInterferenceWindow`, asynchronous worker, category filtering, result opening og File Inventory-registration implementeret lokalt.
 - Tests: **34 passed**; nye tests dækker launcher-navigation, worker cancellation, GUI lifecycle, repeated scans, overlap, Unicode og formatting preservation.
 - Næste fase: packaged Windows E2E/build; bilingual Mode B er fortsat ikke implementeret.
+
+## Phase D
+
+- Status: packaged build og GUI acceptance gennemført lokalt; dokumentationsopdatering afventer commit.
+- Automated suite: **34 passed**.
+- Packaged GUI: alle fem launcher-ruter åbnet; DA-interferensscan gennemført med 3 findings, 0 warnings og 3 outputfiler.
+- DOCX XML verification: RED/YELLOW `w:highlight`, ORANGE `w:shd`, eksisterende bold-formattering og source preservation kontrolleret.
+- Manual Word gate: ikke gennemført; Microsoft Word repair-warning test mangler.
+- Word Index packaged Danish/Norwegian stopword processing: resource inclusion is verified by build configuration, but full interactive language runs remain outstanding.

@@ -9,3 +9,6 @@
 - [ ] Input/output registreres i File Inventory uden at originalen ændres.
 - [ ] Dansk og norsk Word Index-stopord virker fra den pakkede EXE.
 - [ ] Åbn DOCX i Microsoft Word; ingen repair warnings; kontroller styles, tabeller, headers, tracked changes og eksisterende highlights.
+- [x] Packaged launcher åbner alle fem moduler og packaged DA-scan giver 3 findings med 0 warnings.
+- [ ] Kør interaktiv dansk og norsk Word Index med stopord i packaged EXE.
+- [ ] Åbn den markerede DOCX i Microsoft Word og bekræft ingen repair warning.

@@ -6,4 +6,6 @@ Phase B automation: `tests/test_da_interference.py` verifies strict schema, thre
 
 Phase C automation: launcher route count, DA window controls, worker cancellation state, repeated findings, overlap, Unicode, run formatting and full v0.2 regression suite. Packaged GUI and Microsoft Word opening remain Windows acceptance tests.
 
+Phase D results: automated suite 34 passed; packaged CUA test opened all five modules and executed a real DA scan producing three findings. Report counts matched marked occurrences. XML verification is automated; Word rendering/repair dialog remains manual.
+
 Pakket Windows-test skal åbne alle fem moduler, scanne en dansk fixture med dansk og norsk regelsæt, validere begge stopordslister i Word Index og kontrollere inventarvisning. Microsoft Word åbning uden repair warning er en manuel gate.

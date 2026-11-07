@@ -8,8 +8,8 @@ WordIndexPlaceholder = WordIndexWindow
 
 class Launcher(QMainWindow):
     def __init__(self):
-        super().__init__(); self.setWindowTitle('Nenolink Text Tools v0.2'); self.resize(420,300); self.modules=[]
-        title=QLabel('Nenolink Text Tools v0.2'); title.setStyleSheet('font-size: 20px; font-weight: bold')
+        super().__init__(); self.setWindowTitle('Nenolink Text Tools v0.3'); self.resize(420,360); self.modules=[]
+        title=QLabel('Nenolink Text Tools v0.3'); title.setStyleSheet('font-size: 20px; font-weight: bold')
         intro=QLabel('Lokale værktøjer til manuskripter og oversættelsesreview.'); intro.setWordWrap(True)
         layout=QVBoxLayout(); layout.addWidget(title); layout.addWidget(intro)
         for text, factory in [('Text Marker',TextMarkerWindow),('Translation Risk Scanner',RiskWindow),('Word Index',WordIndexWindow),('Filinventar',InventoryWindow),('DA-interferensscan',DAInterferenceWindow)]:
