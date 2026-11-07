@@ -48,3 +48,4 @@
 - QThread close/cancel lifecycle: explicit cooperative cancellation and join added; GUI regression coverage added.
 - DOCX extraction: documented; unsupported OOXML run structures produce warnings and are skipped.
 - Packaged three-module E2E: launcher/Word Index smoke is automated through CUA; Text Marker and Risk Scanner full workflows still require a Windows run with suitable input fixtures.
+- File inventory GUI: implemented from the launcher with search, open, missing-file status and reference removal; source files are not deleted.

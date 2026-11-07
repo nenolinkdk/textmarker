@@ -12,3 +12,4 @@
 - Verify inventory persistence and source immutability.
 - Verify packaged launcher opens all three module routes; manual acceptance must execute each route end-to-end.
 - Verify DOCX output in Microsoft Word without repair warnings; XML/ZIP checks alone are insufficient.
+- Packaged test: open all four routes, verify Danish/Norwegian stopword resources from the frozen bundle, index a fixture, and inspect/remove an inventory reference.

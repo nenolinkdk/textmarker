@@ -23,3 +23,9 @@ class FileInventory:
 
     def list(self):
         with sqlite3.connect(self.database) as db: return db.execute('SELECT path,size,mtime_ns,sha256,indexed_at FROM files ORDER BY path').fetchall()
+
+    def remove(self, path):
+        with sqlite3.connect(self.database) as db: db.execute('DELETE FROM files WHERE path=?', (str(Path(path).resolve()),))
+
+    def missing(self):
+        return [row for row in self.list() if not Path(row[0]).exists()]

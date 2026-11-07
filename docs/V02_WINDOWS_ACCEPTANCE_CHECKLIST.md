@@ -20,6 +20,8 @@
 - [ ] Registrér en lokal fil og kontroller path, størrelse, mtime og SHA-256 i SQLite.
 - [ ] Ændr filen, kør registrering igen og kontroller at metadata opdateres.
 - [ ] Kontroller at inventaret ikke flytter, sletter eller ændrer kildefilen.
+- [ ] Åbn Filinventar fra startmenuen, søg efter en reference, dobbeltklik/åbn filen og fjern derefter kun referencen.
+- [ ] Omdøb eller flyt ikke filen uden for værktøjet, genindlæs inventaret og kontroller at den markeres som manglende.
 
 ## DOCX-integritet i Microsoft Word
 
