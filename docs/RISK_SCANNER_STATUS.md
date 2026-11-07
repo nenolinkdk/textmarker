@@ -33,3 +33,15 @@ The scanner now distinguishes `categories=None` (all categories) from an explici
 - SHA-256: `8CE8AB26B224220043C04E3F69555CC7364F16262EEC56678B42BEA24B447B69`
 - Full pytest: 18 passed.
 - Packaged GUI smoke: one visible window confirmed.
+
+## Transactional output follow-up
+
+DOCX, occurrence CSV and optional summary CSV are now produced in same-directory temporary files. Final paths are reserved with exclusive create/no-replace semantics before publication; if report generation, cancellation, or concurrent destination creation fails, temporary files and only paths reserved by this run are removed. Pre-existing files are never overwritten or deleted. Fault-injection coverage includes report errors, cancellation between DOCX/report publication, concurrent creation and optional summaries.
+
+- Transaction fix source commit: `88aa7dc594e0849c90bc554e94785c2846d4c396`
+- Final artifact: `dist-risk-transactional/Nenolink-Translation-Risk-Scanner-0.1-TEST.exe`
+- Build timestamp: 2026-11-07 11:01:02 local Windows time
+- Size: 50,361,706 bytes
+- SHA-256: `09747AD83CB899CE6B678E17DCC5E4E84A8814536966C80B6123FCA2AC5AA69`
+- Full pytest: 20 passed.
+- Packaged GUI smoke: one visible window confirmed.
