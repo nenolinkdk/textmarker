@@ -21,3 +21,15 @@ Implemented on `feature/translation-risk-scanner-v0.1`, based on `origin/feature
 ## Limitations
 
 Findings are literal lexical review flags, not translation-error judgments. Norwegian/Danish alignment, semantic equivalence, omission detection, rewriting, and intentional nonstandard character voice are out of scope. Unsupported OOXML paragraphs are skipped conservatively and require human review; locators use `body/p[n]` and are not Word bookmarks. Microsoft Word opening/repair-warning validation was not available.
+
+## Review follow-up
+
+The scanner now distinguishes `categories=None` (all categories) from an explicit category set, rejects unknown categories, preserves filtered rule-to-finding mapping, rejects conflicting duplicates and malformed/extra CSV columns, requires non-empty categories, protects pre-existing DOCX/report files, atomically writes reports, removes only run-owned artifacts on cancellation, and exposes warnings through the summary model. The GUI uses a checked category list and treats cancellation as a normal result.
+
+- Review-fix source commit: `8a4d93c6933dad59d10a107f292c2316dfe88a0d`
+- Final artifact: `dist-risk-final/Nenolink-Translation-Risk-Scanner-0.1-TEST.exe`
+- Build timestamp: 2026-11-07 10:54:32 local Windows time
+- Size: 50,359,321 bytes
+- SHA-256: `8CE8AB26B224220043C04E3F69555CC7364F16262EEC56678B42BEA24B447B69`
+- Full pytest: 18 passed.
+- Packaged GUI smoke: one visible window confirmed.
