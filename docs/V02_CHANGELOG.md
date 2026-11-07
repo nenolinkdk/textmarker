@@ -10,4 +10,6 @@
 - Added Word Index core and Danish/Norwegian stopword resources.
 - Added Danish Word Index GUI route with worker-thread processing, cancellation, progress and safe CSV/TXT output.
 - Added Unicode, stopword, export and cancellation regression coverage.
+- Added persistent local SQLite file inventory with SHA-256 reference metadata.
+- Built and manually opened the packaged shared launcher and Word Index window.
 

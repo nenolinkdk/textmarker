@@ -27,3 +27,10 @@
 - Tests: 26 passed locally with the repository virtual environment and offscreen Qt. The first run was blocked by a Windows TEMP ACL issue; rerun used a repository-local temporary directory.
 - Limitation: unsupported OOXML run structures are skipped with warnings; no lemmatization is performed. Future language support is intended through the language/stopword boundary.
 - Next: Phase D persistent local file inventory, then integration/build acceptance.
+
+## Phase D — local file inventory
+
+- Status: implemented locally; commit `589bfff0511759f6ed612ffe2dd86296ff462674`.
+- Behavior: SQLite stores absolute path, size, mtime and SHA-256 as reference metadata only; no source mutation is performed.
+- Smoke test: inventory insert/update and readback passed.
+- Next: CI/PR synchronization and broader packaged end-to-end acceptance.
