@@ -5,6 +5,9 @@ from textmarker.core.models import TermSpec
 from textmarker.matching.matcher import find_matches
 from textmarker.docx.highlighter import mark_docx, CancelledError
 from textmarker.risk.models import RiskRule, RiskFinding, RiskSummary
+from textmarker.risk.report import write_risk_report
+from tempfile import NamedTemporaryFile
+import os
 
 W="http://schemas.openxmlformats.org/wordprocessingml/2006/main"; NS={"w":W}; q=lambda n:"{"+W+"}"+n
 
@@ -48,3 +51,34 @@ def scan_docx(source, rules, output, *, case_sensitive=False, whole_words=True, 
         if output.exists(): output.unlink()
         raise
     return RiskSummary(tuple(findings),tuple(warnings))
+
+def _reserve(path):
+    path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
+    fd=os.open(path,os.O_CREAT|os.O_EXCL|os.O_WRONLY); os.close(fd); return path
+
+def _temp_name(path):
+    with NamedTemporaryFile(dir=Path(path).parent,prefix=Path(path).name+'.',suffix='.tmp',delete=False) as f: name=Path(f.name)
+    name.unlink(); return name
+
+def scan_and_write(source, rules, output, report, *, summary_path=None, case_sensitive=False, whole_words=True, categories=None, cancel=None, progress=None):
+    source,output,report=Path(source),Path(output),Path(report); summary_path=Path(summary_path) if summary_path else None
+    finals=[output,report]+([summary_path] if summary_path else [])
+    if len({p.resolve() for p in finals})!=len(finals): raise ValueError("DOCX, rapport og summary skal have forskellige stier")
+    if any(p.resolve()==source.resolve() for p in finals): raise ValueError("Output må ikke være kildedokumentet")
+    temp_docx=_temp_name(output); temp_report=_temp_name(report); temp_summary=_temp_name(summary_path) if summary_path else None; reserved=[]; published=[]
+    try:
+        summary=scan_docx(source,rules,temp_docx,case_sensitive=case_sensitive,whole_words=whole_words,categories=categories,cancel=cancel,progress=progress)
+        if cancel and cancel.is_set(): raise CancelledError()
+        write_risk_report(temp_report,summary,summary_path=temp_summary)
+        if cancel and cancel.is_set(): raise CancelledError()
+        for final in finals: reserved.append(_reserve(final))
+        pairs=[(temp_docx,output),(temp_report,report)]+([(temp_summary,summary_path)] if summary_path else [])
+        for temp,final in pairs: os.replace(temp,final); published.append(final)
+        return summary
+    except Exception:
+        for p in published+reserved:
+            if p.exists(): p.unlink()
+        raise
+    finally:
+        for p in (temp_docx,temp_report,temp_summary):
+            if p and p.exists(): p.unlink()

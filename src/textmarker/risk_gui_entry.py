@@ -3,8 +3,7 @@ from threading import Event
 from PySide6.QtCore import QObject,QThread,Signal,Slot,Qt
 from PySide6.QtWidgets import QApplication,QFileDialog,QFormLayout,QHBoxLayout,QLabel,QLineEdit,QMainWindow,QMessageBox,QProgressBar,QPushButton,QWidget,QCheckBox,QListWidget,QListWidgetItem
 from textmarker.risk.rules import parse_risk_rules
-from textmarker.risk.scanner import scan_docx
-from textmarker.risk.report import write_risk_report
+from textmarker.risk.scanner import scan_and_write
 from textmarker.docx.highlighter import CancelledError
 
 class RiskWorker(QObject):
@@ -13,9 +12,9 @@ class RiskWorker(QObject):
     @Slot()
     def run(self):
         try:
-            source,rules,output,report,case_sensitive,whole_words,categories=self.args
+            source,rules,output,report,summary_path,case_sensitive,whole_words,categories=self.args
             if Path(output).exists() or Path(report).exists(): raise FileExistsError('Output eller rapport findes allerede; vælg nye filnavne.')
-            rs=scan_docx(source,parse_risk_rules(rules),output,case_sensitive=case_sensitive,whole_words=whole_words,categories=categories,cancel=self.cancel,progress=self.progress.emit)
+            rs=scan_and_write(source,parse_risk_rules(rules),output,report,summary_path=summary_path,case_sensitive=case_sensitive,whole_words=whole_words,categories=categories,cancel=self.cancel,progress=self.progress.emit)
             if self.cancel.is_set():
                 for p in (Path(output),Path(report)):
                     if p.exists(): p.unlink()
@@ -43,9 +42,9 @@ class RiskWindow(QMainWindow):
         if p:e.setText(p)
     def begin(self):
         if not self.source.text() or not self.rules.text(): QMessageBox.warning(self,'Mangler filer','Vælg manuskript og risk-regler.'); return
-        out=self.output.text() or str(Path(self.source.text()).with_name(Path(self.source.text()).stem+'_risk_marked.docx')); report=str(Path(out).with_suffix('.csv'))
+        out=self.output.text() or str(Path(self.source.text()).with_name(Path(self.source.text()).stem+'_risk_marked.docx')); report=str(Path(out).with_name(Path(out).stem+'_report.csv')); summary_path=str(Path(out).with_name(Path(out).stem+'_summary.csv'))
         if Path(out).resolve()==Path(self.source.text()).resolve(): QMessageBox.warning(self,'Ugyldigt output','Output må ikke være kilden.'); return
-        self.output.setText(out); self.start.setEnabled(False); self.cancel.setEnabled(True); self.thread=QThread(); cats={self.category_list.item(i).text() for i in range(self.category_list.count()) if self.category_list.item(i).checkState()==Qt.CheckState.Checked}; self.worker=RiskWorker((self.source.text(),self.rules.text(),out,report,self.case.isChecked(),self.whole.isChecked(),cats)); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.done.connect(self.finished); self.worker.error.connect(self.failed); self.thread.start()
+        self.output.setText(out); self.start.setEnabled(False); self.cancel.setEnabled(True); self.thread=QThread(); cats={self.category_list.item(i).text() for i in range(self.category_list.count()) if self.category_list.item(i).checkState()==Qt.CheckState.Checked}; self.worker=RiskWorker((self.source.text(),self.rules.text(),out,report,summary_path,self.case.isChecked(),self.whole.isChecked(),cats)); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.done.connect(self.finished); self.worker.error.connect(self.failed); self.thread.start()
     def stop(self):
         if self.worker:self.worker.cancel.set(); self.status.setText('Annullerer…')
     def finished(self,summary):

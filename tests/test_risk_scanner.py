@@ -2,7 +2,7 @@ from pathlib import Path
 from zipfile import ZipFile
 from docx import Document
 from textmarker.risk.rules import parse_risk_rules
-from textmarker.risk.scanner import scan_docx
+from textmarker.risk.scanner import scan_docx, scan_and_write
 from textmarker.risk.report import write_risk_report
 from threading import Event
 
@@ -46,3 +46,27 @@ def test_cancel_before_highlight_leaves_no_output(tmp_path: Path):
     try: scan_docx(source,parse_risk_rules(rules),out,cancel=cancel); assert False
     except Exception: pass
     assert not out.exists()
+
+def test_transaction_optional_summary_and_report_failure_rollback(tmp_path: Path, monkeypatch):
+    rules=tmp_path/'r.csv'; rules.write_text('expression,category,color,severity,explanation,suggestion,enabled\nx,C,yellow,low,e,s,true\n',encoding='utf-8'); source=tmp_path/'s.docx'; Document().add_paragraph('x'); d=Document(); d.add_paragraph('x'); d.save(source)
+    out=tmp_path/'o.docx'; report=tmp_path/'o_report.csv'; summary=tmp_path/'o_summary.csv'
+    import textmarker.risk.scanner as scanner
+    monkeypatch.setattr(scanner,'write_risk_report',lambda *a,**k: (_ for _ in ()).throw(OSError('disk full')))
+    try: scan_and_write(source,parse_risk_rules(rules),out,report,summary_path=summary); assert False
+    except OSError: pass
+    assert not out.exists() and not report.exists() and not summary.exists()
+
+def test_transaction_cancellation_and_concurrent_creation_preserve_external_file(tmp_path: Path, monkeypatch):
+    rules=tmp_path/'r.csv'; rules.write_text('expression,category,color,severity,explanation,suggestion,enabled\nx,C,yellow,low,e,s,true\n',encoding='utf-8'); source=tmp_path/'s.docx'; d=Document(); d.add_paragraph('x'); d.save(source); out=tmp_path/'o.docx'; report=tmp_path/'o.csv'; cancel=Event(); import textmarker.risk.scanner as scanner
+    original=scanner.write_risk_report
+    def cancel_after_docx(*args,**kwargs): cancel.set(); return original(*args,**kwargs)
+    monkeypatch.setattr(scanner,'write_risk_report',cancel_after_docx)
+    try: scan_and_write(source,parse_risk_rules(rules),out,report,cancel=cancel); assert False
+    except Exception: pass
+    assert not out.exists() and not report.exists()
+    def race(path):
+        Path(path).write_text('external',encoding='utf-8'); raise FileExistsError('concurrent creator')
+    monkeypatch.setattr(scanner,'_reserve',race); external=tmp_path/'race.docx'; race_report=tmp_path/'race.csv'
+    try: scan_and_write(source,parse_risk_rules(rules),external,race_report); assert False
+    except FileExistsError: pass
+    assert external.read_text(encoding='utf-8')=='external' and not race_report.exists()
