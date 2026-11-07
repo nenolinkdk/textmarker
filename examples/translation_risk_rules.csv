@@ -1,0 +1,11 @@
+expression,category,color,severity,explanation,suggestion,enabled
+frokost,Meaning differences,yellow,medium,"Possible Norwegian-influenced lexical choice; review context.","Check intended meal meaning in context.",true
+grine,Meaning differences,yellow,medium,"May be a false friend or deliberate character voice.","Review against surrounding dialogue.",true
+rar,Meaning differences,yellow,low,"Can have different pragmatic meaning across Scandinavian languages.","Review tone and intended meaning.",true
+lensmann,Police/legal terminology,red,high,"Historical or regional police terminology may need contextual review.","Check period and jurisdiction.",true
+altså,Discourse/dialogue markers,cyan,low,"Discourse marker may affect voice or emphasis.","Review dialogue rhythm and register.",true
+jo,Discourse/dialogue markers,cyan,low,"Short discourse marker; lexical flag only.","Review pragmatic function; do not auto-correct.",true
+på sparket,Idioms and fixed expressions,green,medium,"Fixed expression may not carry the intended idiomatic meaning.","Review idiomatic equivalence in context.",true
+ikke,Critical review flags,magenta,medium,"Negation is flagged for human review only.","Verify that polarity is preserved.",true
+aldri,Critical review flags,magenta,medium,"Negation/intensifier is flagged for human review only.","Verify scope and emphasis.",true
+skal,Meaning differences,yellow,low,"Modal verb may deserve contextual review.","Check modality and tense.",true
