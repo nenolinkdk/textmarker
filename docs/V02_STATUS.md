@@ -40,3 +40,11 @@
 - Checklist: `docs/V02_WINDOWS_ACCEPTANCE_CHECKLIST.md`.
 - Local packaged smoke: launcher and Word Index windows opened successfully.
 - Remaining manual gate: run Text Marker, Risk Scanner and Word Index end-to-end on Windows, then open generated DOCX files in Microsoft Word and confirm no repair warnings.
+
+## Review correction status
+
+- Stopword packaging path: corrected and regression-tested.
+- SQLite inventory GUI integration: implemented as optional source registration and regression-tested.
+- QThread close/cancel lifecycle: explicit cooperative cancellation and join added; GUI regression coverage added.
+- DOCX extraction: documented; unsupported OOXML run structures produce warnings and are skipped.
+- Packaged three-module E2E: launcher/Word Index smoke is automated through CUA; Text Marker and Risk Scanner full workflows still require a Windows run with suitable input fixtures.

@@ -12,4 +12,5 @@
 - Added Unicode, stopword, export and cancellation regression coverage.
 - Added persistent local SQLite file inventory with SHA-256 reference metadata.
 - Built and manually opened the packaged shared launcher and Word Index window.
+- Review corrections: PyInstaller-aware stopword paths, GUI inventory registration, close-time worker cancellation, and regression tests for these boundaries.
 

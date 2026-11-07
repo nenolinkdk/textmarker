@@ -4,11 +4,17 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from zipfile import ZipFile
 import csv, os, re, unicodedata
+import sys
 from lxml import etree
 
 W='http://schemas.openxmlformats.org/wordprocessingml/2006/main'; NS={'w':W}; q=lambda n:'{'+W+'}'+n
 TOKEN_RE=re.compile(r"[^\W\d_]+(?:['’\-‑][^\W\d_]+)*|\d+(?:[.,]\d+)?",re.UNICODE)
 ALPHABET='abcdefghijklmnopqrstuvwxyzæøå'
+
+def resource_path(relative):
+    """Resolve bundled data in source trees and PyInstaller one-file extracts."""
+    root = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[2]))
+    return root / relative
 
 @dataclass(frozen=True)
 class WordIndexResult:
