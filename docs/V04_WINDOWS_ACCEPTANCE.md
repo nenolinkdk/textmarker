@@ -11,3 +11,11 @@
 - [ ] Project scan afviser missing/incompatible active packs før output-publicering.
 - [ ] Run packaged end-to-end project workflow through scan and reports.
 - [ ] Open representative DOCX outputs in Microsoft Word and record repair-warning result.
+
+## P0 hotfix evidence
+
+- [x] Fresh onefile hotfix EXE built with Python 3.12 and PyInstaller 6.11.1.
+- [x] Main window launched from the packaged EXE without a Python traceback.
+- [x] Navigation list and Settings route verified in the packaged GUI.
+- [ ] Select and visually review all six UI languages on Windows.
+- [ ] Open representative DOCX outputs in Microsoft Word and confirm no repair warning.

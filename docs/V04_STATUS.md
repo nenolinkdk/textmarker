@@ -24,3 +24,11 @@
 - Manual Microsoft Word acceptance: not performed.
 - Release blocker: packaged full workflow and Word repair-warning validation remain outstanding.
 - Begrænsninger: translations, rule coverage, Word rendering og project migration skal implementeres og testes i senere faser.
+
+## P0 hotfix: PyInstaller locale resources
+
+- Root cause: the PyInstaller spec included `data` but not `src/textmarker/multilingual/locales`; package-data configuration alone did not add JSON resources to the executable.
+- Fix: localization now resolves resources from source, frozen `_MEIPASS` bundle locations and `importlib.resources`, with a controlled missing-resource error. The clean build explicitly bundles all six locale JSON files.
+- Also corrected AppShell navigation mapping so Settings opens the Settings page in the packaged shell.
+- Verification: complete suite **46 passed**; packaged executable rebuilt and launched as a separate Windows process with a visible main window. Settings navigation was verified in the packaged GUI.
+- Microsoft Word repair-warning validation remains manual and not performed.

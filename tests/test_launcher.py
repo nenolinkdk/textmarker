@@ -32,3 +32,6 @@ def test_app_shell_navigation_localization_and_project(tmp_path):
 
 def test_phase_d_workspace_sections_are_functional():
     app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Glossaries & Rules (Phase D)' in names and 'Prompt Library (Phase D)' in names; shell.close()
+
+def test_shell_settings_navigation_maps_to_settings_page():
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(8); assert shell.pages.currentWidget() is shell.pages.widget(1) and shell.ui_language is not None; shell.close()

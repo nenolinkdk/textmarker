@@ -44,3 +44,10 @@
 - Added persistent rule enable/disable/remove operations and project active-pack validation.
 - Added explicit DA scanner integration adapter with language-pair checks.
 - Complete suite: 43 passed.
+
+## P0 hotfix
+
+- Added explicit PyInstaller data inclusion for `textmarker/multilingual/locales`.
+- Added source/package/frozen resource lookup and controlled missing-locale errors.
+- Fixed packaged AppShell Settings navigation mapping.
+- Verification: 46 tests passed; fresh `Nenolink-Text-Tools-0.4-TEST-hotfix.exe` launched successfully.

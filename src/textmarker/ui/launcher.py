@@ -31,7 +31,7 @@ class AppShell(QMainWindow):
             page=QWidget(); l=QVBoxLayout(page); l.addWidget(QLabel(name)); l.addWidget(QLabel('Lokalt modul med validering; resultater kræver menneskelig kontrol.')); b=QPushButton('Åbn modul'); b.clicked.connect(lambda _,f=factory:self.open_module(f)); l.addWidget(b); l.addStretch(); self.pages.addWidget(page)
         page=QWidget(); l=QVBoxLayout(page); l.addWidget(QLabel('Help')); l.addWidget(QLabel('Se dokumentationen for schema, begrænsninger og Windows acceptance.')); l.addStretch(); page.setLayout(l); self.pages.addWidget(page)
     def select_page(self,row):
-        self.pages.setCurrentIndex(row); name=self.nav.item(row).text(); self.context.setText(f'{name}\n\nVælg sprog og projekt i Settings. Processing ændrer ikke originaldokumenter.')
+        page_by_nav=[0,2,3,4,5,6,7,8,1,10]; self.pages.setCurrentIndex(page_by_nav[row]); name=self.nav.item(row).text(); self.context.setText(f'{name}\n\nVælg sprog og projekt i Settings. Processing ændrer ikke originaldokumenter.')
     def toggle_context(self): self.context.setVisible(not self.context.isVisible()); self.context_toggle.setText('Vis hjælp' if not self.context.isVisible() else 'Skjul hjælp')
     def switch_language(self):
         self.translator.set_locale(self.ui_language.currentData()); self.context.setText(self.translator.text('shell.language_changed'))

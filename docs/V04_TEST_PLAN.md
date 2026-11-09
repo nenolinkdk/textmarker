@@ -13,3 +13,5 @@ Phase D automation covers rule-pack import, v0.3 compatibility, duplicate protec
 Phase E automation covers exact schema detection, CRUD persistence, active-pack references, missing/incompatible pack validation and scanner-adapter preconditions. Complete suite: 43 passed.
 
 Phase F adds multi-pack ordering, duplicate/conflict handling, project selection persistence and packaged workflow checks. Manual Word validation remains separate.
+
+P0 hotfix verification adds six-locale resource loading, controlled missing-resource failure, explicit PyInstaller bundle checks and a packaged Windows launch/navigation smoke test. The local complete suite result is 46 passed. Microsoft Word opening/repair-warning verification remains manual.

@@ -17,6 +17,13 @@ def test_six_languages_and_independent_pair():
 def test_localization_completeness_and_fallback():
     assert all(not v for v in Translator.missing_keys_for().values()); tr=Translator('fr'); assert tr.text('action.cancel')=='Annuler'; assert tr.text('unknown.key').startswith('Missing translation')
 
+def test_all_locale_resources_load_and_missing_resource_is_controlled(tmp_path, monkeypatch):
+    for code in LANGUAGES: assert Translator(code).text('app.name')=='Nenolink Text Tools'
+    import textmarker.multilingual.localization as loc
+    monkeypatch.setattr(loc, 'RESOURCE_DIR', tmp_path); monkeypatch.setattr(loc.resources, 'files', lambda _: (_ for _ in ()).throw(FileNotFoundError()))
+    try: Translator('en'); assert False
+    except RuntimeError as exc: assert 'Application resource missing' in str(exc)
+
 def test_project_roundtrip_and_validation(tmp_path):
     profile=ProjectProfile('id','Demo','en','de',{'default':str(tmp_path)},['pack'],[],{'format':'docx'}); store=ProjectStore(tmp_path/'project.json'); store.save(profile); assert store.load()==profile
     try: ProjectProfile('id','Demo','xx','de',{},[],[],{}).validate(); assert False
