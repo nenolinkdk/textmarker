@@ -18,3 +18,11 @@
 - Tilføjet Settings med UI/source/target language selectors og local project profile persistence.
 - Legacy module windows åbnes via adapters; processing behavior og File Inventory storage er bevaret.
 - Phase C suite: 39 passed.
+
+## Phase D
+
+- Tilføjet lokal RulePackStore med canonical CSV persistence, legacy adapters og duplicate protection.
+- Tilføjet Glossaries & Rules workspace med import, search og rule table.
+- Tilføjet lokal Prompt Library med seks templates og custom prompt save.
+- Ingen external AI API, cloud upload eller TBX.
+- Phase D suite: 42 passed.

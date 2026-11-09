@@ -15,3 +15,7 @@ Legacy CSV importeres via navngivne adapters og aldrig ved tavs kolonnefortolkni
 ## D-004 — local-first privacy
 
 Ingen telemetry eller external document upload; prompts er lokale tekstressourcer uden AI API.
+
+## D-005 — separate user rule packs
+
+Importerede CSV-kilder bevares urørte. Canonical pack files ligger i brugerdata, har stabile IDs og må ikke overskrives ved import.

@@ -29,3 +29,6 @@ def test_da_window_controls_and_worker_cancel(tmp_path):
 
 def test_app_shell_navigation_localization_and_project(tmp_path):
     app=QApplication.instance() or QApplication([]); shell=AppShell(); assert shell.nav.count()==10; shell.ui_language.setCurrentText('French'); assert shell.translator.locale=='fr'; shell.project_dir.setText(str(tmp_path)); shell.save_project(); assert (tmp_path/'nenolink-project.json').exists(); shell.close()
+
+def test_phase_d_workspace_sections_are_functional():
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Glossaries & Rules (Phase D)' in names and 'Prompt Library (Phase D)' in names; shell.close()

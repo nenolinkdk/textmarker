@@ -11,4 +11,7 @@
 - Phase C: AppShell, navigation, central workspace, collapsible contextual panel, Settings, independent language selectors og project profile save implementeret.
 - Tests: complete suite **39 passed**.
 - Phase C commit: afventer commit efter dokumentationsopdatering.
+- Phase D: lokale RulePackStore/Glossaries & Rules og PromptStore/Prompt Library implementeret; legacy imports er eksplicitte og filer overskrives ikke.
+- Tests: complete suite **42 passed**.
+- Phase D commit: afventer commit efter dokumentationsopdatering.
 - Begrænsninger: translations, rule coverage, Word rendering og project migration skal implementeres og testes i senere faser.

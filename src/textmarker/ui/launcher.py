@@ -9,6 +9,8 @@ from textmarker.ui.da_interference_window import DAInterferenceWindow
 from textmarker.multilingual.languages import LANGUAGES
 from textmarker.multilingual.localization import Translator
 from textmarker.multilingual.project import ProjectProfile, ProjectStore
+from textmarker.ui.rule_pack_window import RulePackWindow
+from textmarker.ui.prompt_library_window import PromptLibraryWindow
 WordIndexPlaceholder = WordIndexWindow
 
 class AppShell(QMainWindow):
@@ -25,8 +27,9 @@ class AppShell(QMainWindow):
         settings=QWidget(); form=QFormLayout(settings); self.ui_language=QComboBox(); [self.ui_language.addItem(x.name,x.code) for x in LANGUAGES.values()]; self.ui_language.setCurrentIndex(self.ui_language.findData('da')); self.ui_language.currentIndexChanged.connect(self.switch_language); self.source_language=QComboBox(); self.target_language=QComboBox(); [c.addItems(LANGUAGES.keys()) for c in (self.source_language,self.target_language)]; self.source_language.setCurrentText('en'); self.target_language.setCurrentText('da'); self.project_name=QLineEdit('Lokalt projekt'); self.project_dir=QLineEdit(str(Path.home())); save=QPushButton('Gem projekt'); save.clicked.connect(self.save_project); form.addRow('UI-sprog',self.ui_language); form.addRow('Kildesprog',self.source_language); form.addRow('Målsprog',self.target_language); form.addRow('Projektnavn',self.project_name); form.addRow('Projektmappe',self.project_dir); form.addRow('',save); self.pages.addWidget(settings)
         for name in ['Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory']:
             page=QWidget(); l=QVBoxLayout(page); l.addWidget(QLabel(name)); l.addWidget(QLabel('Dette modul åbnes i sin eksisterende, kompatible arbejdsoverflade.')); b=QPushButton('Åbn modul'); b.clicked.connect(lambda _,n=name:self.open_module(self.factories[n])); l.addWidget(b); l.addStretch(); self.pages.addWidget(page)
-        for name in ['Glossaries & Rules (Phase D)','Prompt Library (Phase D)','Help']:
-            page=QWidget(); l=QVBoxLayout(page); l.addWidget(QLabel(name)); l.addWidget(QLabel('Ikke tilgængelig i v0.4 Phase C.')); l.addStretch(); self.pages.addWidget(page)
+        for name,factory in [('Glossaries & Rules',RulePackWindow),('Prompt Library',PromptLibraryWindow)]:
+            page=QWidget(); l=QVBoxLayout(page); l.addWidget(QLabel(name)); l.addWidget(QLabel('Lokalt modul med validering; resultater kræver menneskelig kontrol.')); b=QPushButton('Åbn modul'); b.clicked.connect(lambda _,f=factory:self.open_module(f)); l.addWidget(b); l.addStretch(); self.pages.addWidget(page)
+        page=QWidget(); l=QVBoxLayout(page); l.addWidget(QLabel('Help')); l.addWidget(QLabel('Se dokumentationen for schema, begrænsninger og Windows acceptance.')); l.addStretch(); page.setLayout(l); self.pages.addWidget(page)
     def select_page(self,row):
         self.pages.setCurrentIndex(row); name=self.nav.item(row).text(); self.context.setText(f'{name}\n\nVælg sprog og projekt i Settings. Processing ændrer ikke originaldokumenter.')
     def toggle_context(self): self.context.setVisible(not self.context.isVisible()); self.context_toggle.setText('Vis hjælp' if not self.context.isVisible() else 'Skjul hjælp')
