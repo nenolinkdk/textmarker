@@ -1,8 +1,16 @@
 from pathlib import Path
 from uuid import uuid4
-from PySide6.QtWidgets import QFileDialog, QFormLayout, QHBoxLayout, QInputDialog, QLabel, QListWidget, QMainWindow, QMessageBox, QPushButton, QLineEdit, QComboBox, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFileDialog, QFormLayout, QHBoxLayout, QInputDialog, QLabel, QListWidget, QMainWindow, QMessageBox, QPushButton, QLineEdit, QComboBox, QVBoxLayout, QWidget, QDialog, QDialogButtonBox
 from textmarker.terminology.repository import Concept, TermEntry, TerminologyRepository, TERM_STATUSES
-from textmarker.terminology.csv_io import CANONICAL_FIELDS, export_csv, import_csv, preview_csv
+from textmarker.terminology.csv_io import CANONICAL_FIELDS, MappingProfileStore, export_csv, import_csv, preview_csv
+
+class CsvMappingDialog(QDialog):
+    def __init__(self,preview,parent=None):
+        super().__init__(parent); self.setWindowTitle('Map CSV-kolonner'); self.mapping={}; form=QFormLayout(self); options=['(ingen)']+list(preview.headers); self.boxes={}
+        for field in CANONICAL_FIELDS:
+            box=QComboBox(); box.addItems(options); box.setProperty('help_id','terminology.column-mapping'); self.boxes[field]=box; form.addRow(field,box)
+        self.language=QLineEdit(); form.addRow('Standard language (valgfri)',self.language); buttons=QDialogButtonBox(QDialogButtonBox.StandardButton.Ok|QDialogButtonBox.StandardButton.Cancel); form.addRow(buttons); buttons.accepted.connect(self.accept); buttons.rejected.connect(self.reject)
+    def result(self): return ({k:v.currentText() for k,v in self.boxes.items() if v.currentText()!='(ingen)'},self.language.text().strip() or None)
 
 class TerminologyWindow(QMainWindow):
     def __init__(self, database=None):
@@ -43,7 +51,12 @@ class TerminologyWindow(QMainWindow):
         path=QFileDialog.getOpenFileName(self,'Importér terminology CSV','','CSV (*.csv)')[0]
         if not path: return
         try:
-            preview=preview_csv(path); mapping={field:field for field in CANONICAL_FIELDS if field in preview.headers}; result=import_csv(self.repo,path,mapping); self.refresh(); QMessageBox.information(self,'Import færdig',f"{result['rows']} rækker, {result['concepts']} concepts, {result['terms']} termer")
+            preview=preview_csv(path); dialog=CsvMappingDialog(preview,self)
+            if dialog.exec()!=QDialog.DialogCode.Accepted: return
+            mapping,language=dialog.result(); errors=[]
+            if not mapping.get('concept_id') or not mapping.get('term'): errors.append('concept_id og term skal mappes')
+            if errors: raise ValueError('; '.join(errors))
+            result=import_csv(self.repo,path,mapping,language); self.refresh(); QMessageBox.information(self,'Import færdig',f"{result['rows']} rækker, {result['concepts']} concepts, {result['terms']} termer")
         except Exception as exc: QMessageBox.critical(self,'Import fejlede',str(exc))
     def export_file(self):
         path=QFileDialog.getSaveFileName(self,'Eksportér terminology CSV','','CSV (*.csv)')[0]

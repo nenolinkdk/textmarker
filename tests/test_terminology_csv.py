@@ -1,6 +1,6 @@
 import csv
 import pytest
-from textmarker.terminology.csv_io import CANONICAL_FIELDS, export_csv, import_csv, preview_csv
+from textmarker.terminology.csv_io import CANONICAL_FIELDS, MappingProfileStore, export_csv, import_csv, preview_csv
 from textmarker.terminology.repository import Concept, TerminologyRepository
 
 def _write(path, delimiter=',', bom=False):
@@ -25,3 +25,8 @@ def test_export_refuses_overwrite_and_filters(tmp_path):
     source=tmp_path/'input.csv'; _write(source); repo=TerminologyRepository(tmp_path/'terms.sqlite'); import_csv(repo,source,{x:x for x in CANONICAL_FIELDS})
     out=tmp_path/'out.csv'; export_csv(repo,out,language='da'); assert len(preview_csv(out).rows)==1
     with pytest.raises(FileExistsError): export_csv(repo,out)
+
+def test_mapping_profiles_validate_headers(tmp_path):
+    store=MappingProfileStore(tmp_path/'profiles.json'); headers=('Term','Language'); store.save('customer',headers,{'term':'Term','language':'Language'},'da'); assert store.load('customer',headers)['mapping']['term']=='Term'
+    with pytest.raises(ValueError): store.load('customer',('Changed',))
+    store.delete('customer'); assert store.list()==[]

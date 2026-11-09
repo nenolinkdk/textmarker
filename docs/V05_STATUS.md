@@ -28,3 +28,12 @@ Known limitation: migration backups are retained beside the database and are not
 - Canonical CSV preview/import/export is implemented with validation, transaction rollback and no-overwrite export.
 - Complete suite: **59 passed, 0 failed**.
 - Windows TEST EXE built successfully; the packaged process was started and remained responsive. GUI route verification is automated; direct packaged click-through of the Terminology page remains limited by the current desktop automation session.
+
+## Phase C2 — module introductions and guided mapping
+
+- Added reusable `ModuleIntroduction` metadata component for all 12 navigation items.
+- Added stable help IDs and offline `docs/manual/help.html` anchors, bundled by PyInstaller.
+- Added centralized `0.5.0` version definition used by the application title.
+- Added interactive CSV mapping dialog with language selection and validation, plus local mapping-profile persistence API.
+- Complete suite: **61 passed, 0 failed**.
+- Packaged build completed; process started responsive. Direct packaged click-through of the mapping dialog remains pending in this desktop session.

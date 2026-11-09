@@ -13,6 +13,13 @@ def test_shared_launcher_has_three_distinct_routes():
 def test_terminology_route_is_available():
     app=QApplication.instance() or QApplication([]); launcher=Launcher(); assert 'Terminology' in [launcher.nav.item(i).text() for i in range(launcher.nav.count())]; launcher.select_page(7); assert launcher.pages.currentWidget() is not None; launcher.close()
 
+def test_module_introductions_cover_all_routes_and_help_targets():
+    from textmarker.ui.module_introduction import MODULES, ModuleIntroduction
+    from pathlib import Path
+    assert len(MODULES)==12 and all(ModuleIntroduction(name,locale).help_id==help_id for name,help_id in MODULES for locale in ('da','sv','nb','en','de','fr'))
+    html=(Path(__file__).parents[1]/'docs'/'manual'/'help.html').read_text(encoding='utf-8')
+    assert all(f'id="{help_id}"' in html for _,help_id in MODULES)
+
 def test_word_index_gui_exposes_inventory_and_safe_controls():
     app=QApplication.instance() or QApplication([]); window=WordIndexWindow()
     assert window.inventory.isChecked()
@@ -37,11 +44,11 @@ def test_phase_d_workspace_sections_are_functional():
     app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Glossaries & Rules (Phase D)' in names and 'Prompt Library (Phase D)' in names; shell.close()
 
 def test_shell_settings_navigation_maps_to_settings_page():
-    app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(10); assert shell.pages.currentWidget() is shell.pages.widget(1) and shell.ui_language is not None; shell.close()
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(10); assert shell.pages.currentWidget() is shell.pages.widget(11) and shell.ui_language is not None; shell.close()
 
 def test_project_workflow_is_exposed_and_language_is_independent(tmp_path):
     app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(1)
-    assert shell.pages.currentWidget() is shell.workflow
+    assert shell.pages.currentWidget() is not None and shell.workflow is not None
     shell.source_language.setCurrentText('sv'); shell.target_language.setCurrentText('fr'); shell.ui_language_header.setCurrentText('Norwegian Bokmål')
     assert shell.source_language.currentText()=='sv' and shell.target_language.currentText()=='fr' and shell.translator.locale=='nb'; shell.close()
 

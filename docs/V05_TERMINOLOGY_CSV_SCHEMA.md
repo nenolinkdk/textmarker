@@ -10,4 +10,4 @@ Customer spreadsheets require an explicit mapping preview. Missing required fiel
 
 Phase C implements the parser, preview metadata, validation and canonical export. The current GUI path auto-selects same-name canonical columns; explicit arbitrary customer-column mapping and reusable mapping profiles remain unimplemented and are therefore not claimed as complete.
 
-The GUI does not merge concepts automatically. Existing concept IDs are rejected during import, possible duplicate expressions remain a repository review result, and export refuses to overwrite an existing destination.
+The GUI does not merge concepts automatically. Existing concept IDs are rejected during import, possible duplicate expressions remain a repository review result, and export refuses to overwrite an existing destination. Phase C2 adds explicit source-column mapping and named local mapping profiles; profiles are rejected when the source header set changes.

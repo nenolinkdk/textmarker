@@ -17,3 +17,11 @@
 - Interactive customer-column mapping profiles remain a follow-up limitation; TBX, scanner projection and Prompt Builder remain out of scope.
 
 Packaged v0.5 TEST build completed with the Terminology module included. Microsoft Word, TBX and end-user customer-spreadsheet acceptance remain outside this phase.
+
+## Phase C2
+
+- Added compact localized module introductions covering purpose, input, output, use and workflow.
+- Added stable offline help anchors and packaged help resource validation tests.
+- Added guided source-column mapping dialog and reusable profile storage with header compatibility checks.
+- Added central application version `0.5.0`.
+- Complete suite: 61 passed.

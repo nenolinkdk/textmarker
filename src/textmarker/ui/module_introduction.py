@@ -1,0 +1,26 @@
+from pathlib import Path
+import sys
+from PySide6.QtCore import QUrl
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtWidgets import QFormLayout, QGroupBox, QLabel, QPushButton, QVBoxLayout, QWidget
+
+_TEXT={
+'da': {'Dashboard':('Overblik','Start her for at vælge projekt og sprog.','Ingen fil kræves.','Projektstatus og modulvalg.','Planlæg reviewarbejdet.','Vælg projekt → kontrollér sprog → åbn modul.'),'Project Workflow':('Projektworkflow','Kør et projektbaseret review med aktive rule packs.','DOCX, canonical rule-pack CSV.','Markeret DOCX og CSV-rapporter.','Gentagelige, sporbare reviewkørsler.','Opret projekt → importér packs → scan → åbn rapporter.'),'Text Marker':('Text Marker','Markér udtryk i et separat Word-dokument.','DOCX/TXT og ordliste.','Markeret DOCX og rapport.','Visuel redaktionel gennemgang.','Vælg input → vælg ordliste → markér → gennemgå.'),'Translation Risk Scanner':('Translation Risk Scanner','Find regelbaserede oversættelsesrisici.','DOCX og risikoregler.','Fund og rapporter.','Prioritér menneskelig kvalitetssikring.','Vælg filer → scan → gennemgå fund.'),'Language Interference Scanner':('Language Interference Scanner','Find sproginterferens i dokumentet.','Dansk DOCX og CSV-regler.','Farvemarkeret DOCX og CSV.','Fokuseret sproglig revision.','Vælg DOCX → vælg regler → scan → kontrollér.'),'Word Index':('Word Index','Lav frekvensbaserede ordindeks.','DOCX/TXT.','Frekvensliste eller CSV/TXT.','Terminologi- og stilgennemgang.','Vælg tekst → vælg sprog → eksportér.'),'File Inventory':('File Inventory','Find og genbrug lokale filreferencer.','Lokale filstier.','Søgbart inventar.','Sikker genbrug af arbejdsfiler.','Søg → vælg fil → åbn eller genbrug.'),'Terminology':('Terminology','Vedligehold en konceptbaseret termbase.','Lokalt termbase-DB eller CSV.','Concepts, termer og canonical CSV.','Konsistent flersproget terminologi.','Opret concept → tilføj termer → søg → eksportér.'),'Glossaries & Rules':('Glossaries & Rules','Administrér validerede rule packs.','CSV-rule packs.','Lokale rule packs.','Kontrolleret regelstyring.','Importér → validér → redigér → tilknyt.'),'Prompt Library':('Prompt Library','Gem lokale promptskabeloner til reviewarbejde.','Lokale tekstskabeloner.','Redigerbare prompts.','Standardisér manuelle analyseprocedurer.','Vælg skabelon → redigér → gem lokalt.'),'Settings':('Settings','Konfigurér interface, projekt og sprog.','Projektindstillinger.','Gemte lokale præferencer.','Gentagelig opsætning.','Vælg UI-sprog → vælg par → gem.'),'Help':('Help','Åbn manual og introduktion.','Ingen fil kræves.','Offline vejledning.','Lær workflowet uden netværk.','Åbn guide → vælg sektion → følg trin.')},
+'en': {}, 'sv': {}, 'nb': {}, 'de': {}, 'fr': {}}
+for _lang in ('en','sv','nb','de','fr'):
+    _TEXT[_lang]={k:(k,'Purpose, input, output and workflow guidance.','Required local files or data.','Generated local files or results.','Use results for professional review.','Choose input → run workflow → review results.') for k in _TEXT['da']}
+
+MODULES=[('Dashboard','dashboard.overview'),('Project Workflow','projects.create'),('Text Marker','textmarker.overview'),('Translation Risk Scanner','scanner.overview'),('Language Interference Scanner','interference.overview'),('Word Index','wordindex.overview'),('File Inventory','inventory.overview'),('Terminology','terminology.overview'),('Glossaries & Rules','rules.overview'),('Prompt Library','prompts.overview'),('Settings','settings.overview'),('Help','help.overview')]
+
+class ModuleIntroduction(QWidget):
+    def __init__(self,module,locale='da',open_callback=None,parent=None):
+        super().__init__(parent); self.module=module; self.help_id=dict(MODULES)[module]; self.locale=locale; self.open_callback=open_callback; self.guide=QPushButton('Brugervejledning'); self.tutorial=QPushButton('Tutorial'); self.open=QPushButton('Åbn modul'); self.open.setProperty('help_id',self.help_id); self.guide.setProperty('help_id',self.help_id); self.refresh(locale)
+        self.open.clicked.connect(lambda: self.open_callback() if self.open_callback else None); self.guide.clicked.connect(self.open_guide); self.tutorial.clicked.connect(self.open_tutorial)
+    def refresh(self,locale):
+        self.locale=locale; text=_TEXT.get(locale,_TEXT['en']).get(self.module,_TEXT['en'][self.module]); layout=QVBoxLayout(self); layout.setSpacing(8)
+        title=QLabel(text[0]); title.setStyleSheet('font-size:20px;font-weight:bold'); layout.addWidget(title); layout.addWidget(QLabel(text[1])); box=QGroupBox('Workflow'); form=QFormLayout(box); form.addRow('INPUT',QLabel(text[2])); form.addRow('OUTPUT',QLabel(text[3])); form.addRow('USE OF RESULTS',QLabel(text[4])); form.addRow('TYPICAL WORKFLOW',QLabel(text[5])); layout.addWidget(box); layout.addWidget(self.open); layout.addWidget(self.guide)
+        if self.module in ('Dashboard','Project Workflow','Terminology','Help'): layout.addWidget(self.tutorial)
+        layout.addStretch(); self.setLayout(layout)
+    def open_guide(self):
+        root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3])); QDesktopServices.openUrl(QUrl.fromLocalFile(str(root/'docs'/'manual'/'help.html')+'#'+self.help_id))
+    def open_tutorial(self): self.open_guide()

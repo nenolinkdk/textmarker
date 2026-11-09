@@ -1,6 +1,7 @@
 """Explicit, transaction-safe terminology CSV preview/import/export."""
 from __future__ import annotations
 import csv, io
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from .repository import Concept, TermEntry, TerminologyRepository, TERM_STATUSES, normalize_language_tag
@@ -13,6 +14,18 @@ class CsvPreview:
     rows: tuple[dict[str,str],...]
     encoding: str
     delimiter: str
+
+class MappingProfileStore:
+    def __init__(self, path: str|Path): self.path=Path(path); self.path.parent.mkdir(parents=True,exist_ok=True)
+    def list(self): return sorted(json.loads(self.path.read_text(encoding='utf-8')).keys()) if self.path.exists() else []
+    def save(self,name,headers,mapping,language=None):
+        data=json.loads(self.path.read_text(encoding='utf-8')) if self.path.exists() else {}; data[name]={'headers':list(headers),'mapping':mapping,'language':language}; self.path.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
+    def load(self,name,headers):
+        data=json.loads(self.path.read_text(encoding='utf-8')); item=data[name]
+        if tuple(item['headers']) != tuple(headers): raise ValueError('Mapping profile passer ikke til CSV-headeren')
+        return item
+    def delete(self,name):
+        data=json.loads(self.path.read_text(encoding='utf-8')); data.pop(name,None); self.path.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
 
 def _read(path: str|Path) -> tuple[str,str]:
     data=Path(path).read_bytes()

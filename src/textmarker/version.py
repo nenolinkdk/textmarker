@@ -1,0 +1,3 @@
+APP_VERSION = '0.5.0'
+APP_NAME = 'Nenolink Text Tools'
+WINDOW_TITLE = f'{APP_NAME} v{APP_VERSION}'
