@@ -3,3 +3,7 @@
 Hovedvinduet har tre områder: kompakt venstre navigation, centralt workspace og sammenklappeligt højre contextual panel. Navigationen indeholder Dashboard, Text Review, Translation Risk Scanner, Language Interference Scanner, Word Index, Text Marker, File Inventory, Glossaries & Rules, Prompt Library, Settings og Help.
 
 Alle inputfelter har label, kort forklaring, default hvor sikkert, vælger og inline validation. Højre panel viser aktiv funktion, language pair, rule packs/glossaries, warnings og usage guidance. Standard laptop-layout skal undgå unødvendig scrolling; keyboard focus og tydelige statusfarver er obligatoriske.
+
+## Phase C implementation
+
+`AppShell` er 1180×700 som default med 960×540 minimum, egnet til 1366×768 og Qt display scaling. Glossaries & Rules og Prompt Library er synligt markeret Phase D og er ikke funktionelle processing-moduler. Eksisterende modulers processing forbliver i deres egne kompatible vinduer.

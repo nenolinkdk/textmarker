@@ -3,10 +3,11 @@ from textmarker.ui.launcher import Launcher, WordIndexPlaceholder
 from textmarker.ui.word_index_window import WordIndexWindow
 from textmarker.ui.inventory_window import InventoryWindow
 from textmarker.ui.da_interference_window import DAInterferenceWindow, DAWorker
+from textmarker.ui.launcher import AppShell
 
 def test_shared_launcher_has_three_distinct_routes():
-    app=QApplication.instance() or QApplication([]); launcher=Launcher(); buttons=launcher.findChildren(type(launcher.centralWidget().layout().itemAt(2).widget()))
-    assert [b.text() for b in buttons if hasattr(b,'text')][:5]==['Text Marker','Translation Risk Scanner','Word Index','Filinventar','DA-interferensscan']
+    app=QApplication.instance() or QApplication([]); launcher=Launcher()
+    assert [launcher.nav.item(i).text() for i in range(1,6)]==['Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory']
     assert WordIndexPlaceholder().windowTitle().startswith('Word Index')
 
 def test_word_index_gui_exposes_inventory_and_safe_controls():
@@ -25,3 +26,6 @@ def test_da_window_controls_and_worker_cancel(tmp_path):
     app=QApplication.instance() or QApplication([]); window=DAInterferenceWindow()
     assert window.category_list.count()==3 and window.cancel_button.isEnabled() is False
     worker=DAWorker(tmp_path/'missing.docx',tmp_path/'missing.csv',tmp_path,{'RED'}); worker.cancel(); assert worker.cancel_event.is_set(); window.close()
+
+def test_app_shell_navigation_localization_and_project(tmp_path):
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); assert shell.nav.count()==10; shell.ui_language.setCurrentText('French'); assert shell.translator.locale=='fr'; shell.project_dir.setText(str(tmp_path)); shell.save_project(); assert (tmp_path/'nenolink-project.json').exists(); shell.close()

@@ -8,4 +8,7 @@
 - Tests: baseline **34 passed**; complete suite efter Phase B **38 passed**.
 - Compatibility: eksisterende scanners og File Inventory er ikke ændret; adapters er additive.
 - Phase B commit: `bc4e5daf3b24233db65890a5dc1c59edeca97cca`.
+- Phase C: AppShell, navigation, central workspace, collapsible contextual panel, Settings, independent language selectors og project profile save implementeret.
+- Tests: complete suite **39 passed**.
+- Phase C commit: afventer commit efter dokumentationsopdatering.
 - Begrænsninger: translations, rule coverage, Word rendering og project migration skal implementeres og testes i senere faser.
