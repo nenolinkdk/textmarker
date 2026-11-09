@@ -9,3 +9,5 @@
 - [ ] Ingen telemetry eller dokument-upload observeres under test.
 - [ ] Ambiguous/unsupported CSV schemas afvises med klar fejl.
 - [ ] Project scan afviser missing/incompatible active packs før output-publicering.
+- [ ] Run packaged end-to-end project workflow through scan and reports.
+- [ ] Open representative DOCX outputs in Microsoft Word and record repair-warning result.

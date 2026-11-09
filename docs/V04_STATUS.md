@@ -20,4 +20,7 @@
 - Phase E: explicit CSV schema detection, rule CRUD persistence, project pack associations and `scan_project` adapter implemented.
 - Tests: complete suite **43 passed**.
 - Phase E commit: afventer commit efter dokumentationsopdatering.
+- Phase F build: `Nenolink-Text-Tools-0.4-TEST.exe`, Python 3.12 / PyInstaller 6.11.1, 51,839,819 bytes, SHA-256 `393867A873F78C4E2C668AE27E02C0BA362537C5818EB9B5B42496AE3E11A88C`.
+- Manual Microsoft Word acceptance: not performed.
+- Release blocker: packaged full workflow and Word repair-warning validation remain outstanding.
 - Begrænsninger: translations, rule coverage, Word rendering og project migration skal implementeres og testes i senere faser.

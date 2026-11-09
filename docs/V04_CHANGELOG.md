@@ -33,6 +33,11 @@
 - Added project rule-pack selection and persistent association controls.
 - Complete suite: 44 passed before Windows build.
 
+## Phase F
+
+- Built `Nenolink-Text-Tools-0.4-TEST.exe` from Python 3.12/PyInstaller 6.11.1.
+- Microsoft Word manual acceptance remains pending.
+
 ## Phase E
 
 - Added exact v0.2/v0.3/v0.4 CSV schema detection; ambiguous headers are rejected.
