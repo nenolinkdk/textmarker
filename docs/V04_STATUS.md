@@ -7,5 +7,5 @@
 - Draft PR: afventer branch push/GitHub API.
 - Tests: baseline **34 passed**; complete suite efter Phase B **38 passed**.
 - Compatibility: eksisterende scanners og File Inventory er ikke ændret; adapters er additive.
-- Phase B commit: afventer commit efter dokumentationsopdatering.
+- Phase B commit: `bc4e5daf3b24233db65890a5dc1c59edeca97cca`.
 - Begrænsninger: translations, rule coverage, Word rendering og project migration skal implementeres og testes i senere faser.
