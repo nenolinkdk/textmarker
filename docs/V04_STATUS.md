@@ -46,3 +46,9 @@
 - Packaged startup/resource smoke: passed with the existing hotfix EXE.
 - Complete packaged project workflow: blocked by missing AppShell controls for project/rule-pack association and project scanning.
 - Module-specific packaged E2E and Microsoft Word manual acceptance remain pending.
+
+## v0.4.1 Phase C
+
+- AppShell now includes Project Workflow, synchronized persistent UI-language selectors, manual access and a five-step local tutorial.
+- Complete suite: **48 passed, 0 failed**.
+- New packaged build: `Nenolink-Text-Tools-0.4.1-TEST.exe`; packaged process started successfully. Full click-through E2E and Microsoft Word acceptance remain pending.

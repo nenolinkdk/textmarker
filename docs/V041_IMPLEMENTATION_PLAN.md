@@ -8,6 +8,8 @@ Phase B result: automated baseline passed (46/46) and packaged startup/resource 
 
 Phase C: implement only after Phase B approval. Add persistent UI locale preference, expanded contextual guidance, Help/manual access and the tutorial shell. Add localization, lifecycle, backward-compatibility and packaged GUI tests. Keep scanner windows and File Inventory storage unchanged.
 
+Phase C result: Project Workflow is exposed through AppShell and delegates scanning to `scan_project`; header/Settings language selectors are synchronized and persisted; English/Danish manual source/PDF resources and a local tutorial are bundled. Complete project-workflow packaged click-through and Microsoft Word acceptance remain pending.
+
 Phase D (future): implement the FSM Prompt Builder and concept-oriented Terminology module only after a separate approved specification. Format interoperability work remains a separate decision.
 
 Phase gates:

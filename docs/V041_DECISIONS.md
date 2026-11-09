@@ -23,3 +23,7 @@ TBX, TMX, XLIFF and Trados compatibility will be reported as fixture-based obser
 ## D-041-006: Phase B scope control
 
 The existing AppShell exposes module routes but not the complete project/rule-pack scanning workflow. Phase B records this as an integration blocker rather than adding unapproved Phase C usability functionality. No defect was fixed because no regression in the verified v0.4 baseline was reproduced.
+
+## D-041-007: Project Workflow adapter
+
+Phase C uses one Qt workflow adapter around `scan_project`; it does not add a second scanner. Canonical rules are converted to the existing DA scanner rule shape at the integration boundary, with language-pair and conflict checks remaining in the core.

@@ -63,3 +63,10 @@
 - Verified 46 automated tests and the existing packaged startup/resource-loading hotfix.
 - Recorded the missing packaged project-workflow GUI controls as an integration blocker.
 - No application code or EXE was changed because no baseline defect was reproduced.
+
+## v0.4.1 Phase C
+
+- Added persistent synchronized UI-language selectors in AppShell and Settings.
+- Added Project Workflow using the existing project/rule-pack/scanner APIs, progress/cancel, report opening and File Inventory registration.
+- Added English/Danish manual source/PDF resources and a local first-run tutorial.
+- Complete suite: 48 passed. Packaged v0.4.1 TEST build completed; full Word acceptance remains pending.

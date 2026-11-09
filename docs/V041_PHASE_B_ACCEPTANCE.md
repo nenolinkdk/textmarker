@@ -39,8 +39,12 @@ The automated suite covers missing inputs, malformed CSV, missing/conflicting pa
 
 Pending. Representative acceptance cases are defined in `V041_IMPLEMENTATION_PLAN.md` and `V04_WINDOWS_ACCEPTANCE.md`: ordinary paragraphs, bold/italic and split runs, tables, existing highlights and tracked changes. Microsoft Word was not opened in this run, so repair-warning-free status and visual formatting preservation are not claimed.
 
+## Phase C update
+
+The AppShell now exposes Project Workflow, a persistent header UI-language selector synchronized with Settings, localized manual access and a five-step local tutorial. Project scanning uses the existing `scan_project` pipeline and registers source/output references in File Inventory.
+
 ## Release blockers
 
-1. Complete packaged project-to-report workflow must be exposed or driven through a dedicated packaged E2E harness.
+1. A full click-by-click packaged project-to-report run still requires fixture-driven GUI automation; the new packaged shell starts, but no Microsoft Word acceptance was performed.
 2. Packaged module-specific E2E and Danish/Norwegian Word Index stopword checks remain outstanding.
 3. Microsoft Word manual acceptance remains outstanding.

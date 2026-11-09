@@ -2,6 +2,7 @@ from pathlib import Path
 from .project import ProjectStore, validate_pack_pair
 from .rule_packs import RulePackStore
 from textmarker.da_interference import scan_and_write
+from textmarker.da_interference import DARule
 
 def scan_project(profile_path, source, output, report, summary=None, pack_root=None, cancel=None, progress=None):
     profile=ProjectStore(profile_path).load(); packs=RulePackStore(pack_root or Path(profile_path).parent/'rule_packs'); available={p.stem for p in packs.list()}; active=ProjectStore(profile_path).valid_rule_packs(available)
@@ -15,5 +16,6 @@ def scan_project(profile_path, source, output, report, summary=None, pack_root=N
                 previous=seen[rule.rule_id]
                 if previous != rule: raise ValueError(f'Konfliktende rule ID på tværs af packs: {rule.rule_id}')
                 continue
-            seen[rule.rule_id]=rule; merged.append(rule)
+            seen[rule.rule_id]=rule
+            merged.append(DARule(rule.expression,rule.category,rule.category.casefold(),rule.severity,rule.explanation,rule.suggested_review,rule.enabled,len(merged),rule.rule_id))
     return scan_and_write(source,merged,output,report,summary_path=summary,cancel=cancel,progress=progress)
