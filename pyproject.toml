@@ -17,6 +17,9 @@ gui-test = ["PySide6==6.7.3", "shiboken6==6.7.3"]
 textmarker = "textmarker.__main__:main"
 textmarker-gui = "textmarker.ui.main_window:main"
 
+[tool.setuptools.package-data]
+textmarker = ["multilingual/locales/*.json"]
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
