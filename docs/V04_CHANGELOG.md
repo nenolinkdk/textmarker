@@ -70,3 +70,8 @@
 - Added Project Workflow using the existing project/rule-pack/scanner APIs, progress/cancel, report opening and File Inventory registration.
 - Added English/Danish manual source/PDF resources and a local first-run tutorial.
 - Complete suite: 48 passed. Packaged v0.4.1 TEST build completed; full Word acceptance remains pending.
+
+## v0.5 Phase A
+
+- Added documentation-only architecture for terminology management, living help, Prompt Builder FSM and optional TBX assessment.
+- Recorded v0.4.1 reference artifact and user-reported Word acceptance without claiming comprehensive acceptance.

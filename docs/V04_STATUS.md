@@ -52,3 +52,9 @@
 - AppShell now includes Project Workflow, synchronized persistent UI-language selectors, manual access and a five-step local tutorial.
 - Complete suite: **48 passed, 0 failed**.
 - New packaged build: `Nenolink-Text-Tools-0.4.1-TEST.exe`; packaged process started successfully. Full click-through E2E and Microsoft Word acceptance remain pending.
+
+## v0.5 Phase A
+
+- New branch: `feature/text-tools-v0.5` from v0.4.1 commit `8bfdf0c8cdeb377eb4f4a1ca85c8b851301a1295`.
+- Documentation-only architecture and specification work; no v0.4.1 code was modified.
+- User-reported Microsoft Word opening and visual inspection are recorded, but broader acceptance remains planned and is not claimed complete.
