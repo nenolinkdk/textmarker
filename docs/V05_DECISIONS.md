@@ -19,3 +19,11 @@ TBX and Trados compatibility will be described only from executed fixture tests 
 ## D-0505 — Phase A boundary
 
 This commit contains documentation only. No schema, GUI, scanner or file-format implementation is started before Phase B approval.
+
+## D-0506 — Status vocabulary
+
+Phase B accepts both the operational terms `preferred`/`admitted` and lifecycle/review values `proposed`/`needs-review` from the approved requirements. Values are validated, stored as-is and never silently converted. `deprecated` and `forbidden` are also explicit statuses.
+
+## D-0507 — Schema and migration safety
+
+Fresh databases are created through migrations up to schema version 2. Existing databases are backed up before migration; newer versions are rejected, and migration errors roll back. No destructive migration is performed without a validated backup.

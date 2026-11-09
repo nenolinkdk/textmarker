@@ -2,7 +2,7 @@
 
 ## Phase B — terminology data model and storage
 
-Deliverables: SQLite schema, migrations, repository, backup/restore and deterministic search. Tests: migration, rollback, Unicode, duplicate handling, invalid state and backward compatibility. Risk: project data corruption; acceptance requires atomic writes and integrity checks.
+Deliverables: SQLite schema, migrations, repository, backup/restore and deterministic search. Completed in Phase B with schema version 2. Tests: migration, rollback, Unicode, duplicate handling, invalid state and backward compatibility; complete suite 55 passed. Risk: project data corruption; acceptance is protected by atomic writes, foreign keys and integrity checks.
 
 ## Phase C — terminology GUI and CSV
 
