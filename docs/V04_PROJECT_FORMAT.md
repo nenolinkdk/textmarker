@@ -7,3 +7,5 @@ Et project profile er lokal JSON eller SQLite med schema-version og felterne:
 Working directories: default, source, target, glossary/rule, output og report. Relative paths gemmes portable mod profile-mappen hvor muligt; absolute paths valideres og ændres ikke automatisk. Global defaults arves af project overrides. Profile metadata kan registreres i File Inventory, men dokumentindhold kopieres ikke.
 
 Phase E bruger `rule_pack_ids` som aktive, persistente referencer. Manglende packs eller incompatible language pairs stopper scanning før output.
+
+Phase F allows explicit selection of one or more packs through the rule-management UI; no first-pack fallback is used.

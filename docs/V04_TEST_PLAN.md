@@ -11,3 +11,5 @@ Phase C automation covers navigation labels, five module routes, future-section 
 Phase D automation covers rule-pack import, v0.3 compatibility, duplicate protection, prompt loading/saving and functional workspace routes. Full individual rule editing/filter matrix and Windows visual scaling remain acceptance follow-up.
 
 Phase E automation covers exact schema detection, CRUD persistence, active-pack references, missing/incompatible pack validation and scanner-adapter preconditions. Complete suite: 43 passed.
+
+Phase F adds multi-pack ordering, duplicate/conflict handling, project selection persistence and packaged workflow checks. Manual Word validation remains separate.

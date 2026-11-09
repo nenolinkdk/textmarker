@@ -11,3 +11,5 @@ En canonical `Finding` indeholder rule pack, rule id, source/target language, ex
 Risici: Qt-rewrite kan bryde legacy windows; løses med adaptere og regressionssuite. Orange OOXML og tracked changes kræver fortsat Word-verifikation. Manglende rule packs må vises som manglende coverage, ikke som fuld sprogunderstøttelse.
 
 Phase E's `scan_project` validates active-pack availability and exact source/target pair before invoking the DA scanner.
+
+Phase F merges explicitly associated compatible packs in sorted pack-ID order. Identical duplicate rules are deterministic; conflicting definitions are rejected.

@@ -14,6 +14,9 @@
 - Phase D: lokale RulePackStore/Glossaries & Rules og PromptStore/Prompt Library implementeret; legacy imports er eksplicitte og filer overskrives ikke.
 - Tests: complete suite **42 passed**.
 - Phase D commit: afventer commit efter dokumentationsopdatering.
+- Phase F: multi-pack scanner integration, conflict validation and project pack selection UI implemented.
+- Tests: complete suite **44 passed**.
+- Phase F commit: afventer commit efter documentation update.
 - Phase E: explicit CSV schema detection, rule CRUD persistence, project pack associations and `scan_project` adapter implemented.
 - Tests: complete suite **43 passed**.
 - Phase E commit: afventer commit efter dokumentationsopdatering.

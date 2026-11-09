@@ -27,6 +27,12 @@
 - Ingen external AI API, cloud upload eller TBX.
 - Phase D suite: 42 passed.
 
+## Phase F
+
+- Added deterministic multi-pack merging with duplicate/conflict rejection.
+- Added project rule-pack selection and persistent association controls.
+- Complete suite: 44 passed before Windows build.
+
 ## Phase E
 
 - Added exact v0.2/v0.3/v0.4 CSV schema detection; ambiguous headers are rejected.
