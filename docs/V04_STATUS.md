@@ -32,3 +32,10 @@
 - Also corrected AppShell navigation mapping so Settings opens the Settings page in the packaged shell.
 - Verification: complete suite **46 passed**; packaged executable rebuilt and launched as a separate Windows process with a visible main window. Settings navigation was verified in the packaged GUI.
 - Microsoft Word repair-warning validation remains manual and not performed.
+
+## v0.4.1 Phase A
+
+- Branch: `feature/text-tools-v0.4.1-usability`.
+- Base: verified v0.4 hotfix commit `da198e2`.
+- Phase A documentation is complete; no GUI, scanner, file-format or release changes were made.
+- Phase B is intentionally pending approval.

@@ -51,3 +51,9 @@
 - Added source/package/frozen resource lookup and controlled missing-locale errors.
 - Fixed packaged AppShell Settings navigation mapping.
 - Verification: 46 tests passed; fresh `Nenolink-Text-Tools-0.4-TEST-hotfix.exe` launched successfully.
+
+## v0.4.1 Phase A
+
+- Added the v0.4.1 specification, architecture, implementation plan and decision log.
+- Defined persistent UI-language preferences, localized guidance/manual architecture, first-run tutorial FSM, future Prompt Builder FSM, Terminology concepts and interoperability evaluation boundaries.
+- No application behavior was changed in Phase A.
