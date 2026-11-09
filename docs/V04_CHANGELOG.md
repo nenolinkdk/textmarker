@@ -57,3 +57,9 @@
 - Added the v0.4.1 specification, architecture, implementation plan and decision log.
 - Defined persistent UI-language preferences, localized guidance/manual architecture, first-run tutorial FSM, future Prompt Builder FSM, Terminology concepts and interoperability evaluation boundaries.
 - No application behavior was changed in Phase A.
+
+## v0.4.1 Phase B
+
+- Verified 46 automated tests and the existing packaged startup/resource-loading hotfix.
+- Recorded the missing packaged project-workflow GUI controls as an integration blocker.
+- No application code or EXE was changed because no baseline defect was reproduced.

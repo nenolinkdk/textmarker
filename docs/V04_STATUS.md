@@ -39,3 +39,10 @@
 - Base: verified v0.4 hotfix commit `da198e2`.
 - Phase A documentation is complete; no GUI, scanner, file-format or release changes were made.
 - Phase B is intentionally pending approval.
+
+## v0.4.1 Phase B
+
+- Baseline suite: **46 passed, 0 failed**.
+- Packaged startup/resource smoke: passed with the existing hotfix EXE.
+- Complete packaged project workflow: blocked by missing AppShell controls for project/rule-pack association and project scanning.
+- Module-specific packaged E2E and Microsoft Word manual acceptance remain pending.

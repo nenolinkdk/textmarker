@@ -19,3 +19,7 @@ The first-run tutorial uses bundled synthetic files and local outputs. It has no
 ## D-041-005: Interoperability claims
 
 TBX, TMX, XLIFF and Trados compatibility will be reported as fixture-based observations only. No format support is implied by this design phase.
+
+## D-041-006: Phase B scope control
+
+The existing AppShell exposes module routes but not the complete project/rule-pack scanning workflow. Phase B records this as an integration blocker rather than adding unapproved Phase C usability functionality. No defect was fixed because no regression in the verified v0.4 baseline was reproduced.
