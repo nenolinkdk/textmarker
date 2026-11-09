@@ -6,7 +6,7 @@ Deliverables: SQLite schema, migrations, repository, backup/restore and determin
 
 ## Phase C — terminology GUI and CSV
 
-Deliverables: concept/term editor, search/filter, explicit customer-column mapping, import error report and safe canonical export. Tests: CRUD, multilingual entries, round trip, duplicate review and no-overwrite.
+Deliverables: concept/term editor, search/filter, CSV preview/validation and safe canonical export. Phase C completed the GUI and canonical import/export; arbitrary customer-column mapping profiles and full import error dialog remain before this phase can be considered complete. Tests: CRUD, multilingual entries, round trip, duplicate review and no-overwrite.
 
 ## Phase D — FSM Prompt Builder
 

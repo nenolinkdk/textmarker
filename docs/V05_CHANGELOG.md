@@ -8,3 +8,12 @@
 - Added integrity checks, backup/recovery and unsupported newer-schema protection.
 - Added 9 terminology repository tests; complete suite: **55 passed**.
 - No GUI, import/export, TBX or scanner integration was added.
+
+## Phase C
+
+- Added Terminology workspace to AppShell with CRUD/search/filter and destructive-operation confirmations.
+- Added transaction-safe canonical terminology CSV preview/import/export with UTF-8/BOM, delimiter detection, duplicate validation and no-overwrite export.
+- Added GUI/CSV regression tests; complete suite: **59 passed**.
+- Interactive customer-column mapping profiles remain a follow-up limitation; TBX, scanner projection and Prompt Builder remain out of scope.
+
+Packaged v0.5 TEST build completed with the Terminology module included. Microsoft Word, TBX and end-user customer-spreadsheet acceptance remain outside this phase.

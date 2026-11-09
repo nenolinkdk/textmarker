@@ -200,6 +200,19 @@ class TerminologyRepository:
         except sqlite3.IntegrityError as exc: raise ValueError(f'Duplicate or invalid term entry: {result.term_id}') from exc
         return result
 
+    def import_batch(self, concepts: Iterable[Concept], terms: Iterable[TermEntry]) -> None:
+        """Insert a validated batch in one transaction; rollback is automatic."""
+        concepts=list(concepts); terms=list(terms); now=_now()
+        with self._connect() as conn:
+            for concept in concepts:
+                item=Concept(concept.concept_id,concept.definition,concept.subject_field,concept.notes,concept.client_id,concept.project_id,concept.source_reference,concept.created_at or now,concept.updated_at or now)
+                conn.execute('INSERT INTO concepts(concept_id,definition,subject_field,notes,client_id,project_id,source_reference,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)',tuple(item.__dict__.values()))
+            for term in terms:
+                language=normalize_language_tag(term.language)
+                if term.status not in TERM_STATUSES or not term.term.strip(): raise ValueError(f'Invalid term: {term.term_id}')
+                item=TermEntry(term.term_id,term.concept_id,language,term.term,term.status,term.source_reference,term.grammatical_info,term.created_at or now,term.updated_at or now)
+                conn.execute('INSERT INTO term_entries VALUES(?,?,?,?,?,?,?,?,?,?)',(item.term_id,item.concept_id,item.language,item.term,item.term.casefold(),item.status,item.source_reference,item.grammatical_info,item.created_at,item.updated_at))
+
     def get_term(self, term_id: str) -> TermEntry:
         with self._connect() as conn: row = conn.execute('SELECT term_id,concept_id,language,term,status,source_reference,grammatical_info,created_at,updated_at FROM term_entries WHERE term_id=?',(term_id,)).fetchone()
         if not row: raise KeyError(term_id)
