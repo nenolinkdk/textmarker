@@ -26,3 +26,10 @@
 - Tilføjet lokal Prompt Library med seks templates og custom prompt save.
 - Ingen external AI API, cloud upload eller TBX.
 - Phase D suite: 42 passed.
+
+## Phase E
+
+- Added exact v0.2/v0.3/v0.4 CSV schema detection; ambiguous headers are rejected.
+- Added persistent rule enable/disable/remove operations and project active-pack validation.
+- Added explicit DA scanner integration adapter with language-pair checks.
+- Complete suite: 43 passed.

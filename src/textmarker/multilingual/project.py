@@ -21,3 +21,13 @@ class ProjectStore:
     def load(self):
         if not self.path.exists(): raise FileNotFoundError(self.path)
         data=json.loads(self.path.read_text(encoding='utf-8')); return ProjectProfile(**data).validate()
+
+    def associate_rule_packs(self, pack_ids):
+        profile=self.load(); profile.rule_pack_ids=sorted(set(pack_ids)); profile.validate(); self.save(profile)
+
+    def valid_rule_packs(self, available):
+        profile=self.load(); available=set(available); return [p for p in profile.rule_pack_ids if p in available]
+
+def validate_pack_pair(pack, source, target):
+    if pack.source_language!=source or pack.target_language!=target:
+        raise ValueError(f'Rule pack {pack.pack_id} matches {pack.source_language}->{pack.target_language}, not {source}->{target}')

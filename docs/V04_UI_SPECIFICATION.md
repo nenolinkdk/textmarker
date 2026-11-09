@@ -9,3 +9,5 @@ Alle inputfelter har label, kort forklaring, default hvor sikkert, vælger og in
 `AppShell` er 1180×700 som default med 960×540 minimum, egnet til 1366×768 og Qt display scaling. Glossaries & Rules og Prompt Library er synligt markeret Phase D og er ikke funktionelle processing-moduler. Eksisterende modulers processing forbliver i deres egne kompatible vinduer.
 
 Phase D gør begge sektioner funktionelle: Glossaries & Rules importerer og viser lokale packs; Prompt Library viser lokale templates og gemmer custom prompts. UI’en antyder ikke, at en pack er aktiv under scanning, før project activation er implementeret.
+
+Phase E tilføjer enable/disable og remove for valgte managed rules; import valideres før storage. Fuld edit-formular og project-pack assignment controls er fortsat begrænset.

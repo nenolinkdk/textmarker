@@ -9,3 +9,5 @@ Canonical version `1` er JSON/CSV-kompatibel og kræver:
 Import-adapters for v0.2/v0.3 validerer gamle headers eksplicit og udfylder ikke skjulte semantikker. Gamle filer eksporteres uændret; canonical export bruger versioneret schema. Duplicate IDs, ukendte enums, malformed rows og inkonsistent delimiter afvises.
 
 Phase D `RulePackStore` gemmer canonical packs som separate lokale UTF-8 CSV-filer. Importerede kilder ændres ikke, og duplicate pack IDs afvises. Den nuværende UI understøtter import/search/display; fuld individuel edit/enable/disable/remove og project activation er fortsat opfølgning.
+
+Phase E detects exact headers for v0.2, v0.3 and canonical v0.4 before conversion. Managed packs support persistent enable/disable/remove.

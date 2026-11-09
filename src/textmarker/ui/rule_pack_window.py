@@ -1,9 +1,10 @@
 from pathlib import Path
+from dataclasses import replace
 from PySide6.QtWidgets import QHBoxLayout,QLabel,QLineEdit,QListWidget,QMainWindow,QPushButton,QTableWidget,QTableWidgetItem,QVBoxLayout,QWidget,QFileDialog,QMessageBox
 from textmarker.multilingual.rule_packs import RulePackStore
 class RulePackWindow(QMainWindow):
     def __init__(self):
-        super().__init__(); self.setWindowTitle('Glossaries & Rules — v0.4'); self.resize(800,550); self.store=RulePackStore(Path.home()/'.nenolink'/'rule_packs'); self.search=QLineEdit(); self.search.setPlaceholderText('Søg i regler…'); self.search.textChanged.connect(self.refresh); self.packs=QListWidget(); self.packs.currentTextChanged.connect(self.refresh); self.table=QTableWidget(0,7); self.table.setHorizontalHeaderLabels(['Rule ID','Source','Target','Expression','Category','Severity','Enabled']); self.import_button=QPushButton('Importér CSV'); self.import_button.clicked.connect(self.import_csv); self.status=QLabel('Lokale rule packs'); l=QVBoxLayout(); l.addWidget(QLabel('Glossaries & Rules')); l.addWidget(QLabel('Importer en regel-/glossaryfil; gamle schemas valideres via eksplicit adapter.')); l.addWidget(self.search); l.addWidget(self.packs); l.addWidget(self.table); l.addWidget(self.import_button); l.addWidget(self.status); w=QWidget(); w.setLayout(l); self.setCentralWidget(w); self.refresh_packs()
+        super().__init__(); self.setWindowTitle('Glossaries & Rules — v0.4'); self.resize(800,550); self.store=RulePackStore(Path.home()/'.nenolink'/'rule_packs'); self.search=QLineEdit(); self.search.setPlaceholderText('Søg i regler…'); self.search.textChanged.connect(self.refresh); self.packs=QListWidget(); self.packs.currentTextChanged.connect(self.refresh); self.table=QTableWidget(0,7); self.table.setHorizontalHeaderLabels(['Rule ID','Source','Target','Expression','Category','Severity','Enabled']); self.import_button=QPushButton('Importér CSV'); self.import_button.clicked.connect(self.import_csv); self.toggle_button=QPushButton('Aktivér/deaktivér valgt'); self.toggle_button.clicked.connect(self.toggle_rule); self.remove_button=QPushButton('Fjern valgt regel'); self.remove_button.clicked.connect(self.remove_rule); self.status=QLabel('Lokale rule packs'); l=QVBoxLayout(); l.addWidget(QLabel('Glossaries & Rules')); l.addWidget(QLabel('Importer en regel-/glossaryfil; gamle schemas valideres via eksplicit adapter.')); l.addWidget(self.search); l.addWidget(self.packs); l.addWidget(self.table); l.addWidget(self.import_button); l.addWidget(self.toggle_button); l.addWidget(self.remove_button); l.addWidget(self.status); w=QWidget(); w.setLayout(l); self.setCentralWidget(w); self.refresh_packs()
     def refresh_packs(self): self.packs.clear(); self.packs.addItems([p.stem for p in self.store.list()]); self.refresh()
     def refresh(self):
         if not self.packs.currentItem(): self.table.setRowCount(0); return
@@ -18,3 +19,9 @@ class RulePackWindow(QMainWindow):
         if not path: return
         try: self.store.import_csv(path,Path(path).stem,Path(path).stem); self.refresh_packs()
         except Exception as e: QMessageBox.critical(self,'Import fejlede',str(e))
+    def toggle_rule(self):
+        if not self.packs.currentItem() or self.table.currentRow()<0: return
+        pack=self.store.load(self.packs.currentItem().text()); rid=self.table.item(self.table.currentRow(),0).text(); rule=next(r for r in pack.rules if r.rule_id==rid); self.store.update_rule(pack.pack_id,replace(rule,enabled=not rule.enabled)); self.refresh()
+    def remove_rule(self):
+        if not self.packs.currentItem() or self.table.currentRow()<0: return
+        pack=self.store.load(self.packs.currentItem().text()); rid=self.table.item(self.table.currentRow(),0).text(); self.store.remove_rule(pack.pack_id,rid); self.refresh()

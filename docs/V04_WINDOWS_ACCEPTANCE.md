@@ -7,3 +7,5 @@
 - [ ] Legacy rules og canonical rule packs importeres uden tavs reinterpretation.
 - [ ] DOCX outputs åbnes i Microsoft Word uden repair warning.
 - [ ] Ingen telemetry eller dokument-upload observeres under test.
+- [ ] Ambiguous/unsupported CSV schemas afvises med klar fejl.
+- [ ] Project scan afviser missing/incompatible active packs før output-publicering.

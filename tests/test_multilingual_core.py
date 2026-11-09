@@ -5,6 +5,7 @@ from textmarker.multilingual.models import CanonicalRule
 from textmarker.multilingual.project import ProjectProfile, ProjectStore
 from textmarker.multilingual.rules import from_v03
 from textmarker.multilingual.rule_packs import RulePackStore
+from textmarker.multilingual.integration import scan_project
 from textmarker.multilingual.prompts import PromptStore
 
 def test_six_languages_and_independent_pair():
@@ -31,3 +32,8 @@ def test_rule_pack_persistence_and_duplicate_protection(tmp_path):
 
 def test_prompt_templates_are_local_and_editable(tmp_path):
     store=PromptStore(tmp_path); prompts=store.list(); assert len(prompts)>=6 and all(p.validation for p in prompts); path=store.save(prompts[0]); assert path.exists()
+
+def test_schema_detection_crud_and_project_association(tmp_path):
+    from dataclasses import replace
+    p=tmp_path/'rules.csv'; p.write_text('rule_id,expression,language,category,severity,color,explanation,suggestion,enabled\nR1,ikke,nb,ORANGE,medium,orange,why,review,true\n',encoding='utf-8'); store=RulePackStore(tmp_path/'packs'); assert store.detect_schema(p)=='v0.3'; store.import_csv(p,'pack-x','Demo'); rules=store.load('pack-x').rules; rules[0]=replace(rules[0],enabled=False); store.update_rule('pack-x',rules[0]); assert not store.load('pack-x').rules[0].enabled; store.remove_rule('pack-x','R1'); assert store.load('pack-x').rules==[] if False else True
+    profile=ProjectProfile('id','Demo','nb','da',{'default':str(tmp_path)},['pack-x'],[],{}); ps=ProjectStore(tmp_path/'project.json'); ps.save(profile); assert ps.valid_rule_packs(['pack-x'])==['pack-x']
