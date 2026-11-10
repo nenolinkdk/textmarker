@@ -10,7 +10,7 @@ Deliverables: concept/term editor, search/filter, CSV preview/validation and saf
 
 ## Phase D — FSM Prompt Builder
 
-Deliverables: state machine, editable local templates, validation, back/reset/cancel and persistence. Tests: transition table, guards, invalid input, restart and no-network behavior.
+Deliverables: state machine, editable local templates, validation, back/reset/cancel and persistence. Completed in Phase D with explicit guards and 65 passing tests. Packaged wizard click-through remains an acceptance step.
 
 ## Phase E — contextual HTML help and tutorials
 

@@ -25,3 +25,12 @@ Packaged v0.5 TEST build completed with the Terminology module included. Microso
 - Added guided source-column mapping dialog and reusable profile storage with header compatibility checks.
 - Added central application version `0.5.0`.
 - Complete suite: 61 passed.
+
+## Phase D
+
+- Added deterministic Qt-independent Prompt Builder FSM and local editable prompt persistence.
+- Added six review-safe initial templates covering terminology, interference, risk, style, completeness and technical documentation.
+- Added Prompt Builder GUI with editable preview, clipboard copy and local save/reopen.
+- Complete suite: 65 passed.
+
+The v0.5 TEST executable was rebuilt from the Phase D sources; packaged Prompt Builder click-through is still a manual acceptance item.

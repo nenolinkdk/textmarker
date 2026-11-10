@@ -13,3 +13,5 @@ The builder is local, deterministic and editable. It never calls a cloud service
 | SAVED | edit, reset | stored template exists | PREVIEW / SELECT_TASK |
 
 Events `cancel` and `reset` are valid from every non-terminal state and clear transient state without altering the last saved template. Back navigation restores prior inputs. Invalid guards keep the state and expose field-level errors. Templates contain purpose, required input, editable text, expected output, limitations and validation instructions.
+
+Phase D implements this FSM in `textmarker.prompt_builder.fsm`. The GUI is a projection of the FSM state; it does not maintain a second transition model. Local persistence is provided by `PromptStore`; built-in templates are read-only values and user edits are stored under new local IDs.

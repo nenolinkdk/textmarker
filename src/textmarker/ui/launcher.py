@@ -17,6 +17,7 @@ from textmarker.ui.project_workflow import ProjectWorkflow
 from textmarker.ui.tutorial import FirstRunTutorial
 from textmarker.ui.terminology_window import TerminologyWindow
 from textmarker.ui.module_introduction import ModuleIntroduction
+from textmarker.ui.prompt_builder_window import PromptBuilderWindow
 from textmarker.version import WINDOW_TITLE, APP_VERSION
 WordIndexPlaceholder = WordIndexWindow
 
@@ -37,7 +38,7 @@ class AppShell(QMainWindow):
         for name in ['Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory']:
             page=ModuleIntroduction(name,self.translator.locale,lambda n=name:self.open_module(self.factories[n]),parent=self); self.pages.addWidget(page)
         page=ModuleIntroduction('Terminology',self.translator.locale,lambda:self.open_module(TerminologyWindow),parent=self); self.pages.addWidget(page)
-        for name,factory in [('Glossaries & Rules',RulePackWindow),('Prompt Library',PromptLibraryWindow)]:
+        for name,factory in [('Glossaries & Rules',RulePackWindow),('Prompt Library',PromptBuilderWindow)]:
             page=ModuleIntroduction(name,self.translator.locale,lambda f=factory:self.open_module(f),parent=self); self.pages.addWidget(page)
         page=QWidget(); l=QVBoxLayout(page); l.addWidget(ModuleIntroduction('Settings',self.translator.locale,parent=self)); form=QFormLayout(); form.addRow('UI-sprog',self.ui_language); form.addRow('Kildesprog',self.source_language); form.addRow('Målsprog',self.target_language); form.addRow('Projektnavn',self.project_name); form.addRow('Projektmappe',self.project_dir); form.addRow('',save); l.addLayout(form); self.pages.addWidget(page)
         page=ModuleIntroduction('Help',self.translator.locale,parent=self); self.pages.addWidget(page)

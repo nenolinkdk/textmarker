@@ -37,3 +37,11 @@ Known limitation: migration backups are retained beside the database and are not
 - Added interactive CSV mapping dialog with language selection and validation, plus local mapping-profile persistence API.
 - Complete suite: **61 passed, 0 failed**.
 - Packaged build completed; process started responsive. Direct packaged click-through of the mapping dialog remains pending in this desktop session.
+
+## Phase D — Prompt Builder
+
+- Added Qt-independent deterministic FSM with explicit states, guards, Back, Reset, Edit and Save transitions.
+- Added local PromptStore CRUD, search, duplicate and text export, with six initial review templates.
+- Added Prompt Builder window in the Prompt Library route with task/language/domain/criteria/output steps, editable preview, clipboard copy and local save/reopen.
+- Complete suite: **65 passed, 0 failed**.
+- Final packaged build completed; the executable process started and remained responsive. Full wizard click-through remains pending in the current desktop session.

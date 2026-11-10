@@ -20,6 +20,10 @@ def test_module_introductions_cover_all_routes_and_help_targets():
     html=(Path(__file__).parents[1]/'docs'/'manual'/'help.html').read_text(encoding='utf-8')
     assert all(f'id="{help_id}"' in html for _,help_id in MODULES)
 
+def test_prompt_library_route_uses_builder():
+    from textmarker.ui.prompt_builder_window import PromptBuilderWindow
+    app=QApplication.instance() or QApplication([]); shell=Launcher(); shell.select_page(9); assert shell.nav.item(9).text().startswith('Prompt Library'); window=PromptBuilderWindow(); assert window.fsm.state.value=='SELECT_TASK'; window.close(); shell.close()
+
 def test_word_index_gui_exposes_inventory_and_safe_controls():
     app=QApplication.instance() or QApplication([]); window=WordIndexWindow()
     assert window.inventory.isChecked()
