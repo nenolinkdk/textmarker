@@ -55,3 +55,4 @@ The v0.5 TEST executable was rebuilt from the Phase D sources; packaged Prompt B
 - Added explicit help anchors for DA-interference rules and the first-run tutorial.
 - Added release-candidate acceptance evidence and separated automated, packaged and manual Word verification statuses.
 - Rewrote Danish and English module introductions with concrete source material, settings, processing, outputs and linguistic review use; added a twelve-module documentation coverage matrix.
+- Rebuilt the Windows TEST executable after the introduction-text update; packaged startup remained responsive.
