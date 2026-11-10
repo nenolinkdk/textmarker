@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QApplication,QFileDialog,QFormLayout,QHBoxLayout,Q
 from textmarker.risk.rules import parse_risk_rules
 from textmarker.risk.scanner import scan_and_write
 from textmarker.docx.highlighter import CancelledError
-from textmarker.ui.result_controls import ResultRow, HelpLinks
+from textmarker.ui.result_controls import ResultRow, HelpLinks, open_help_anchor
 
 class RiskWorker(QObject):
     progress=Signal(int); done=Signal(object); error=Signal(str)
@@ -68,7 +68,7 @@ class RiskWindow(QMainWindow):
     def open_output_folder(self):
         if getattr(self,'last_output',None): QDesktopServices.openUrl(QUrl.fromLocalFile(str(Path(self.last_output).parent)))
     def open_help(self, anchor):
-        root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3])); QDesktopServices.openUrl(QUrl.fromLocalFile(str(root/'docs'/'manual'/'help.html')+'#'+anchor))
+        open_help_anchor(anchor,self)
 
 def main():
     app=QApplication([]); w=RiskWindow(); w.resize(620,280); w.show(); app.exec()

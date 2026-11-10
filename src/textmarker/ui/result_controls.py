@@ -2,11 +2,19 @@ import os, sys
 from pathlib import Path
 from PySide6.QtCore import QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QWidget
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QWidget, QMessageBox
 
 def resource_file(relative):
     root = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[3]))
     return root / relative
+
+def open_help_anchor(anchor, parent=None):
+    path=resource_file('docs/manual/help.html')
+    if not path.is_file():
+        if parent: QMessageBox.warning(parent,'Hjælp mangler',f'Offline-manualen blev ikke fundet: {path}')
+        return False
+    url=QUrl.fromLocalFile(str(path)); url.setFragment(anchor)
+    return QDesktopServices.openUrl(url)
 
 class ResultRow(QWidget):
     """Compact result controls; path is always set from the committed output."""
@@ -27,4 +35,4 @@ class HelpLinks(QWidget):
         for label,anchor in anchors:
             button=QPushButton(label); button.clicked.connect(lambda _,a=anchor:self.open_anchor(a)); row.addWidget(button)
     def open_anchor(self, anchor):
-        QDesktopServices.openUrl(QUrl.fromLocalFile(str(resource_file('docs/manual/help.html')) + '#' + anchor))
+        open_help_anchor(anchor,self)

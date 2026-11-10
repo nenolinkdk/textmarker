@@ -65,3 +65,15 @@ def test_help_resources_and_tutorial_lifecycle():
     from textmarker.ui.tutorial import FirstRunTutorial
     assert (Path(__file__).parents[1]/'docs'/'manual'/'USER_MANUAL_EN.pdf').exists()
     tutorial=FirstRunTutorial(); assert tutorial.next.isEnabled() and tutorial.back.isEnabled() is False; tutorial.forward(); assert tutorial.index==1; tutorial.reject()
+
+def test_danish_shell_uses_danish_control_labels_and_dashboard_opens_settings():
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('da'))
+    assert shell.header_label.text()=='Grænsefladesprog'; assert shell.context_toggle.text()=='Skjul hjælp'
+    shell.select_page(0); page=shell.pages.currentWidget(); page.open.click(); assert shell.nav.currentRow()==10; shell.close()
+
+def test_help_anchor_is_a_fragment_on_bundled_html_file():
+    from textmarker.ui.result_controls import resource_file
+    from PySide6.QtCore import QUrl
+    path=resource_file('docs/manual/help.html'); assert path.is_file()
+    url=QUrl.fromLocalFile(str(path)); url.setFragment('scanner.overview')
+    assert url.fragment()=='scanner.overview' and url.path().endswith('help.html')
