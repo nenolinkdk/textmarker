@@ -41,3 +41,10 @@ The v0.5 TEST executable was rebuilt from the Phase D sources; packaged Prompt B
 - Documented Prompt Builder and added its offline help anchor.
 - Added explicit generated-concept-ID choice to customer CSV import.
 - Complete suite: 67 passed.
+
+## Phase F
+
+- Completed mapping profile controls and explicit generated-concept-ID option.
+- Added bundled DA-interference rule example and documented actual CSV schema.
+- Added linguistic-purpose/help documentation and Phase F acceptance matrix.
+- Final suite: 68 passed.

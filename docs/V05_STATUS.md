@@ -53,3 +53,11 @@ Known limitation: migration backups are retained beside the database and are not
 - Added generated concept-ID option to guided CSV import; explicit mapping remains required for term and language, and concepts are never silently merged.
 - Added regression coverage: **67 passed, 0 failed**.
 - Final packaged GUI click-through remains limited by the desktop session; startup is verified after the final build.
+
+## Phase F — final GUI completion and Windows acceptance
+
+- Added GUI mapping-profile save, select, compatibility validation and delete controls.
+- Added explicit generated concept-ID import option and bundled DA-interference CSV example using the actual supported schema.
+- Added linguistic-purpose prose and scanner/rule documentation anchors.
+- Final automated suite: **68 passed, 0 failed**.
+- Acceptance matrix: `V05_PHASE_F_ACCEPTANCE.md`.

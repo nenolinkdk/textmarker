@@ -34,3 +34,7 @@ def test_mapping_profiles_validate_headers(tmp_path):
 def test_generated_concept_ids_are_stable_for_import_batch(tmp_path):
     source=tmp_path/'bilingual.csv'; source.write_text('English,Dansk\ncolour,farve\n',encoding='utf-8')
     repo=TerminologyRepository(tmp_path/'terms.sqlite'); result=import_csv(repo,source,{'term':'Dansk'},'da',True); assert result['concepts']==1; terms=repo.search(); assert terms[0].concept_id.startswith('concept_')
+
+def test_bundled_da_rules_example_has_actual_supported_schema():
+    from textmarker.da_interference import load_rules
+    rules=load_rules('data/examples/da_interference_rules.csv'); assert len(rules)==3 and rules[0].rule_id=='DA001'

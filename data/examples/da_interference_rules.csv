@@ -1,0 +1,4 @@
+rule_id,expression,language,category,severity,color,explanation,suggestion,enabled
+DA001,eventuelt,nb,ORANGE,medium,orange,Norsk eventuelt kan få en anden betydning på dansk,Kontrollér konteksten og den danske formulering,true
+DA002,aktuell,nb,RED,high,red,Falsk ven mellem norsk og dansk,Kontrollér den tilsigtede betydning i kildeteksten,true
+DA003,skal,nb,YELLOW,low,yellow,Modalitet bør vurderes i målteksten,Kontrollér register og modalitet,true

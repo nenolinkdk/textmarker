@@ -5,16 +5,30 @@ from textmarker.terminology.repository import Concept, TermEntry, TerminologyRep
 from textmarker.terminology.csv_io import CANONICAL_FIELDS, MappingProfileStore, export_csv, import_csv, preview_csv
 
 class CsvMappingDialog(QDialog):
-    def __init__(self,preview,parent=None):
+    def __init__(self,preview,profiles,parent=None):
         super().__init__(parent); self.setWindowTitle('Map CSV-kolonner'); self.mapping={}; form=QFormLayout(self); options=['(ingen)']+list(preview.headers); self.boxes={}
         for field in CANONICAL_FIELDS:
             box=QComboBox(); box.addItems(options); box.setProperty('help_id','terminology.column-mapping'); self.boxes[field]=box; form.addRow(field,box)
+        self.profiles=profiles; self.profile=QComboBox(); self.profile.addItem('(ingen)'); self.profile.addItems(profiles.list()); self.load_profile=QPushButton('Brug profil'); self.save_profile=QPushButton('Gem profil'); self.delete_profile=QPushButton('Slet profil'); row=QHBoxLayout(); [row.addWidget(x) for x in (self.profile,self.load_profile,self.save_profile,self.delete_profile)]; form.addRow('Mapping profile',row); self.load_profile.clicked.connect(self.use_profile); self.save_profile.clicked.connect(self.save); self.delete_profile.clicked.connect(self.delete)
         self.language=QLineEdit(); self.generate=QCheckBox('Generér nye concept IDs'); form.addRow('Standard language (valgfri)',self.language); form.addRow(self.generate); buttons=QDialogButtonBox(QDialogButtonBox.StandardButton.Ok|QDialogButtonBox.StandardButton.Cancel); form.addRow(buttons); buttons.accepted.connect(self.accept); buttons.rejected.connect(self.reject)
     def result(self): return ({k:v.currentText() for k,v in self.boxes.items() if v.currentText()!='(ingen)'},self.language.text().strip() or None,self.generate.isChecked())
+    def use_profile(self):
+        if self.profile.currentText()=='(ingen)': return
+        try:
+            item=self.profiles.load(self.profile.currentText(),tuple(self.boxes['term'].itemText(i) for i in range(1,self.boxes['term'].count())))
+            for field,column in item['mapping'].items(): self.boxes[field].setCurrentText(column)
+            if item.get('language'): self.language.setText(item['language'])
+        except Exception as exc: QMessageBox.warning(self,'Profil passer ikke',str(exc))
+    def save(self):
+        name,ok=QInputDialog.getText(self,'Gem mapping profile','Navn:')
+        if ok and name:
+            mapping,language,_=self.result(); headers=tuple(self.boxes['term'].itemText(i) for i in range(1,self.boxes['term'].count())); self.profiles.save(name,headers,mapping,language); self.profile.addItem(name)
+    def delete(self):
+        if self.profile.currentText()!='(ingen)' and QMessageBox.question(self,'Bekræft','Slet mapping profile?')==QMessageBox.StandardButton.Yes: self.profiles.delete(self.profile.currentText()); self.profile.removeItem(self.profile.currentIndex())
 
 class TerminologyWindow(QMainWindow):
     def __init__(self, database=None):
-        super().__init__(); self.setWindowTitle('Terminology'); self.resize(850,600); self.repo=TerminologyRepository(database or Path.home()/'.nenolink'/'terminology.sqlite'); self.current=None
+        super().__init__(); self.setWindowTitle('Terminology'); self.resize(850,600); self.repo=TerminologyRepository(database or Path.home()/'.nenolink'/'terminology.sqlite'); self.profile_store=MappingProfileStore(Path.home()/'.nenolink'/'mapping_profiles.json'); self.current=None
         self.search=QLineEdit(); self.search.setPlaceholderText('Søg term eller concept ID'); self.language=QLineEdit(); self.subject=QLineEdit(); self.status_filter=QComboBox(); self.status_filter.addItem('Alle',''); [self.status_filter.addItem(x,x) for x in sorted(TERM_STATUSES)]
         self.concepts=QListWidget(); self.terms=QListWidget(); self.definition=QLineEdit(); self.subject_edit=QLineEdit(); self.term=QLineEdit(); self.term_language=QLineEdit('da'); self.term_status=QComboBox(); [self.term_status.addItem(x,x) for x in sorted(TERM_STATUSES)]
         self.add_concept=QPushButton('Nyt concept'); self.save_concept=QPushButton('Gem concept'); self.delete_concept=QPushButton('Slet concept'); self.add_term=QPushButton('Tilføj term'); self.remove_term=QPushButton('Fjern term'); self.import_button=QPushButton('Importér CSV'); self.export_button=QPushButton('Eksportér CSV')
@@ -51,7 +65,7 @@ class TerminologyWindow(QMainWindow):
         path=QFileDialog.getOpenFileName(self,'Importér terminology CSV','','CSV (*.csv)')[0]
         if not path: return
         try:
-            preview=preview_csv(path); dialog=CsvMappingDialog(preview,self)
+            preview=preview_csv(path); dialog=CsvMappingDialog(preview,self.profile_store,self)
             if dialog.exec()!=QDialog.DialogCode.Accepted: return
             mapping,language,generate=dialog.result(); errors=[]
             if not mapping.get('concept_id') and not generate: errors.append('Map concept_id eller vælg generering af IDs')
