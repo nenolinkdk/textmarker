@@ -75,3 +75,4 @@ Known limitation: migration backups are retained beside the database and are not
 - Phase H added `V05_PHASE_H_WINDOWS_CHECKLIST.md` and expanded the three rule-schema procedures. Since the current HEAD is newer than the previous RC build, a fresh build is required for final provenance.
 - Phase H RC build from `b3e930253a0b5951e98194f724a1b3cacb4899c`: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 51,947,979 bytes, SHA-256 `FE3D862F16FE2B0A2BA21DBF81352469C0D5E3FF190C525AA5A7EA6D1A4E0ACE`; separate-process startup remained responsive.
 - Phase I added localized module-introduction action labels and the control inventory `V05_PHASE_I_CONTROL_INVENTORY.md`; full per-window locale cleanup and packaged click-through remain acceptance work.
+- Phase I TEST build from `c590e90da66c2b57ed08a52d0d3fcc9e899f6d7e`: 51,948,592 bytes, SHA-256 `C534E9666768A4591743569BB452907C15E7FB91E20340418DEBE1AEDAF449B6`; separate-process startup remained responsive.
