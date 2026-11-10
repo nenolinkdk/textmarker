@@ -45,3 +45,11 @@ Known limitation: migration backups are retained beside the database and are not
 - Added Prompt Builder window in the Prompt Library route with task/language/domain/criteria/output steps, editable preview, clipboard copy and local save/reopen.
 - Complete suite: **65 passed, 0 failed**.
 - Final packaged build completed; the executable process started and remained responsive. Full wizard click-through remains pending in the current desktop session.
+
+## Phase E — complete user experience
+
+- Added two connected prose paragraphs for each of the 12 module introductions in all six locale resources, while retaining structured INPUT/OUTPUT/USE/WORKFLOW sections.
+- Added Prompt Builder help anchor and documentation for templates, editing, saving, reopening, copying, confidentiality and limitations.
+- Added generated concept-ID option to guided CSV import; explicit mapping remains required for term and language, and concepts are never silently merged.
+- Added regression coverage: **67 passed, 0 failed**.
+- Final packaged GUI click-through remains limited by the desktop session; startup is verified after the final build.

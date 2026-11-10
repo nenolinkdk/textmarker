@@ -4,6 +4,7 @@ import csv, io
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from uuid import uuid4
 from .repository import Concept, TermEntry, TerminologyRepository, TERM_STATUSES, normalize_language_tag
 
 CANONICAL_FIELDS=('concept_id','term_id','language','term','definition','subject_field','source_reference','approval_status','client_id','project_id')
@@ -44,25 +45,26 @@ def preview_csv(path: str|Path) -> CsvPreview:
     rows=tuple({str(k).strip():(v or '').strip() for k,v in row.items() if k is not None} for row in reader)
     return CsvPreview(headers,rows,encoding,dialect.delimiter)
 
-def validate_mapping(preview: CsvPreview, mapping: dict[str,str], default_language: str|None=None) -> list[str]:
+def validate_mapping(preview: CsvPreview, mapping: dict[str,str], default_language: str|None=None, generate_concept_ids=False) -> list[str]:
     errors=[]
     required=('term','concept_id')
     for field in required:
+        if field=='concept_id' and generate_concept_ids: continue
         if not mapping.get(field): errors.append(f'Mangler mapping for {field}')
     if not mapping.get('language') and not default_language: errors.append('Vælg et sprog eller map language-kolonnen')
     if mapping.get('approval_status') and any(row.get(mapping['approval_status'],'') and row[mapping['approval_status']] not in TERM_STATUSES for row in preview.rows): errors.append('Ugyldig approval_status')
     for index,row in enumerate(preview.rows,2):
         if not row.get(mapping.get('term',''), '').strip(): errors.append(f'Række {index}: term mangler')
-        if not row.get(mapping.get('concept_id',''), '').strip(): errors.append(f'Række {index}: concept_id mangler')
+        if not generate_concept_ids and not row.get(mapping.get('concept_id',''), '').strip(): errors.append(f'Række {index}: concept_id mangler')
     return errors
 
-def import_csv(repo: TerminologyRepository, path: str|Path, mapping: dict[str,str], default_language: str|None=None) -> dict:
-    preview=preview_csv(path); errors=validate_mapping(preview,mapping,default_language)
+def import_csv(repo: TerminologyRepository, path: str|Path, mapping: dict[str,str], default_language: str|None=None, generate_concept_ids=False) -> dict:
+    preview=preview_csv(path); errors=validate_mapping(preview,mapping,default_language,generate_concept_ids)
     if errors: raise ValueError('; '.join(errors))
     language=normalize_language_tag(default_language) if default_language else None
     concepts={}; terms=[]
     for row in preview.rows:
-        cid=row[mapping['concept_id']]; lang=normalize_language_tag(row[mapping['language']]) if mapping.get('language') and row.get(mapping['language']) else language
+        cid=(row[mapping['concept_id']] if mapping.get('concept_id') and row.get(mapping['concept_id']) else 'concept_'+uuid4().hex) if generate_concept_ids else row[mapping['concept_id']]; lang=normalize_language_tag(row[mapping['language']]) if mapping.get('language') and row.get(mapping['language']) else language
         if cid not in concepts: concepts[cid]=Concept(cid,row.get(mapping.get('definition',''),'') if mapping.get('definition') else '',row.get(mapping.get('subject_field',''),'') if mapping.get('subject_field') else '',client_id=row.get(mapping.get('client_id','')) if mapping.get('client_id') else None,project_id=row.get(mapping.get('project_id','')) if mapping.get('project_id') else None,source_reference=row.get(mapping.get('source_reference','')) if mapping.get('source_reference') else None)
         terms.append(TermEntry(row.get(mapping.get('term_id',''),'') or f'{cid}_{len(terms)+1}',cid,lang,row[mapping['term']],row.get(mapping.get('approval_status',''),'proposed') if mapping.get('approval_status') else 'proposed',source_reference=row.get(mapping.get('source_reference','')) if mapping.get('source_reference') else None))
     # Validate all data before opening the write transaction.

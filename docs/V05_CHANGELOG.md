@@ -34,3 +34,10 @@ Packaged v0.5 TEST build completed with the Terminology module included. Microso
 - Complete suite: 65 passed.
 
 The v0.5 TEST executable was rebuilt from the Phase D sources; packaged Prompt Builder click-through is still a manual acceptance item.
+
+## Phase E
+
+- Expanded all 12 module introduction pages with localized prose and retained structured input/output guidance.
+- Documented Prompt Builder and added its offline help anchor.
+- Added explicit generated-concept-ID choice to customer CSV import.
+- Complete suite: 67 passed.

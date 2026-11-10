@@ -30,3 +30,7 @@ def test_mapping_profiles_validate_headers(tmp_path):
     store=MappingProfileStore(tmp_path/'profiles.json'); headers=('Term','Language'); store.save('customer',headers,{'term':'Term','language':'Language'},'da'); assert store.load('customer',headers)['mapping']['term']=='Term'
     with pytest.raises(ValueError): store.load('customer',('Changed',))
     store.delete('customer'); assert store.list()==[]
+
+def test_generated_concept_ids_are_stable_for_import_batch(tmp_path):
+    source=tmp_path/'bilingual.csv'; source.write_text('English,Dansk\ncolour,farve\n',encoding='utf-8')
+    repo=TerminologyRepository(tmp_path/'terms.sqlite'); result=import_csv(repo,source,{'term':'Dansk'},'da',True); assert result['concepts']==1; terms=repo.search(); assert terms[0].concept_id.startswith('concept_')

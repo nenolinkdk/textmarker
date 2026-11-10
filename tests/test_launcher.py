@@ -24,6 +24,10 @@ def test_prompt_library_route_uses_builder():
     from textmarker.ui.prompt_builder_window import PromptBuilderWindow
     app=QApplication.instance() or QApplication([]); shell=Launcher(); shell.select_page(9); assert shell.nav.item(9).text().startswith('Prompt Library'); window=PromptBuilderWindow(); assert window.fsm.state.value=='SELECT_TASK'; window.close(); shell.close()
 
+def test_introductions_have_two_prose_paragraphs_in_all_locales():
+    from textmarker.ui.module_introduction import MODULES, _PROSE
+    assert all(len(_PROSE[locale][module])==2 and all(len(p.split())>=20 for p in _PROSE[locale][module]) for locale in ('da','sv','nb','en','de','fr') for module,_ in MODULES)
+
 def test_word_index_gui_exposes_inventory_and_safe_controls():
     app=QApplication.instance() or QApplication([]); window=WordIndexWindow()
     assert window.inventory.isChecked()
