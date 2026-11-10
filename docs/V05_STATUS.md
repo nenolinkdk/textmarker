@@ -76,3 +76,4 @@ Known limitation: migration backups are retained beside the database and are not
 - Phase H RC build from `b3e930253a0b5951e98194f724a1b3cacb4899c`: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 51,947,979 bytes, SHA-256 `FE3D862F16FE2B0A2BA21DBF81352469C0D5E3FF190C525AA5A7EA6D1A4E0ACE`; separate-process startup remained responsive.
 - Phase I added localized module-introduction action labels and the control inventory `V05_PHASE_I_CONTROL_INVENTORY.md`; full per-window locale cleanup and packaged click-through remain acceptance work.
 - Phase I TEST build from `c590e90da66c2b57ed08a52d0d3fcc9e899f6d7e`: 51,948,592 bytes, SHA-256 `C534E9666768A4591743569BB452907C15E7FB91E20340418DEBE1AEDAF449B6`; separate-process startup remained responsive.
+- Phase I.1 added direct risk-scanner file/result controls, a copyable Norwegian–Danish seven-column example, risk tutorial/manual anchors and regression coverage.
