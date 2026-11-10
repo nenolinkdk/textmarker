@@ -17,4 +17,4 @@ This matrix distinguishes content coverage from packaged click-through testing. 
 | Settings | PASS | PASS | PASS (`settings.overview`) | NOT TESTED | NOT TESTED | NOT TESTED | NOT TESTED |
 | Help | PASS | PASS | PASS (`help.overview`) | PASS (first-run tutorial) | PASS (offline help) | NOT TESTED | NOT TESTED |
 
-The two primary UI locales (Danish and English) now contain module-specific input, processing, output and linguistic-use prose. Swedish, Norwegian Bokmål, German and French retain localized baseline copy and require native linguistic review before release. No tutorial button is presented for modules without an implemented tutorial route.
+The two primary UI locales (Danish and English) contain module-specific input, processing, output and linguistic-use prose. Swedish, Norwegian Bokmål, German and French retain localized baseline copy and require native linguistic review before release. The current tutorial is shared first-run content; module-specific tutorials are not claimed where no dedicated procedure exists. Packaged link status remains NOT TESTED until manual Windows click-through.
