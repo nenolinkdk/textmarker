@@ -48,3 +48,9 @@ The v0.5 TEST executable was rebuilt from the Phase D sources; packaged Prompt B
 - Added bundled DA-interference rule example and documented actual CSV schema.
 - Added linguistic-purpose/help documentation and Phase F acceptance matrix.
 - Final suite: 68 passed.
+
+## Phase G
+
+- Audited the implemented CSV parsers and corrected offline help so Translation Risk, DA-interference and canonical rule-pack schemas are not conflated.
+- Added explicit help anchors for DA-interference rules and the first-run tutorial.
+- Added release-candidate acceptance evidence and separated automated, packaged and manual Word verification statuses.
