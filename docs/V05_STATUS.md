@@ -69,4 +69,4 @@ Known limitation: migration backups are retained beside the database and are not
 - Actual parser audit completed for Translation Risk, DA-interference and canonical v0.4 rule packs. Documentation now distinguishes their schemas and includes `interference.rules` and `tutorial.overview` anchors.
 - Push was attempted and blocked by network connectivity; the exact error is recorded in the Phase G acceptance report. Remote synchronization is not claimed.
 - Packaged startup can be verified, but full packaged GUI click-through and Microsoft Word visual acceptance remain pending in this desktop session.
-- New RC artifact: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 51,943,095 bytes, SHA-256 `A12CCE64CABC1090462C9BCD1B0336594197E2D4B27D557F0B02C3BF6B4E1827`; separate-process startup remained responsive.
+- New RC artifact: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 51,943,095 bytes, SHA-256 `DE5B5B1DFB3904B0D8F8A0A0FACCC6B9DD61FDA7E08A2BAE5487F1B5DF98F22C`; built from `830f4118e90d89e7ea0a84a16d4d316d63e26403`; separate-process startup remained responsive.

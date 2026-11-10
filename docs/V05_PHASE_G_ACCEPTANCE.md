@@ -13,7 +13,7 @@ Statuses are limited to PASS, FAIL, BLOCKED and NOT TESTED.
 | Bundled DA example | PASS | `data/examples/da_interference_rules.csv` loads with DA parser |
 | Offline help IDs/anchors | PASS | Module links resolve; `scanner.rules`, `interference.rules` and `tutorial.overview` present |
 | Packaged startup | PASS | Existing v0.5 executable starts as a separate process and remains responsive |
-| Release-candidate build | PASS | PyInstaller 6.11.1 / Python 3.12.14; built from the Phase G commit; 51,943,095 bytes; SHA-256 `A12CCE64CABC1090462C9BCD1B0336594197E2D4B27D557F0B02C3BF6B4E1827` |
+| Release-candidate build | PASS | PyInstaller 6.11.1 / Python 3.12.14; built from commit `830f4118e90d89e7ea0a84a16d4d316d63e26403`; 51,943,095 bytes; SHA-256 `DE5B5B1DFB3904B0D8F8A0A0FACCC6B9DD61FDA7E08A2BAE5487F1B5DF98F22C` |
 | Packaged Terminology round trip | NOT TESTED | Desktop GUI click-through unavailable in this session |
 | Packaged Prompt Builder | NOT TESTED | Desktop GUI click-through unavailable in this session |
 | Packaged help click-through | NOT TESTED | Process startup was observable; individual clicks were not |
