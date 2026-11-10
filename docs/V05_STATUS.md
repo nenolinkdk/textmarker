@@ -78,3 +78,4 @@ Known limitation: migration backups are retained beside the database and are not
 - Phase I TEST build from `c590e90da66c2b57ed08a52d0d3fcc9e899f6d7e`: 51,948,592 bytes, SHA-256 `C534E9666768A4591743569BB452907C15E7FB91E20340418DEBE1AEDAF449B6`; separate-process startup remained responsive.
 - Phase I.1 added direct risk-scanner file/result controls, a copyable Norwegian–Danish seven-column example, risk tutorial/manual anchors and regression coverage.
 - Phase I.1 TEST build from `ffbaffc8cbd883719002f0c037661811333cef73`: 51,951,859 bytes, SHA-256 `E9AA1047087AFB8C60DE04EE3DEF7575B35FE6F257A32EF172DF7B401E4FB576`; separate-process startup remained responsive.
+- Phase I.2 added shared compact result/help controls to Risk Scanner, Interference Scanner and Word Index. TEST build from `3f4bf2919acbae36dd92ca99ac0b8dbde2a33296`: 51,955,432 bytes, SHA-256 `18C799AE48CF6DB1A0605C6C311A929AC755BBCBC58E44AEDA6DCC24E375F8A8`; separate-process startup remained responsive.
