@@ -70,3 +70,4 @@ Known limitation: migration backups are retained beside the database and are not
 - Push was attempted and blocked by network connectivity; the exact error is recorded in the Phase G acceptance report. Remote synchronization is not claimed.
 - Packaged startup can be verified, but full packaged GUI click-through and Microsoft Word visual acceptance remain pending in this desktop session.
 - New RC artifact: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 51,943,095 bytes, SHA-256 `DE5B5B1DFB3904B0D8F8A0A0FACCC6B9DD61FDA7E08A2BAE5487F1B5DF98F22C`; built from `830f4118e90d89e7ea0a84a16d4d316d63e26403`; separate-process startup remained responsive.
+- Added the documentation coverage matrix in `V05_DOCUMENTATION_COVERAGE.md`. Danish and English now have module-specific linguistic input→processing→output prose; the four other locales remain flagged for native linguistic review.

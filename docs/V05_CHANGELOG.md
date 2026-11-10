@@ -54,3 +54,4 @@ The v0.5 TEST executable was rebuilt from the Phase D sources; packaged Prompt B
 - Audited the implemented CSV parsers and corrected offline help so Translation Risk, DA-interference and canonical rule-pack schemas are not conflated.
 - Added explicit help anchors for DA-interference rules and the first-run tutorial.
 - Added release-candidate acceptance evidence and separated automated, packaged and manual Word verification statuses.
+- Rewrote Danish and English module introductions with concrete source material, settings, processing, outputs and linguistic review use; added a twelve-module documentation coverage matrix.
