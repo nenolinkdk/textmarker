@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QFileDialog, QFormLayout,
 
 from textmarker.file_inventory import FileInventory
 from textmarker.word_index import export_csv, export_txt, index_docx, resource_path
+from textmarker.ui.result_controls import ResultRow, HelpLinks
 
 
 class IndexWorker(QObject):
@@ -47,11 +48,12 @@ class WordIndexWindow(QMainWindow):
         self.stopwords = QCheckBox('Filtrér stopord (100 ord)'); self.stopwords.setChecked(True); self.counts = QCheckBox('Medtag frekvenstal i TXT')
         self.inventory = QCheckBox('Registrér kildedokument i lokal filinventar'); self.inventory.setChecked(True)
         self.format = QComboBox(); self.format.addItems(['CSV', 'TXT']); self.progress = QProgressBar(); self.status = QLabel('Klar')
+        self.result_row=ResultRow(); self.help_links=HelpLinks([('Brugervejledning','wordindex.overview'),('Tutorial','wordindex.interference')])
         form = QFormLayout(); form.addRow('Kildedokument (.docx)', self._browse(self.source, False)); form.addRow('Output', self._browse(self.output, True)); form.addRow('Sprog', self.language); form.addRow('Format', self.format)
         form.addRow('', self.stopwords); form.addRow('', self.counts); form.addRow('', self.inventory)
         self.run_button = QPushButton('Indeksér'); self.cancel_button = QPushButton('Annullér'); self.cancel_button.setEnabled(False); self.run_button.clicked.connect(self.start); self.cancel_button.clicked.connect(self.cancel)
         buttons = QHBoxLayout(); buttons.addWidget(self.run_button); buttons.addWidget(self.cancel_button)
-        layout = QVBoxLayout(); layout.addLayout(form); layout.addLayout(buttons); layout.addWidget(self.progress); layout.addWidget(self.status)
+        layout = QVBoxLayout(); layout.addLayout(form); layout.addLayout(buttons); layout.addWidget(self.progress); layout.addWidget(self.result_row); layout.addWidget(self.help_links); layout.addWidget(self.status)
         root = QWidget(); root.setLayout(layout); self.setCentralWidget(root); self.resize(620, 280)
 
     def _browse(self, edit, save):
@@ -65,7 +67,7 @@ class WordIndexWindow(QMainWindow):
     def start(self):
         source, output = self.source.text().strip(), self.output.text().strip()
         if not source or not output: QMessageBox.warning(self, 'Mangler valg', 'Vælg både kilde og output.'); return
-        self.thread = QThread(self); self.worker = IndexWorker(source, output, self.language.currentData(), self.stopwords.isChecked(), self.counts.isChecked(), self.format.currentText()); self.worker.moveToThread(self.thread)
+        self.result_row.clear(); self.thread = QThread(self); self.worker = IndexWorker(source, output, self.language.currentData(), self.stopwords.isChecked(), self.counts.isChecked(), self.format.currentText()); self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.done); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.thread.start(); self.run_button.setEnabled(False); self.cancel_button.setEnabled(True); self.status.setText('Indekserer…')
 
     def cancel(self):
@@ -79,7 +81,7 @@ class WordIndexWindow(QMainWindow):
             try:
                 db = Path.home() / '.nenolink' / 'file_inventory.sqlite'; FileInventory(db).update([self.source.text().strip()])
             except Exception as exc: result = result.__class__(result.counts, result.excluded_tokens, result.total_tokens, result.warnings + (f'Filinventar: {exc}',))
-        self.status.setText(f'Færdig: {path} · {len(result.counts)} ord · {result.total_tokens - result.excluded_tokens} medtaget · {len(result.warnings)} advarsler')
+        self.result_row.set_result(path); self.status.setText(f'Færdig: {len(result.counts)} ord · {result.total_tokens - result.excluded_tokens} medtaget · {len(result.warnings)} advarsler')
 
     def failed(self, message): self._finish(); QMessageBox.critical(self, 'Indeksering fejlede', message); self.status.setText('Fejlede — ingen output garanteret')
 

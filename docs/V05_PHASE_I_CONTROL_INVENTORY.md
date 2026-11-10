@@ -5,7 +5,7 @@
 | Dashboard | Open project/module | Always available | PASS |
 | Project Workflow | Choose DOCX, import/activate packs, scan, open outputs | Scan requires valid project/input | PASS |
 | Text Marker | Open module and choose DOCX/TXT, list and output | Start requires selected files | PASS |
-| Translation Risk Scanner | Open module and choose document/rules/output | Start requires matching risk CSV | PASS |
+| Translation Risk Scanner | Choose source DOCX, risk CSV, output; scan; open DOCX/folder | Start requires matching seven-column risk CSV | PASS |
 | Language Interference Scanner | Open module and choose DOCX/CSV/output | Start requires matching DA CSV | PASS |
 | Word Index | Open module, choose DOCX, language, stopwords and export | Run requires input/output | PASS |
 | File Inventory | Search, open, reuse and remove reference | Missing paths remain visible | PASS |
