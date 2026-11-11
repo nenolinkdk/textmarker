@@ -81,3 +81,4 @@ Known limitation: migration backups are retained beside the database and are not
 - Phase I.2 added shared compact result/help controls to Risk Scanner, Interference Scanner and Word Index. TEST build from `3f4bf2919acbae36dd92ca99ac0b8dbde2a33296`: 51,955,432 bytes, SHA-256 `18C799AE48CF6DB1A0605C6C311A929AC755BBCBC58E44AEDA6DCC24E375F8A8`; separate-process startup remained responsive.
 - Phase I.3 repaired Prompt Library storage/UI integration, replaced Prompt Builder task IDs with Danish labels, and expanded offline manual/tutorial resources.
 - Phase I.3 TEST build from `099e51cc512e725f88b5cb4a7f856b80419a2709`: 51,956,581 bytes, SHA-256 `6C967EFC86ED6309311E6A1AFC99001F45EF2A2F2A5AC4283DA28CA57C3C98CF`; separate-process startup remained responsive.
+- Phase I.4 added visible built-in Prompt Library templates and the localization/documentation coverage report `V05_PHASE_I4_LOCALIZATION.md`.
