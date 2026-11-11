@@ -43,3 +43,15 @@ The phase is not declared complete. No scanner algorithms, CSV schemas, terminol
 | Help | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
 
 The rows above document resource coverage, not linguistic approval. Full module-specific prose and secondary-window control localization remain `NOT TESTED`/`PARTIAL` pending native-language and packaged GUI review. No row is marked `MANUALLY VERIFIED`.
+
+## Phase I.6.2c final verification matrix
+
+| Requirement | Implementation status | Automated test | Manual verification | Remaining issue |
+|---|---|---|---|---|
+| Central secondary-window translation catalog | IMPLEMENTED for shared core controls | PASSED, 79 tests | NOT TESTED | Risk/DA/Terminology/Rules still contain legacy hardcoded field labels |
+| Six-locale secondary-window instantiation | IMPLEMENTED/PARTIAL | PASSED for catalog coverage | NOT TESTED | Full visual text audit pending |
+| Six manual source resources | IMPLEMENTED | PASSED for resource presence | NOT TESTED | Swedish/NB/DE/FR PDF output not generated |
+| Six tutorial resource sets | IMPLEMENTED/PARTIAL | PASSED for added localized tutorial files | NOT TESTED | DA/EN shared tutorial still needs language-specific audit |
+| Help anchors and bundled HTML | IMPLEMENTED | Existing anchor tests PASSED | NOT TESTED in packaged browser | Browser fragment behavior requires Windows check |
+| Fresh packaged EXE | IMPLEMENTED | Build completed | Startup PASS; full click-through NOT TESTED | Interactive GUI acceptance remains |
+| DOCX/Word acceptance | IMPLEMENTED by existing processing code | Existing regression tests PASSED | NOT TESTED | Microsoft Word unavailable in this session |
