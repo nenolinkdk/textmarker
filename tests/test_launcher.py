@@ -49,7 +49,7 @@ def test_app_shell_navigation_localization_and_project(tmp_path):
     app=QApplication.instance() or QApplication([]); shell=AppShell(); assert shell.nav.count()==12; shell.ui_language.setCurrentIndex(shell.ui_language.findData('fr')); assert shell.translator.locale=='fr' and shell.ui_language_header.currentData()=='fr'; shell.source_language.setCurrentIndex(shell.source_language.findData('en')); shell.target_language.setCurrentIndex(shell.target_language.findData('da')); shell.project_dir.setText(str(tmp_path)); shell.save_project(); assert (tmp_path/'nenolink-project.json').exists(); shell.close()
 
 def test_phase_d_workspace_sections_are_functional():
-    app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Ordlister og regler' in names and 'Promptbibliotek' in names; shell.close()
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Ordlister og regler' in names and 'Promptbibliotek' in names; shell.select_page(0); assert 'Settings' not in shell.context.text() and 'Processing' not in shell.context.text(); shell.close()
 
 def test_shell_settings_navigation_maps_to_settings_page():
     app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(10); assert shell.pages.currentWidget() is shell.pages.widget(11) and shell.ui_language is not None; shell.close()
