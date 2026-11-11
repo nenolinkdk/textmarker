@@ -8,6 +8,7 @@ from textmarker.risk.rules import parse_risk_rules
 from textmarker.risk.scanner import scan_and_write
 from textmarker.docx.highlighter import CancelledError
 from textmarker.ui.result_controls import ResultRow, HelpLinks, open_help_anchor
+from textmarker.ui.ui_texts import localize_widget_tree
 
 class RiskWorker(QObject):
     progress=Signal(int); done=Signal(object); error=Signal(str)
@@ -29,7 +30,7 @@ class RiskWindow(QMainWindow):
         form=QFormLayout()
         for label,edit,filters,save in [('Kilde-DOCX',self.source,'Word-dokument (*.docx)',False),('Risikoregler (CSV)',self.rules,'CSV-filer (*.csv)',False),('Output-DOCX',self.output,'Word-dokument (*.docx)',True)]:
             b=QPushButton('Vælg…'); b.clicked.connect(lambda _,e=edit,f=filters,s=save:self.choose(e,f,s)); row=QHBoxLayout(); row.addWidget(edit); row.addWidget(b); form.addRow(label,row)
-        form.addRow('Kategorier',self.category_list); form.addRow('',self.use_example); form.addRow(self.case); form.addRow(self.whole); buttons=QHBoxLayout(); buttons.addWidget(self.start); buttons.addWidget(self.cancel); buttons.addWidget(self.open_result); buttons.addWidget(self.open_folder); form.addRow(buttons); form.addRow(self.progress); form.addRow(self.result_row); form.addRow(self.help_links); form.addRow(self.status); w=QWidget(); w.setLayout(form); self.setCentralWidget(w); self.start.clicked.connect(self.begin); self.cancel.clicked.connect(self.stop)
+        form.addRow('Kategorier',self.category_list); form.addRow('',self.use_example); form.addRow(self.case); form.addRow(self.whole); buttons=QHBoxLayout(); buttons.addWidget(self.start); buttons.addWidget(self.cancel); buttons.addWidget(self.open_result); buttons.addWidget(self.open_folder); form.addRow(buttons); form.addRow(self.progress); form.addRow(self.result_row); form.addRow(self.help_links); form.addRow(self.status); w=QWidget(); w.setLayout(form); self.setCentralWidget(w); self.start.clicked.connect(self.begin); self.cancel.clicked.connect(self.stop); localize_widget_tree(self)
     def populate_categories(self,path):
         try: cats=sorted({r.category for r in parse_risk_rules(path)})
         except Exception: return

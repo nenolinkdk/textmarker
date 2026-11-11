@@ -100,3 +100,17 @@ def test_secondary_window_localization_catalog_has_all_supported_locales():
     for locale in ('da','sv','nb','en','de','fr'):
         assert locale in _TEXT
         assert all(ui(key,locale) != key for key in ('choose','cancel','start','open','save','language','source','target','output','manual','tutorial','settings'))
+
+def test_scanner_rule_and_terminology_windows_use_selected_locale(tmp_path):
+    from textmarker.ui.ui_texts import set_current_locale
+    from textmarker.risk_gui_entry import RiskWindow
+    from textmarker.ui.da_interference_window import DAInterferenceWindow
+    from textmarker.ui.terminology_window import TerminologyWindow
+    from textmarker.ui.rule_pack_window import RulePackWindow
+    app=QApplication.instance() or QApplication([])
+    for locale in ('da','sv','nb','en','de','fr'):
+        set_current_locale(locale)
+        windows=[RiskWindow(),DAInterferenceWindow(),TerminologyWindow(tmp_path/f'{locale}.sqlite'),RulePackWindow()]
+        assert all(w.windowTitle() for w in windows)
+        assert windows[0].cancel.text() != 'Annullér' or locale=='da'
+        for window in windows: window.close()

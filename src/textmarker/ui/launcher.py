@@ -17,6 +17,7 @@ from textmarker.ui.project_workflow import ProjectWorkflow
 from textmarker.ui.tutorial import FirstRunTutorial
 from textmarker.ui.terminology_window import TerminologyWindow
 from textmarker.ui.module_introduction import ModuleIntroduction
+from textmarker.ui.ui_texts import set_current_locale
 from textmarker.ui.prompt_builder_window import PromptBuilderWindow
 from textmarker.version import WINDOW_TITLE, APP_VERSION
 WordIndexPlaceholder = WordIndexWindow
@@ -26,7 +27,7 @@ _NAV_INTERNAL=['Dashboard','Project Workflow','Text Marker','Translation Risk Sc
 
 class AppShell(QMainWindow):
     def __init__(self):
-        super().__init__(); self.translator=Translator(QSettings('Nenolink','TextTools').value('ui_locale','da')); self.modules=[]; self.setWindowTitle(WINDOW_TITLE); self.resize(1180,700); self.setMinimumSize(960,540)
+        super().__init__(); self.translator=Translator(QSettings('Nenolink','TextTools').value('ui_locale','da')); set_current_locale(self.translator.locale); self.modules=[]; self.setWindowTitle(WINDOW_TITLE); self.resize(1180,700); self.setMinimumSize(960,540)
         self.factories={'Text Marker':TextMarkerWindow,'Translation Risk Scanner':RiskWindow,'Language Interference Scanner':DAInterferenceWindow,'Word Index':WordIndexWindow,'File Inventory':InventoryWindow}
         self.nav=QListWidget(); self.nav.setFixedWidth(220); self.nav.addItems(_NAV_DA if self.translator.locale=='da' else _NAV_INTERNAL); self.nav.currentRowChanged.connect(self.select_page)
         self.pages=QStackedWidget(); self.context=QLabel(); self.context.setWordWrap(True); self.context.setMinimumWidth(220); self.context.setMaximumWidth(300); self.context.setText(_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en'])['context']); self.context_toggle=QPushButton(_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en'])['hide']); self.context_toggle.clicked.connect(self.toggle_context)
@@ -49,7 +50,7 @@ class AppShell(QMainWindow):
         page_by_nav=[0,2,3,4,5,6,7,8,9,10,11,12]; self.pages.setCurrentIndex(page_by_nav[row]); name=self.nav.item(row).text(); self.context.setText(f'{name}\n\nVælg sprog og projekt i Indstillinger. Behandlingen ændrer ikke originaldokumenter.')
     def toggle_context(self): self.context.setVisible(not self.context.isVisible()); self.context_toggle.setText(_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en'])['show'] if not self.context.isVisible() else _SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en'])['hide'])
     def switch_language(self):
-        code=self.ui_language_header.currentData(); self.translator.set_locale(code); self.ui_language.blockSignals(True); self.ui_language.setCurrentIndex(self.ui_language.findData(code)); self.ui_language.blockSignals(False); QSettings('Nenolink','TextTools').setValue('ui_locale',code); self._refresh_shell_text(); self.context.setText(self.translator.text('shell.language_changed'))
+        code=self.ui_language_header.currentData(); self.translator.set_locale(code); set_current_locale(code); self.ui_language.blockSignals(True); self.ui_language.setCurrentIndex(self.ui_language.findData(code)); self.ui_language.blockSignals(False); QSettings('Nenolink','TextTools').setValue('ui_locale',code); self._refresh_shell_text(); self.context.setText(self.translator.text('shell.language_changed'))
     def _refresh_shell_text(self):
         labels=_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en']); self.header_label.setText(labels['ui']); current=self.nav.currentRow(); self.nav.blockSignals(True); self.nav.clear(); self.nav.addItems(_NAV_DA if self.translator.locale=='da' else _NAV_INTERNAL); self.nav.setCurrentRow(current); self.nav.blockSignals(False)
         for combo in (self.ui_language,self.ui_language_header):

@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QCheckBox, QFileDialog, QHBoxLayout, QLabel, QLine
 from textmarker.da_interference import load_rules, scan_and_write
 from textmarker.file_inventory import FileInventory
 from textmarker.ui.result_controls import ResultRow, HelpLinks
+from textmarker.ui.ui_texts import localize_widget_tree
 
 class DAWorker(QObject):
     progress=Signal(int); finished=Signal(object); failed=Signal(str)
@@ -34,7 +35,7 @@ class DAInterferenceWindow(QMainWindow):
         self.result_row=ResultRow(); self.help_links=HelpLinks([('Brugervejledning','interference.overview'),('Tutorial','interference.rules')])
         self.start_button.clicked.connect(self.start); self.cancel_button.clicked.connect(self.cancel); self.open_button.clicked.connect(self.open_results)
         buttons=QHBoxLayout(); buttons.addWidget(self.start_button); buttons.addWidget(self.cancel_button); buttons.addWidget(self.open_button); form.addLayout(buttons); form.addWidget(self.progress); form.addWidget(self.result_row); form.addWidget(self.help_links); form.addWidget(self.status)
-        root=QWidget(); root.setLayout(form); self.setCentralWidget(root); self.result_paths=()
+        root=QWidget(); root.setLayout(form); self.setCentralWidget(root); self.result_paths=(); localize_widget_tree(self)
     def _row(self, edit, directory):
         row=QHBoxLayout(); row.addWidget(edit); button=QPushButton('Vælg…'); row.addWidget(button); button.clicked.connect(lambda:self._choose(edit,directory)); return row
     def _choose(self, edit, directory):
