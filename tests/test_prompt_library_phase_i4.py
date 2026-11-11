@@ -21,3 +21,9 @@ def test_personal_prompt_round_trip_does_not_overwrite_builtins(tmp_path):
     personal=store.create('Min terminologikontrol','custom',builtin.text+'\nEkstra kriterium','nb','da')
     assert store.get(personal.prompt_id).text.endswith('Ekstra kriterium')
     assert store.initial_templates()[0].text==builtin.text
+
+def test_prompt_library_exports_current_editor_as_utf8(tmp_path, monkeypatch):
+    monkeypatch.setattr('textmarker.ui.prompt_library_window.Path.home', lambda: tmp_path)
+    target=tmp_path/'current.txt'; monkeypatch.setattr('textmarker.ui.prompt_library_window.QFileDialog.getSaveFileName', lambda *a: (str(target),'Tekst (*.txt)'))
+    app=QApplication.instance() or QApplication([]); window=PromptLibraryWindow(); window.editor.setPlainText('Norsk å — redigeret prompt'); window.export_prompt()
+    assert target.read_text(encoding='utf-8')=='Norsk å — redigeret prompt'; window.close()

@@ -7,11 +7,11 @@ from textmarker.ui.launcher import AppShell
 
 def test_shared_launcher_has_three_distinct_routes():
     app=QApplication.instance() or QApplication([]); launcher=Launcher()
-    assert [launcher.nav.item(i).text() for i in range(2,7)]==['Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory']
+    assert [launcher.nav.item(i).text() for i in range(2,7)]==['Tekstmarkering','Oversættelsesrisici','Sproginterferens','Ordfrekvens','Filinventar']
     assert WordIndexPlaceholder().windowTitle().startswith('Word Index')
 
 def test_terminology_route_is_available():
-    app=QApplication.instance() or QApplication([]); launcher=Launcher(); assert 'Terminology' in [launcher.nav.item(i).text() for i in range(launcher.nav.count())]; launcher.select_page(7); assert launcher.pages.currentWidget() is not None; launcher.close()
+    app=QApplication.instance() or QApplication([]); launcher=Launcher(); assert 'Terminologi' in [launcher.nav.item(i).text() for i in range(launcher.nav.count())]; launcher.select_page(7); assert launcher.pages.currentWidget() is not None; launcher.close()
 
 def test_module_introductions_cover_all_routes_and_help_targets():
     from textmarker.ui.module_introduction import MODULES, ModuleIntroduction
@@ -22,7 +22,7 @@ def test_module_introductions_cover_all_routes_and_help_targets():
 
 def test_prompt_library_route_uses_builder():
     from textmarker.ui.prompt_builder_window import PromptBuilderWindow
-    app=QApplication.instance() or QApplication([]); shell=Launcher(); shell.select_page(9); assert shell.nav.item(9).text().startswith('Prompt Library'); window=PromptBuilderWindow(); assert window.fsm.state.value=='SELECT_TASK'; window.close(); shell.close()
+    app=QApplication.instance() or QApplication([]); shell=Launcher(); shell.select_page(9); assert shell.nav.item(9).text().startswith('Promptbibliotek'); window=PromptBuilderWindow(); assert window.fsm.state.value=='SELECT_TASK'; window.close(); shell.close()
 
 def test_introductions_have_two_prose_paragraphs_in_all_locales():
     from textmarker.ui.module_introduction import MODULES, _PROSE
@@ -49,7 +49,7 @@ def test_app_shell_navigation_localization_and_project(tmp_path):
     app=QApplication.instance() or QApplication([]); shell=AppShell(); assert shell.nav.count()==12; shell.ui_language.setCurrentText('French'); assert shell.translator.locale=='fr' and shell.ui_language_header.currentData()=='fr'; shell.source_language.setCurrentText('en'); shell.target_language.setCurrentText('da'); shell.project_dir.setText(str(tmp_path)); shell.save_project(); assert (tmp_path/'nenolink-project.json').exists(); shell.close()
 
 def test_phase_d_workspace_sections_are_functional():
-    app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Glossaries & Rules (Phase D)' in names and 'Prompt Library (Phase D)' in names; shell.close()
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Ordlister og regler' in names and 'Promptbibliotek' in names; shell.close()
 
 def test_shell_settings_navigation_maps_to_settings_page():
     app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(10); assert shell.pages.currentWidget() is shell.pages.widget(11) and shell.ui_language is not None; shell.close()

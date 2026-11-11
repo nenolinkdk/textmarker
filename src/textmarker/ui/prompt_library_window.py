@@ -30,6 +30,9 @@ class PromptLibraryWindow(QMainWindow):
             self.refresh(); self.status.setText('Prompt duplikeret lokalt')
     def export_prompt(self):
         row=self.items.currentRow()
-        if row>=len(self.builtins) and row<len(self.all_prompts):
-            path=QFileDialog.getSaveFileName(self,'Eksportér prompt','','Tekst (*.txt)')[0]
-            if path: self.store.export_text(self.all_prompts[row].prompt_id,path); self.status.setText('Prompt eksporteret')
+        if self.editor.toPlainText().strip() and (0<=row<len(self.all_prompts) or row<0):
+            path=QFileDialog.getSaveFileName(self,'Eksportér prompt','prompt.txt','Tekst (*.txt)')[0]
+            if path:
+                try:
+                    Path(path).write_text(self.editor.toPlainText(),encoding='utf-8'); self.status.setText(f'Prompt eksporteret: {Path(path).name}')
+                except OSError as exc: self.status.setText(f'Eksport fejlede: {exc}')

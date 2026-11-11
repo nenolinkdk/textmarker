@@ -21,12 +21,14 @@ from textmarker.ui.prompt_builder_window import PromptBuilderWindow
 from textmarker.version import WINDOW_TITLE, APP_VERSION
 WordIndexPlaceholder = WordIndexWindow
 _SHELL_TEXT={'da':{'ui':'Grænsefladesprog','hide':'Skjul hjælp','show':'Vis hjælp','context':'Vælg en funktion i navigationen.','dashboard':'Åbn projektindstillinger'},'en':{'ui':'UI language','hide':'Hide help','show':'Show help','context':'Choose a function in navigation.','dashboard':'Open project settings'}}
+_NAV_DA=['Overblik','Projektworkflow','Tekstmarkering','Oversættelsesrisici','Sproginterferens','Ordfrekvens','Filinventar','Terminologi','Ordlister og regler','Promptbibliotek','Indstillinger','Hjælp']
+_NAV_INTERNAL=['Dashboard','Project Workflow','Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory','Terminology','Glossaries & Rules','Prompt Library','Settings','Help']
 
 class AppShell(QMainWindow):
     def __init__(self):
         super().__init__(); self.translator=Translator(QSettings('Nenolink','TextTools').value('ui_locale','da')); self.modules=[]; self.setWindowTitle(WINDOW_TITLE); self.resize(1180,700); self.setMinimumSize(960,540)
         self.factories={'Text Marker':TextMarkerWindow,'Translation Risk Scanner':RiskWindow,'Language Interference Scanner':DAInterferenceWindow,'Word Index':WordIndexWindow,'File Inventory':InventoryWindow}
-        self.nav=QListWidget(); self.nav.setFixedWidth(220); self.nav.addItems(['Dashboard','Project Workflow','Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory','Terminology','Glossaries & Rules (Phase D)','Prompt Library (Phase D)','Settings','Help']); self.nav.currentRowChanged.connect(self.select_page)
+        self.nav=QListWidget(); self.nav.setFixedWidth(220); self.nav.addItems(_NAV_DA if self.translator.locale=='da' else _NAV_INTERNAL); self.nav.currentRowChanged.connect(self.select_page)
         self.pages=QStackedWidget(); self.context=QLabel(); self.context.setWordWrap(True); self.context.setMinimumWidth(220); self.context.setMaximumWidth(300); self.context.setText(_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en'])['context']); self.context_toggle=QPushButton(_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en'])['hide']); self.context_toggle.clicked.connect(self.toggle_context)
         panel=QWidget(); panel_layout=QVBoxLayout(panel); panel_layout.addWidget(self.context_toggle); panel_layout.addWidget(self.context); panel_layout.addStretch()
         splitter=QSplitter(); splitter.addWidget(self.nav); splitter.addWidget(self.pages); splitter.addWidget(panel); splitter.setStretchFactor(1,1)
@@ -49,7 +51,7 @@ class AppShell(QMainWindow):
     def switch_language(self):
         code=self.ui_language_header.currentData(); self.translator.set_locale(code); self.ui_language.blockSignals(True); self.ui_language.setCurrentIndex(self.ui_language.findData(code)); self.ui_language.blockSignals(False); QSettings('Nenolink','TextTools').setValue('ui_locale',code); self._refresh_shell_text(); self.context.setText(self.translator.text('shell.language_changed'))
     def _refresh_shell_text(self):
-        labels=_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en']); self.header_label.setText(labels['ui'])
+        labels=_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en']); self.header_label.setText(labels['ui']); current=self.nav.currentRow(); self.nav.blockSignals(True); self.nav.clear(); self.nav.addItems(_NAV_DA if self.translator.locale=='da' else _NAV_INTERNAL); self.nav.setCurrentRow(current); self.nav.blockSignals(False)
     def sync_language_from_settings(self):
         self.ui_language_header.setCurrentIndex(self.ui_language_header.findData(self.ui_language.currentData()))
     def save_project(self):
