@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QSettings
 from textmarker.ui.launcher import Launcher, WordIndexPlaceholder
 from textmarker.ui.word_index_window import WordIndexWindow
 from textmarker.ui.inventory_window import InventoryWindow
@@ -49,7 +50,7 @@ def test_app_shell_navigation_localization_and_project(tmp_path):
     app=QApplication.instance() or QApplication([]); shell=AppShell(); assert shell.nav.count()==12; shell.ui_language.setCurrentIndex(shell.ui_language.findData('fr')); assert shell.translator.locale=='fr' and shell.ui_language_header.currentData()=='fr'; shell.source_language.setCurrentIndex(shell.source_language.findData('en')); shell.target_language.setCurrentIndex(shell.target_language.findData('da')); shell.project_dir.setText(str(tmp_path)); shell.save_project(); assert (tmp_path/'nenolink-project.json').exists(); shell.close()
 
 def test_phase_d_workspace_sections_are_functional():
-    app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Ordlister og regler' in names and 'Promptbibliotek' in names; shell.select_page(0); assert 'Settings' not in shell.context.text() and 'Processing' not in shell.context.text(); shell.close()
+    app=QApplication.instance() or QApplication([]); QSettings('Nenolink','TextTools').setValue('ui_locale','da'); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Ordlister og regler' in names and 'Promptbibliotek' in names; shell.select_page(0); assert 'Settings' not in shell.context.text() and 'Processing' not in shell.context.text(); shell.close()
 
 def test_shell_settings_navigation_maps_to_settings_page():
     app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(10); assert shell.pages.currentWidget() is shell.pages.widget(11) and shell.ui_language is not None; shell.close()
@@ -67,9 +68,17 @@ def test_help_resources_and_tutorial_lifecycle():
     tutorial=FirstRunTutorial(); assert tutorial.next.isEnabled() and tutorial.back.isEnabled() is False; tutorial.forward(); assert tutorial.index==1; tutorial.reject()
 
 def test_danish_shell_uses_danish_control_labels_and_dashboard_opens_settings():
-    app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('da'))
+    app=QApplication.instance() or QApplication([]); QSettings('Nenolink','TextTools').setValue('ui_locale','da'); shell=AppShell(); shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('da'))
     assert shell.header_label.text()=='Grænsefladesprog'; assert shell.context_toggle.text()=='Skjul hjælp'
     shell.select_page(0); page=shell.pages.currentWidget(); page.open.click(); assert shell.nav.currentRow()==10; shell.close()
+
+def test_danish_to_bokmaal_and_back_updates_shell_labels():
+    app=QApplication.instance() or QApplication([]); QSettings('Nenolink','TextTools').setValue('ui_locale','da'); shell=AppShell()
+    shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('nb'))
+    assert shell.translator.locale=='nb' and shell.nav.item(8).text()=='Glossaries & Rules'
+    shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('da'))
+    assert shell.translator.locale=='da' and shell.nav.item(8).text()=='Ordlister og regler' and shell.context_toggle.text()=='Skjul hjælp'
+    shell.close()
 
 def test_help_anchor_is_a_fragment_on_bundled_html_file():
     from textmarker.ui.result_controls import resource_file
