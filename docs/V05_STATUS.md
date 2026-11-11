@@ -83,3 +83,4 @@ Known limitation: migration backups are retained beside the database and are not
 - Phase I.3 TEST build from `099e51cc512e725f88b5cb4a7f856b80419a2709`: 51,956,581 bytes, SHA-256 `6C967EFC86ED6309311E6A1AFC99001F45EF2A2F2A5AC4283DA28CA57C3C98CF`; separate-process startup remained responsive.
 - Phase I.4 added visible built-in Prompt Library templates and the localization/documentation coverage report `V05_PHASE_I4_LOCALIZATION.md`.
 - Phase I.4 TEST build from `9ecc1d8953c0737eb2cb7164bd94474eef6f07bb`: 51,957,036 bytes, SHA-256 `F827831D301C68FDB63E1A5C2C931AD7E347B1060E7985AC7C7A55525817562A`; separate-process startup remained responsive.
+- Phase I.4.1 TEST build from `5feea0e4946c390d5cd7d56740f5fd9bfed3a5e4`: 51,961,602 bytes, SHA-256 `2776369D04354E404C169FE9F68B440648AB228D8E40EE0FC819ABBF11969D99`; separate-process startup remained responsive.
