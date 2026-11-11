@@ -50,6 +50,7 @@ Kvalitetskriterier: Prioritér fejl der kan ændre brugerens handling, kræv bel
 Outputstruktur: alvorlighed; tekstbelæg; problemtype; konsekvens; forslag; usikkerhed.
 Kildetekst: [INDSÆT KILDETEKST HER]
 Måltekst: [INDSÆT MÅLTEKST HER]'''}
+TEMPLATE_NAMES={'da':{'terminology_consistency':'Terminologikonsistens','source_interference':'Kildesprogsinterferens','translation_risk':'Oversættelsesrisici og false friends','style_register':'Stil og register','translation_completeness':'Fuldstændighed og udeladelser','technical_documentation':'Teknisk dokumentation'},'en':{'terminology_consistency':'Terminology consistency','source_interference':'Source-language interference','translation_risk':'Translation risk and false friends','style_register':'Style and register','translation_completeness':'Completeness and omissions','technical_documentation':'Technical documentation'},'sv':{'terminology_consistency':'Terminologisk konsekvens','source_interference':'Källspråklig interferens','translation_risk':'Översättningsrisker och falska vänner','style_register':'Stil och register','translation_completeness':'Fullständighet och utelämnanden','technical_documentation':'Teknisk dokumentation'},'nb':{'terminology_consistency':'Terminologisk konsistens','source_interference':'Kildespråklig interferens','translation_risk':'Oversettelsesrisiko og falske venner','style_register':'Stil og register','translation_completeness':'Fullstendighet og utelatelser','technical_documentation':'Teknisk dokumentasjon'},'de':{'terminology_consistency':'Terminologiekonsistenz','source_interference':'Ausgangssprachliche Interferenz','translation_risk':'Übersetzungsrisiken und falsche Freunde','style_register':'Stil und Register','translation_completeness':'Vollständigkeit und Auslassungen','technical_documentation':'Technische Dokumentation'},'fr':{'terminology_consistency':'Cohérence terminologique','source_interference':'Interférence de la langue source','translation_risk':'Risques de traduction et faux amis','style_register':'Style et registre','translation_completeness':'Exhaustivité et omissions','technical_documentation':'Documentation technique'}}
 class PromptStore:
     def __init__(self,path=None): self.path=Path(path or Path.home()/'.nenolink'/'prompts.json'); self.path.parent.mkdir(parents=True,exist_ok=True)
     def _read(self): return json.loads(self.path.read_text(encoding='utf-8')) if self.path.exists() else {}
@@ -61,7 +62,9 @@ class PromptStore:
         return self.save(PromptTemplate('prompt_'+uuid4().hex,name,task,text,source_language,target_language))
     def list(self,query=''):
         items=[PromptTemplate(**x) for x in self._read().values()]; return sorted([x for x in items if not query or query.casefold() in (x.name+' '+x.text).casefold()],key=lambda x:x.name.casefold())
-    def initial_templates(self): return [PromptTemplate('builtin_'+task,task.replace('_',' ').title(),task,text) for task,text in INITIAL_TEMPLATES.items()]
+    def initial_templates(self,locale='da'):
+        names=TEMPLATE_NAMES.get(locale,TEMPLATE_NAMES['en'])
+        return [PromptTemplate('builtin_'+task,names[task],task,text) for task,text in INITIAL_TEMPLATES.items()]
     def get(self,prompt_id):
         data=self._read()
         if prompt_id not in data: raise KeyError(prompt_id)

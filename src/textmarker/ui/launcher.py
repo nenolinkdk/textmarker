@@ -56,6 +56,8 @@ class AppShell(QMainWindow):
             selected=combo.currentData(); combo.blockSignals(True); combo.clear(); [combo.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values()]; combo.setCurrentIndex(combo.findData(selected)); combo.blockSignals(False)
         for combo in (self.source_language,self.target_language):
             selected=combo.currentData(); combo.blockSignals(True); combo.clear(); [combo.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values()]; combo.setCurrentIndex(combo.findData(selected)); combo.blockSignals(False)
+        for introduction in self.findChildren(ModuleIntroduction):
+            introduction.refresh(self.translator.locale)
     def sync_language_from_settings(self):
         self.ui_language_header.setCurrentIndex(self.ui_language_header.findData(self.ui_language.currentData()))
     def save_project(self):
