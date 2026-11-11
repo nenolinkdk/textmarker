@@ -94,3 +94,9 @@ def test_all_localized_manual_sources_and_tutorials_exist():
         assert (root/f'USER_MANUAL_{code}.md').is_file()
     for code in ('sv','nb','de','fr'):
         assert (root/f'tutorials_{code}.html').is_file()
+
+def test_secondary_window_localization_catalog_has_all_supported_locales():
+    from textmarker.ui.ui_texts import _TEXT, ui
+    for locale in ('da','sv','nb','en','de','fr'):
+        assert locale in _TEXT
+        assert all(ui(key,locale) != key for key in ('choose','cancel','start','open','save','language','source','target','output','manual','tutorial','settings'))

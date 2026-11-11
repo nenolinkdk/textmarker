@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QFileDialog, QFormLayout,
 from textmarker.file_inventory import FileInventory
 from textmarker.word_index import export_csv, export_txt, index_docx, resource_path
 from textmarker.ui.result_controls import ResultRow, HelpLinks
+from textmarker.ui.ui_texts import ui
 
 
 class IndexWorker(QObject):
@@ -43,7 +44,7 @@ class IndexWorker(QObject):
 
 class WordIndexWindow(QMainWindow):
     def __init__(self):
-        super().__init__(); self.setWindowTitle('Word Index — Nenolink Text Tools v0.2'); self.thread = None; self.worker = None
+        super().__init__(); self.setWindowTitle('Word Index — Nenolink Text Tools v0.5'); self.thread = None; self.worker = None
         self.source = QLineEdit(); self.output = QLineEdit(); self.language = QComboBox(); self.language.addItem('Dansk', 'da'); self.language.addItem('Norsk bokmål', 'nb')
         self.stopwords = QCheckBox('Filtrér stopord (100 ord)'); self.stopwords.setChecked(True); self.counts = QCheckBox('Medtag frekvenstal i TXT')
         self.inventory = QCheckBox('Registrér kildedokument i lokal filinventar'); self.inventory.setChecked(True)
@@ -51,7 +52,7 @@ class WordIndexWindow(QMainWindow):
         self.result_row=ResultRow(); self.help_links=HelpLinks([('Brugervejledning','wordindex.overview'),('Tutorial','wordindex.interference')])
         form = QFormLayout(); form.addRow('Kildedokument (.docx)', self._browse(self.source, False)); form.addRow('Output', self._browse(self.output, True)); form.addRow('Sprog', self.language); form.addRow('Format', self.format)
         form.addRow('', self.stopwords); form.addRow('', self.counts); form.addRow('', self.inventory)
-        self.run_button = QPushButton('Indeksér'); self.cancel_button = QPushButton('Annullér'); self.cancel_button.setEnabled(False); self.run_button.clicked.connect(self.start); self.cancel_button.clicked.connect(self.cancel)
+        self.run_button = QPushButton(ui('start')); self.cancel_button = QPushButton(ui('cancel')); self.cancel_button.setEnabled(False); self.run_button.clicked.connect(self.start); self.cancel_button.clicked.connect(self.cancel)
         buttons = QHBoxLayout(); buttons.addWidget(self.run_button); buttons.addWidget(self.cancel_button)
         layout = QVBoxLayout(); layout.addLayout(form); layout.addLayout(buttons); layout.addWidget(self.progress); layout.addWidget(self.result_row); layout.addWidget(self.help_links); layout.addWidget(self.status)
         root = QWidget(); root.setLayout(layout); self.setCentralWidget(root); self.resize(620, 280)

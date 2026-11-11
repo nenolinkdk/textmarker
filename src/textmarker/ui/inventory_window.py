@@ -3,6 +3,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMainWindow, QMessageBox, QPushButton, QVBoxLayout, QWidget
 from textmarker.file_inventory import FileInventory
+from textmarker.ui.ui_texts import ui
 
 class InventoryWindow(QMainWindow):
     def __init__(self, database=None):
@@ -10,7 +11,7 @@ class InventoryWindow(QMainWindow):
         self.inventory = FileInventory(database or Path.home() / '.nenolink' / 'file_inventory.sqlite')
         self.search = QLineEdit(); self.search.setPlaceholderText('Søg i filstier…'); self.search.textChanged.connect(self.refresh)
         self.files = QListWidget(); self.files.itemDoubleClicked.connect(self.open_selected)
-        self.status = QLabel(); open_button = QPushButton('Åbn'); open_button.clicked.connect(self.open_selected)
+        self.status = QLabel(); open_button = QPushButton(ui('open')); open_button.clicked.connect(self.open_selected)
         remove_button = QPushButton('Fjern reference'); remove_button.clicked.connect(self.remove_selected)
         refresh_button = QPushButton('Opdatér'); refresh_button.clicked.connect(self.refresh)
         buttons=QHBoxLayout(); buttons.addWidget(open_button); buttons.addWidget(remove_button); buttons.addWidget(refresh_button)
