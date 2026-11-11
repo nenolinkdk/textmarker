@@ -46,7 +46,7 @@ def test_da_window_controls_and_worker_cancel(tmp_path):
     worker=DAWorker(tmp_path/'missing.docx',tmp_path/'missing.csv',tmp_path,{'RED'}); worker.cancel(); assert worker.cancel_event.is_set(); window.close()
 
 def test_app_shell_navigation_localization_and_project(tmp_path):
-    app=QApplication.instance() or QApplication([]); shell=AppShell(); assert shell.nav.count()==12; shell.ui_language.setCurrentText('French'); assert shell.translator.locale=='fr' and shell.ui_language_header.currentData()=='fr'; shell.source_language.setCurrentText('en'); shell.target_language.setCurrentText('da'); shell.project_dir.setText(str(tmp_path)); shell.save_project(); assert (tmp_path/'nenolink-project.json').exists(); shell.close()
+    app=QApplication.instance() or QApplication([]); shell=AppShell(); assert shell.nav.count()==12; shell.ui_language.setCurrentIndex(shell.ui_language.findData('fr')); assert shell.translator.locale=='fr' and shell.ui_language_header.currentData()=='fr'; shell.source_language.setCurrentIndex(shell.source_language.findData('en')); shell.target_language.setCurrentIndex(shell.target_language.findData('da')); shell.project_dir.setText(str(tmp_path)); shell.save_project(); assert (tmp_path/'nenolink-project.json').exists(); shell.close()
 
 def test_phase_d_workspace_sections_are_functional():
     app=QApplication.instance() or QApplication([]); shell=AppShell(); names=[shell.nav.item(i).text() for i in range(shell.nav.count())]; assert 'Ordlister og regler' in names and 'Promptbibliotek' in names; shell.close()
@@ -57,8 +57,8 @@ def test_shell_settings_navigation_maps_to_settings_page():
 def test_project_workflow_is_exposed_and_language_is_independent(tmp_path):
     app=QApplication.instance() or QApplication([]); shell=AppShell(); shell.select_page(1)
     assert shell.pages.currentWidget() is not None and shell.workflow is not None
-    shell.source_language.setCurrentText('sv'); shell.target_language.setCurrentText('fr'); shell.ui_language_header.setCurrentText('Norwegian Bokmål')
-    assert shell.source_language.currentText()=='sv' and shell.target_language.currentText()=='fr' and shell.translator.locale=='nb'; shell.close()
+    shell.source_language.setCurrentIndex(shell.source_language.findData('sv')); shell.target_language.setCurrentIndex(shell.target_language.findData('fr')); shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('nb'))
+    assert shell.source_language.currentData()=='sv' and shell.target_language.currentData()=='fr' and shell.translator.locale=='nb'; shell.close()
 
 def test_help_resources_and_tutorial_lifecycle():
     from pathlib import Path

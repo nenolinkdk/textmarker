@@ -8,7 +8,7 @@ from textmarker.risk_gui_entry import RiskWindow
 from textmarker.ui.word_index_window import WordIndexWindow
 from textmarker.ui.inventory_window import InventoryWindow
 from textmarker.ui.da_interference_window import DAInterferenceWindow
-from textmarker.multilingual.languages import LANGUAGES
+from textmarker.multilingual.languages import LANGUAGES, language_name
 from textmarker.multilingual.localization import Translator
 from textmarker.multilingual.project import ProjectProfile, ProjectStore
 from textmarker.ui.rule_pack_window import RulePackWindow
@@ -36,7 +36,7 @@ class AppShell(QMainWindow):
         self.ui_language_header.currentIndexChanged.connect(self.switch_language)
     def _build_pages(self):
         dash=ModuleIntroduction('Dashboard',self.translator.locale,lambda:self.nav.setCurrentRow(10),parent=self); self.pages.addWidget(dash)
-        settings=QWidget(); form=QFormLayout(settings); self.ui_language=QComboBox(); [self.ui_language.addItem(x.name,x.code) for x in LANGUAGES.values()]; self.ui_language.setCurrentIndex(self.ui_language.findData(self.translator.locale)); self.ui_language.currentIndexChanged.connect(self.sync_language_from_settings); self.source_language=QComboBox(); self.target_language=QComboBox(); [c.addItems(LANGUAGES.keys()) for c in (self.source_language,self.target_language)]; self.source_language.setCurrentText('en'); self.target_language.setCurrentText('da'); self.project_name=QLineEdit('Lokalt projekt'); self.project_dir=QLineEdit(str(Path.home())); save=QPushButton('Gem projekt'); save.clicked.connect(self.save_project); form.addRow('UI-sprog',self.ui_language); form.addRow('Kildesprog',self.source_language); form.addRow('Målsprog',self.target_language); form.addRow('Projektnavn',self.project_name); form.addRow('Projektmappe',self.project_dir); form.addRow('',save); self.pages.addWidget(settings)
+        settings=QWidget(); form=QFormLayout(settings); self.ui_language=QComboBox(); [self.ui_language.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values()]; self.ui_language.setCurrentIndex(self.ui_language.findData(self.translator.locale)); self.ui_language.currentIndexChanged.connect(self.sync_language_from_settings); self.source_language=QComboBox(); self.target_language=QComboBox(); [c.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values() for c in (self.source_language,self.target_language)]; self.source_language.setCurrentText(language_name('en',self.translator.locale)); self.target_language.setCurrentText(language_name('da',self.translator.locale)); self.project_name=QLineEdit('Lokalt projekt'); self.project_dir=QLineEdit(str(Path.home())); save=QPushButton('Gem projekt'); save.clicked.connect(self.save_project); form.addRow('UI-sprog',self.ui_language); form.addRow('Kildesprog',self.source_language); form.addRow('Målsprog',self.target_language); form.addRow('Projektnavn',self.project_name); form.addRow('Projektmappe',self.project_dir); form.addRow('',save); self.pages.addWidget(settings)
         workflow_page=QWidget(); wl=QVBoxLayout(workflow_page); wl.addWidget(ModuleIntroduction('Project Workflow',self.translator.locale,parent=self)); workflow=ProjectWorkflow(); self.workflow=workflow; wl.addWidget(workflow); self.pages.addWidget(workflow_page)
         for name in ['Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory']:
             page=ModuleIntroduction(name,self.translator.locale,lambda n=name:self.open_module(self.factories[n]),parent=self); self.pages.addWidget(page)
@@ -52,10 +52,14 @@ class AppShell(QMainWindow):
         code=self.ui_language_header.currentData(); self.translator.set_locale(code); self.ui_language.blockSignals(True); self.ui_language.setCurrentIndex(self.ui_language.findData(code)); self.ui_language.blockSignals(False); QSettings('Nenolink','TextTools').setValue('ui_locale',code); self._refresh_shell_text(); self.context.setText(self.translator.text('shell.language_changed'))
     def _refresh_shell_text(self):
         labels=_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en']); self.header_label.setText(labels['ui']); current=self.nav.currentRow(); self.nav.blockSignals(True); self.nav.clear(); self.nav.addItems(_NAV_DA if self.translator.locale=='da' else _NAV_INTERNAL); self.nav.setCurrentRow(current); self.nav.blockSignals(False)
+        for combo in (self.ui_language,self.ui_language_header):
+            selected=combo.currentData(); combo.blockSignals(True); combo.clear(); [combo.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values()]; combo.setCurrentIndex(combo.findData(selected)); combo.blockSignals(False)
+        for combo in (self.source_language,self.target_language):
+            selected=combo.currentData(); combo.blockSignals(True); combo.clear(); [combo.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values()]; combo.setCurrentIndex(combo.findData(selected)); combo.blockSignals(False)
     def sync_language_from_settings(self):
         self.ui_language_header.setCurrentIndex(self.ui_language_header.findData(self.ui_language.currentData()))
     def save_project(self):
-        path=Path(self.project_dir.text())/'nenolink-project.json'; profile=ProjectProfile('default',self.project_name.text(),self.source_language.currentText(),self.target_language.currentText(),{'default':self.project_dir.text(),'source':self.project_dir.text(),'target':self.project_dir.text()},[],[],{}); ProjectStore(path).save(profile); self.context.setText(f'Projekt gemt: {path}')
+        path=Path(self.project_dir.text())/'nenolink-project.json'; profile=ProjectProfile('default',self.project_name.text(),self.source_language.currentData(),self.target_language.currentData(),{'default':self.project_dir.text(),'source':self.project_dir.text(),'target':self.project_dir.text()},[],[],{}); ProjectStore(path).save(profile); self.context.setText(f'Projekt gemt: {path}')
     def open_module(self,factory):
         module=factory(); self.modules.append(module); module.destroyed.connect(lambda:self.modules.remove(module) if module in self.modules else None); module.show(); module.raise_(); module.activateWindow()
     def open_manual(self):
