@@ -55,3 +55,9 @@ The rows above document resource coverage, not linguistic approval. Full module-
 | Help anchors and bundled HTML | IMPLEMENTED | Existing anchor tests PASSED | NOT TESTED in packaged browser | Browser fragment behavior requires Windows check |
 | Fresh packaged EXE | IMPLEMENTED | Build completed | Startup PASS; full click-through NOT TESTED | Interactive GUI acceptance remains |
 | DOCX/Word acceptance | IMPLEMENTED by existing processing code | Existing regression tests PASSED | NOT TESTED | Microsoft Word unavailable in this session |
+
+## Phase I.6.2d result
+
+The shared catalog now covers the fixed application-owned strings used by the four named windows, and parameterized tests instantiate those windows under all six locales. This is an automated UI-control check, not a substitute for native linguistic review or interactive Windows acceptance.
+
+Fresh build: source commit `5f2fcbd7032b25fe64cc5d3cd843d81c984b31a3`, EXE size `51,981,902` bytes, SHA-256 `39A7A9D315DD8550C93CD3A8273F4FF2D47A3219301B51246F8F0CE579533E96`. Separate-process startup: `PASS`. Full GUI click-through and Microsoft Word: `NOT TESTED`.
