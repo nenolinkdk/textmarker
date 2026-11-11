@@ -1,0 +1,1 @@
+This repository ships the complete Norwegian Bokmål source manual as USER_MANUAL_NB.md. Generate a PDF from that source during the documentation build; no binary PDF is claimed until generated and visually checked.

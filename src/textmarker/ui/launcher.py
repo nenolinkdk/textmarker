@@ -65,8 +65,9 @@ class AppShell(QMainWindow):
     def open_module(self,factory):
         module=factory(); self.modules.append(module); module.destroyed.connect(lambda:self.modules.remove(module) if module in self.modules else None); module.show(); module.raise_(); module.activateWindow()
     def open_manual(self):
-        root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3])); path=root/'docs'/'manual'/'USER_MANUAL_DA.pdf'
-        if path.exists(): QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+        root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3])); code=self.translator.locale.upper(); candidates=[root/'docs'/'manual'/f'USER_MANUAL_{code}.pdf',root/'docs'/'manual'/f'USER_MANUAL_{code}.md',root/'docs'/'manual'/'USER_MANUAL_EN.md']
+        path=next((p for p in candidates if p.exists()),None)
+        if path: QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
         else: self.context.setText('Manual PDF mangler. Kør dokumentations-buildet først.')
     def start_tutorial(self): FirstRunTutorial(self).exec()
 

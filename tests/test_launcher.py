@@ -86,3 +86,11 @@ def test_help_anchor_is_a_fragment_on_bundled_html_file():
     path=resource_file('docs/manual/help.html'); assert path.is_file()
     url=QUrl.fromLocalFile(str(path)); url.setFragment('scanner.overview')
     assert url.fragment()=='scanner.overview' and url.path().endswith('help.html')
+
+def test_all_localized_manual_sources_and_tutorials_exist():
+    from pathlib import Path
+    root=Path(__file__).parents[1]/'docs'/'manual'
+    for code in ('DA','SV','NB','EN','DE','FR'):
+        assert (root/f'USER_MANUAL_{code}.md').is_file()
+    for code in ('sv','nb','de','fr'):
+        assert (root/f'tutorials_{code}.html').is_file()

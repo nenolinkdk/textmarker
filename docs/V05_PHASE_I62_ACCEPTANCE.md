@@ -22,3 +22,24 @@
 | Microsoft Word visual acceptance | NOT TESTED | requires Microsoft Word |
 
 The phase is not declared complete. No scanner algorithms, CSV schemas, terminology storage or FSM behavior were changed.
+
+## Phase I.6.2b coverage matrix
+
+`IMPLEMENTED` means a source resource exists; `AUTOMATED TEST PASSED` means the repository test checks its presence. `MANUALLY VERIFIED` is deliberately reserved for an interactive Windows check.
+
+| Module | da | sv | nb | en | de | fr |
+|---|---|---|---|---|---|---|
+| Dashboard | IMPLEMENTED / AUTOMATED TEST PASSED | IMPLEMENTED / AUTOMATED TEST PASSED | IMPLEMENTED / AUTOMATED TEST PASSED | IMPLEMENTED / AUTOMATED TEST PASSED | IMPLEMENTED / AUTOMATED TEST PASSED | IMPLEMENTED / AUTOMATED TEST PASSED |
+| Project Workflow | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Text Marker | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Translation Risk Scanner | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Language Interference Scanner | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Word Index | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| File Inventory | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Terminology | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Glossaries & Rules | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Prompt Library | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Settings | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+| Help | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED | IMPLEMENTED |
+
+The rows above document resource coverage, not linguistic approval. Full module-specific prose and secondary-window control localization remain `NOT TESTED`/`PARTIAL` pending native-language and packaged GUI review. No row is marked `MANUALLY VERIFIED`.
