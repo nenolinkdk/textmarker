@@ -7,7 +7,7 @@ from textmarker.multilingual.languages import LANGUAGES
 from textmarker.multilingual.project import ProjectProfile, ProjectStore
 from textmarker.multilingual.rule_packs import RulePackStore
 from textmarker.multilingual.integration import scan_project
-from textmarker.ui.ui_texts import localize_widget_tree
+from textmarker.ui.ui_texts import localize_widget_tree, message
 
 class ProjectScanWorker(QObject):
     progress=Signal(int); finished=Signal(object); failed=Signal(str)
@@ -41,7 +41,7 @@ class ProjectWorkflow(QWidget):
         root=Path(self.project_dir.text()); self.project_path=root/'nenolink-project.json'; self.pack_root=root/'rule_packs'; return root
     def create_project(self):
         try:
-            root=self._paths(); root.mkdir(parents=True,exist_ok=True); profile=ProjectProfile('default',self.name.text(),self.source_language.currentData(),self.target_language.currentData(),{'default':str(root),'source':str(root),'target':str(root)},[],[],{}); ProjectStore(self.project_path).save(profile); self.status.setText(f'Projekt gemt: {self.project_path}'); self.refresh_packs()
+            root=self._paths(); root.mkdir(parents=True,exist_ok=True); profile=ProjectProfile('default',self.name.text(),self.source_language.currentData(),self.target_language.currentData(),{'default':str(root),'source':str(root),'target':str(root)},[],[],{}); ProjectStore(self.project_path).save(profile); self.status.setText(message('project_saved',path=self.project_path)); self.refresh_packs()
         except Exception as exc: QMessageBox.critical(self,'Projektfejl',str(exc))
     def refresh_packs(self):
         self.packs.clear(); self.pack_root=self._paths()/'rule_packs'; self.pack_root.mkdir(parents=True,exist_ok=True)
@@ -50,11 +50,11 @@ class ProjectWorkflow(QWidget):
         path=QFileDialog.getOpenFileName(self,'Importér CSV rule pack','','CSV (*.csv)')[0]
         if not path: return
         try:
-            self.pack_root=self._paths()/'rule_packs'; store=RulePackStore(self.pack_root); pack_id=Path(path).stem; store.import_csv(path,pack_id,pack_id); self.refresh_packs(); self.status.setText(f'Rule pack importeret: {pack_id}')
+            self.pack_root=self._paths()/'rule_packs'; store=RulePackStore(self.pack_root); pack_id=Path(path).stem; store.import_csv(path,pack_id,pack_id); self.refresh_packs(); self.status.setText(message('imported_pack',pack=pack_id))
         except Exception as exc: QMessageBox.critical(self,'Rule pack-fejl',str(exc))
     def associate_packs(self):
         try:
-            selected=[x.text() for x in self.packs.selectedItems()]; ProjectStore(self._paths()/'nenolink-project.json').associate_rule_packs(selected); self.status.setText(f'{len(selected)} rule packs aktive i projektet')
+            selected=[x.text() for x in self.packs.selectedItems()]; ProjectStore(self._paths()/'nenolink-project.json').associate_rule_packs(selected); self.status.setText(message('active_packs',count=len(selected)))
         except Exception as exc: QMessageBox.critical(self,'Association fejlede',str(exc))
     def start_scan(self):
         try:
@@ -62,15 +62,15 @@ class ProjectWorkflow(QWidget):
             if not profile.exists(): raise ValueError('Opret projektet først')
             if not self.source.text(): raise ValueError('Vælg et input-DOCX')
             out=root/'outputs'; out.mkdir(exist_ok=True); stem=Path(self.source.text()).stem; output=out/(stem+'-marked.docx'); report=out/(stem+'-findings.csv'); summary=out/(stem+'-summary.csv')
-            self.thread=QThread(self); self.worker=ProjectScanWorker(profile,self.source.text(),output,report,summary,root/'rule_packs'); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.finished); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.scan.setEnabled(False); self.cancel.setEnabled(True); self.thread.start(); self.status.setText('Scanner…')
+            self.thread=QThread(self); self.worker=ProjectScanWorker(profile,self.source.text(),output,report,summary,root/'rule_packs'); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.finished); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.scan.setEnabled(False); self.cancel.setEnabled(True); self.thread.start(); self.status.setText(message('scan_running'))
         except Exception as exc: QMessageBox.warning(self,'Scan kan ikke startes',str(exc))
     def cancel_scan(self):
-        if self.worker: self.worker.cancel(); self.status.setText('Annullerer…')
+        if self.worker: self.worker.cancel(); self.status.setText(message('cancel_requested'))
     def finished(self,result):
         self._finish()
-        if result is None: self.status.setText('Annulleret — ingen output publiceret'); return
+        if result is None: self.status.setText(message('scan_cancelled')); return
         root=self._paths(); self.output_paths=(root/'outputs'/ (Path(self.source.text()).stem+'-marked.docx'),root/'outputs'/ (Path(self.source.text()).stem+'-findings.csv'),root/'outputs'/ (Path(self.source.text()).stem+'-summary.csv')); FileInventory(Path.home()/'.nenolink'/'file_inventory.sqlite').update([Path(self.source.text()),*self.output_paths]); self.open_outputs.setEnabled(True); self.status.setText(f'Færdig: {len(result.findings)} fund · {len(result.warnings)} advarsler')
-    def failed(self,message): self._finish(); QMessageBox.critical(self,'Scanning fejlede',message); self.status.setText('Fejlede — ingen output publiceret')
+    def failed(self,detail): self._finish(); QMessageBox.critical(self,'Scanning fejlede',message('scan_failed')+'\n'+detail); self.status.setText(message('scan_failed'))
     def open_outputs_action(self):
         import os
         for path in self.output_paths:

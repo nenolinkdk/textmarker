@@ -104,6 +104,14 @@ def test_legacy_window_fixed_labels_have_translations_for_all_locales():
         assert key in _FIXED
         assert set(_FIXED[key])=={'da','sv','nb','en','de','fr'}
 
+def test_dynamic_runtime_messages_are_renderable_in_each_locale():
+    from PySide6.QtWidgets import QLabel
+    from textmarker.ui.ui_texts import message, set_current_locale
+    expected={'da':'Annulleret','sv':'Avbruten','nb':'Avbrutt','en':'Cancelled','de':'Abgebrochen','fr':'Annulé'}
+    for locale, word in expected.items():
+        set_current_locale(locale); label=QLabel(message('scan_cancelled')); assert word in label.text()
+        done=QLabel(message('findings_done',findings=2,warnings=1)); assert '2' in done.text() and '1' in done.text()
+
 def test_all_localized_manual_sources_and_tutorials_exist():
     from pathlib import Path
     root=Path(__file__).parents[1]/'docs'/'manual'

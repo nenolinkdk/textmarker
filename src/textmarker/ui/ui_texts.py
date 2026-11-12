@@ -21,6 +21,27 @@ def current_locale(default='da'):
 def ui(key, locale=None):
     return _TEXT.get(locale or current_locale(),_TEXT['en']).get(key,_TEXT['en'].get(key,key))
 
+_MESSAGES={
+ 'scan_cancelled':('Annulleret — ingen output publiceret','Avbruten — inga utdata publicerades','Avbrutt — ingen utdata ble publisert','Cancelled — no output was published','Abgebrochen — keine Ausgabe wurde veröffentlicht','Annulé — aucune sortie n’a été publiée'),
+ 'scan_running':('Scanner…','Skannar…','Skanner…','Scanning…','Scan läuft…','Analyse en cours…'),
+ 'scan_failed':('Scanning fejlede — ingen output er publiceret','Skanningen misslyckades — inga utdata publicerades','Skanningen mislyktes — ingen utdata ble publisert','Scan failed — no output was published','Scan fehlgeschlagen — keine Ausgabe wurde veröffentlicht','Échec de l’analyse — aucune sortie n’a été publiée'),
+ 'cancel_requested':('Annullerer…','Avbryter…','Avbryter…','Cancelling…','Abbruch…','Annulation…'),
+ 'index_running':('Indekserer…','Indexerar…','Indekserer…','Indexing…','Indexierung…','Indexation…'),
+ 'index_cancelled':('Annulleret — ingen output skrevet','Avbruten — inga utdata skrevs','Avbrutt — ingen utdata ble skrevet','Cancelled — no output written','Abgebrochen — keine Ausgabe geschrieben','Annulé — aucune sortie écrite'),
+ 'missing_choice':('Vælg både kilde og output.','Välj både källa och utdata.','Velg både kilde og utdata.','Choose both source and output.','Wählen Sie Quelle und Ausgabe.','Choisissez la source et la sortie.'),
+ 'project_saved':('Projekt gemt: {path}','Projekt sparat: {path}','Prosjekt lagret: {path}','Project saved: {path}','Projekt gespeichert: {path}','Projet enregistré : {path}'),
+ 'imported_pack':('Rule pack importeret: {pack}','Regelpaket importerat: {pack}','Regelpakke importert: {pack}','Rule pack imported: {pack}','Regelpaket importiert: {pack}','Pack de règles importé : {pack}'),
+ 'active_packs':('{count} rule packs aktive i projektet','{count} regelpaket aktiva i projektet','{count} regelpakker aktive i prosjektet','{count} rule packs active in the project','{count} Regelpakete im Projekt aktiv','{count} packs de règles actifs dans le projet'),
+ 'rules_shown':('{pack}: {rows} vist / {rules} regler','{pack}: {rows} visade / {rules} regler','{pack}: {rows} vist / {rules} regler','{pack}: {rows} shown / {rules} rules','{pack}: {rows} angezeigt / {rules} Regeln','{pack} : {rows} affichées / {rules} règles'),
+ 'findings_done':('Færdig: {findings} fund · {warnings} advarsler','Klar: {findings} fynd · {warnings} varningar','Ferdig: {findings} funn · {warnings} advarsler','Done: {findings} findings · {warnings} warnings','Fertig: {findings} Funde · {warnings} Warnungen','Terminé : {findings} résultats · {warnings} avertissements'),
+ 'import_summary':('{rows} rækker, {concepts} begreber, {terms} termer','{rows} rader, {concepts} koncept, {terms} termer','{rows} rader, {concepts} konsepter, {terms} termer','{rows} rows, {concepts} concepts, {terms} terms','{rows} Zeilen, {concepts} Konzepte, {terms} Begriffe','{rows} lignes, {concepts} concepts, {terms} termes'),
+}
+def message(key, locale=None, **values):
+    locale=locale or current_locale(); variants=_MESSAGES.get(key)
+    if not variants: return key
+    text=variants[{'da':0,'sv':1,'nb':2,'en':3,'de':4,'fr':5}.get(locale,3)]
+    return text.format(**values)
+
 _FIXED={
  'Vælg…':{'da':'Vælg…','sv':'Välj…','nb':'Velg…','en':'Choose…','de':'Auswählen…','fr':'Choisir…'},
  'Annullér':{'da':'Annullér','sv':'Avbryt','nb':'Avbryt','en':'Cancel','de':'Abbrechen','fr':'Annuler'},

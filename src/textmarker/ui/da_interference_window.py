@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QCheckBox, QFileDialog, QHBoxLayout, QLabel, QLine
 from textmarker.da_interference import load_rules, scan_and_write
 from textmarker.file_inventory import FileInventory
 from textmarker.ui.result_controls import ResultRow, HelpLinks
-from textmarker.ui.ui_texts import localize_widget_tree
+from textmarker.ui.ui_texts import localize_widget_tree, message
 
 class DAWorker(QObject):
     progress=Signal(int); finished=Signal(object); failed=Signal(str)
@@ -47,12 +47,12 @@ class DAInterferenceWindow(QMainWindow):
         if not self.categories: QMessageBox.warning(self,'Manglende kategorier','Vælg mindst én kategori.'); return
         self.result_row.clear(); self.thread=QThread(self); self.worker=DAWorker(self.source.text(),self.rules.text(),self.output_dir,self.categories); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.done); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.start_button.setEnabled(False); self.cancel_button.setEnabled(True); self.open_button.setEnabled(False); self.status.setText('Scanner…'); self.thread.start()
     def cancel(self):
-        if self.worker: self.worker.cancel(); self.status.setText('Annullerer…')
+        if self.worker: self.worker.cancel(); self.status.setText(message('cancel_requested'))
     def done(self,payload):
         self._finish()
-        if payload is None: self.status.setText('Annulleret — ingen output publiceret'); return
-        result,paths=payload; self.result_paths=paths[2:]; FileInventory(Path.home()/'.nenolink'/'file_inventory.sqlite').update(paths); self.result_row.set_result(self.result_paths[0]); self.open_button.setEnabled(True); self.status.setText(f'Færdig: {len(result.findings)} fund · {len(result.warnings)} advarsler')
-    def failed(self,message): self._finish(); QMessageBox.critical(self,'Scan fejlede',f'Ingen output er publiceret.\n{message}'); self.status.setText('Fejlede — ingen output publiceret')
+        if payload is None: self.status.setText(message('scan_cancelled')); return
+        result,paths=payload; self.result_paths=paths[2:]; FileInventory(Path.home()/'.nenolink'/'file_inventory.sqlite').update(paths); self.result_row.set_result(self.result_paths[0]); self.open_button.setEnabled(True); self.status.setText(message('findings_done',findings=len(result.findings),warnings=len(result.warnings)))
+    def failed(self,detail): self._finish(); QMessageBox.critical(self,'Scan fejlede',message('scan_failed')+'\n'+detail); self.status.setText(message('scan_failed'))
     def open_results(self):
         import os
         for path in self.result_paths:

@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QFileDialog, QFormLayout,
 from textmarker.file_inventory import FileInventory
 from textmarker.word_index import export_csv, export_txt, index_docx, resource_path
 from textmarker.ui.result_controls import ResultRow, HelpLinks
-from textmarker.ui.ui_texts import ui
+from textmarker.ui.ui_texts import ui, message
 
 
 class IndexWorker(QObject):
@@ -69,14 +69,14 @@ class WordIndexWindow(QMainWindow):
         source, output = self.source.text().strip(), self.output.text().strip()
         if not source or not output: QMessageBox.warning(self, 'Mangler valg', 'Vælg både kilde og output.'); return
         self.result_row.clear(); self.thread = QThread(self); self.worker = IndexWorker(source, output, self.language.currentData(), self.stopwords.isChecked(), self.counts.isChecked(), self.format.currentText()); self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.done); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.thread.start(); self.run_button.setEnabled(False); self.cancel_button.setEnabled(True); self.status.setText('Indekserer…')
+        self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.done); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.thread.start(); self.run_button.setEnabled(False); self.cancel_button.setEnabled(True); self.status.setText(message('index_running'))
 
     def cancel(self):
-        if self.worker: self.worker.cancel(); self.status.setText('Annullerer…')
+        if self.worker: self.worker.cancel(); self.status.setText(message('cancel_requested'))
 
     def done(self, payload):
         self._finish()
-        if payload is None: self.status.setText('Annulleret — ingen output skrevet'); return
+        if payload is None: self.status.setText(message('index_cancelled')); return
         result, path = payload
         if self.inventory.isChecked():
             try:
@@ -84,7 +84,7 @@ class WordIndexWindow(QMainWindow):
             except Exception as exc: result = result.__class__(result.counts, result.excluded_tokens, result.total_tokens, result.warnings + (f'Filinventar: {exc}',))
         self.result_row.set_result(path); self.status.setText(f'Færdig: {len(result.counts)} ord · {result.total_tokens - result.excluded_tokens} medtaget · {len(result.warnings)} advarsler')
 
-    def failed(self, message): self._finish(); QMessageBox.critical(self, 'Indeksering fejlede', message); self.status.setText('Fejlede — ingen output garanteret')
+    def failed(self, detail): self._finish(); QMessageBox.critical(self, 'Indeksering fejlede', message('scan_failed')+'\n'+detail); self.status.setText(message('scan_failed'))
 
     def _finish(self):
         self.run_button.setEnabled(True); self.cancel_button.setEnabled(False)

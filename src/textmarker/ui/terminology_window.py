@@ -3,7 +3,7 @@ from uuid import uuid4
 from PySide6.QtWidgets import QFileDialog, QFormLayout, QHBoxLayout, QInputDialog, QLabel, QListWidget, QMainWindow, QMessageBox, QPushButton, QLineEdit, QComboBox, QVBoxLayout, QWidget, QDialog, QDialogButtonBox, QCheckBox
 from textmarker.terminology.repository import Concept, TermEntry, TerminologyRepository, TERM_STATUSES
 from textmarker.terminology.csv_io import CANONICAL_FIELDS, MappingProfileStore, export_csv, import_csv, preview_csv
-from textmarker.ui.ui_texts import localize_widget_tree
+from textmarker.ui.ui_texts import localize_widget_tree, message
 
 class CsvMappingDialog(QDialog):
     def __init__(self,preview,profiles,parent=None):
@@ -72,7 +72,7 @@ class TerminologyWindow(QMainWindow):
             if not mapping.get('concept_id') and not generate: errors.append('Map concept_id eller vælg generering af IDs')
             if not mapping.get('term'): errors.append('term skal mappes')
             if errors: raise ValueError('; '.join(errors))
-            result=import_csv(self.repo,path,mapping,language,generate); self.refresh(); QMessageBox.information(self,'Import færdig',f"{result['rows']} rækker, {result['concepts']} concepts, {result['terms']} termer")
+            result=import_csv(self.repo,path,mapping,language,generate); self.refresh(); QMessageBox.information(self,'Import færdig',message('import_summary',**result))
         except Exception as exc: QMessageBox.critical(self,'Import fejlede',str(exc))
     def export_file(self):
         path=QFileDialog.getSaveFileName(self,'Eksportér terminology CSV','','CSV (*.csv)')[0]
