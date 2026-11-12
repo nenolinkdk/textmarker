@@ -1,18 +1,19 @@
 {
-  "version": "0.5-I.6.2e",
+  "version": "0.5-I.6.2e-fix1",
   "locales": ["da", "sv", "nb", "en", "de", "fr"],
   "source_of_truth": "src/textmarker/ui/ui_texts.py",
   "entries": [
     {"module":"Translation Risk Scanner","window":"RiskWindow","key":"risk.controls","source":"src/textmarker/risk_gui_entry.py:28-33","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":[]},
     {"module":"DA-interference Scanner","window":"DAInterferenceWindow","key":"interference.controls","source":"src/textmarker/ui/da_interference_window.py:27-40","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":[]},
-    {"module":"Terminology","window":"TerminologyWindow","key":"terminology.controls","source":"src/textmarker/ui/terminology_window.py:31-37","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":["mapping-dialog labels require a separate visual audit"]},
-    {"module":"Glossaries & Rules","window":"RulePackWindow","key":"rules.controls","source":"src/textmarker/ui/rule_pack_window.py:8","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":["table headers and project-assignment label require a separate visual audit"]},
+    {"module":"Terminology","window":"TerminologyWindow","key":"terminology.controls","source":"src/textmarker/ui/terminology_window.py:10,31-37","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":["runtime validation/status messages still require a full visual audit"]},
+    {"module":"Glossaries & Rules","window":"RulePackWindow","key":"rules.controls","source":"src/textmarker/ui/rule_pack_window.py:8","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":["runtime import/assignment status messages still require a full visual audit"]},
     {"module":"Text Marker","window":"MainWindow","key":"textmarker.controls","source":"src/textmarker/ui/main_window.py:18-23","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":[]},
-    {"module":"Word Index","window":"WordIndexWindow","key":"wordindex.controls","source":"src/textmarker/ui/word_index_window.py:47-61","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":["long-form field labels require a separate visual audit"]},
+    {"module":"Word Index","window":"WordIndexWindow","key":"wordindex.controls","source":"src/textmarker/ui/word_index_window.py:47-61","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":["runtime progress/error messages still require a full visual audit"]},
     {"module":"Project Workflow","window":"ProjectWorkflow","key":"projects.controls","source":"src/textmarker/ui/project_workflow.py:28-35","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":[]},
     {"module":"Prompt Builder","window":"PromptBuilderWindow","key":"prompts.builder.controls","source":"src/textmarker/ui/prompt_builder_window.py:9-10","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":[]},
     {"module":"Prompt Library","window":"PromptLibraryWindow","key":"prompts.library.controls","source":"src/textmarker/ui/prompt_library_window.py:8","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":["user-authored prompt text is intentionally not translated"]},
     {"module":"File Inventory","window":"InventoryWindow","key":"inventory.controls","source":"src/textmarker/ui/inventory_window.py:10-18","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":[]}
   ],
-  "policy": "User-authored text, imported terms, expressions, rule IDs and CSV content are never translated. Items in unresolved are not claimed as complete."
+  "policy": "User-authored text, imported terms, expressions, rule IDs and CSV content are never translated. Items in unresolved are not claimed as complete.",
+  "latest_verification": {"automated_tests":"85 passed, 0 failed", "packaged_startup":"PASS", "packaged_visible_locale_smoke":"Norwegian Bokmål PASS; remaining five locales NOT TESTED interactively", "word_visual_acceptance":"NOT TESTED", "known_remaining":"dynamic runtime messages in legacy windows need a complete visual audit"}
 }
