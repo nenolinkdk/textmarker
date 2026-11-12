@@ -1,5 +1,5 @@
 {
-  "version": "0.5-I.6.2f",
+  "version": "0.5-I.6.2g",
   "locales": ["da", "sv", "nb", "en", "de", "fr"],
   "source_of_truth": "src/textmarker/ui/ui_texts.py",
   "entries": [
@@ -15,5 +15,5 @@
     {"module":"File Inventory","window":"InventoryWindow","key":"inventory.controls","source":"src/textmarker/ui/inventory_window.py:10-18","coverage":{"da":"mapped","sv":"mapped","nb":"mapped","en":"mapped","de":"mapped","fr":"mapped"},"unresolved":[]}
   ],
   "policy": "User-authored text, imported terms, expressions, rule IDs and CSV content are never translated. Items in unresolved are not claimed as complete.",
-  "latest_verification": {"automated_tests":"85 passed, 0 failed", "packaged_startup":"PASS", "packaged_visible_locale_smoke":"separate-process startup PASS; full six-locale interactive runtime-message walkthrough NOT TESTED", "word_visual_acceptance":"NOT TESTED", "known_remaining":"some exception details are intentionally appended diagnostically; full secondary-window manual language walkthrough remains pending"}
+  "latest_verification": {"automated_tests":"88 passed, 0 failed", "packaged_startup":"PASS", "packaged_visible_locale_smoke":"separate-process startup PASS", "dialog_tests":"Risk validation and terminology profile errors exercised in all six locales", "word_visual_acceptance":"NOT TESTED", "known_remaining":"full secondary-window manual language walkthrough remains pending"}
 }
