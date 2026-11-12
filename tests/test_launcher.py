@@ -114,3 +114,11 @@ def test_scanner_rule_and_terminology_windows_use_selected_locale(tmp_path):
         assert all(w.windowTitle() for w in windows)
         assert windows[0].cancel.text() != 'Annullér' or locale=='da'
         for window in windows: window.close()
+
+def test_localization_audit_is_machine_readable_and_complete_for_registered_windows():
+    import json
+    from pathlib import Path
+    audit=json.loads((Path(__file__).parents[1]/'docs'/'V05_LOCALIZATION_AUDIT.json').read_text(encoding='utf-8'))
+    assert audit['locales']==['da','sv','nb','en','de','fr']
+    assert len(audit['entries']) >= 10
+    assert all(set(entry['coverage'])==set(audit['locales']) for entry in audit['entries'])

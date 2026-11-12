@@ -7,6 +7,7 @@ from textmarker.multilingual.languages import LANGUAGES
 from textmarker.multilingual.project import ProjectProfile, ProjectStore
 from textmarker.multilingual.rule_packs import RulePackStore
 from textmarker.multilingual.integration import scan_project
+from textmarker.ui.ui_texts import localize_widget_tree
 
 class ProjectScanWorker(QObject):
     progress=Signal(int); finished=Signal(object); failed=Signal(str)
@@ -30,7 +31,7 @@ class ProjectWorkflow(QWidget):
         self.create=QPushButton('Opret/gem projekt'); self.import_pack=QPushButton('Importér rule pack'); self.associate=QPushButton('Aktivér valgte packs'); self.scan=QPushButton('Start scanning'); self.cancel=QPushButton('Annullér'); self.open_outputs=QPushButton('Åbn outputs'); self.cancel.setEnabled(False); self.open_outputs.setEnabled(False)
         self.create.clicked.connect(self.create_project); self.import_pack.clicked.connect(self.import_rule_pack); self.associate.clicked.connect(self.associate_packs); self.scan.clicked.connect(self.start_scan); self.cancel.clicked.connect(self.cancel_scan); self.open_outputs.clicked.connect(self.open_outputs_action)
         buttons=QHBoxLayout(); [buttons.addWidget(b) for b in (self.create,self.import_pack,self.associate,self.scan,self.cancel,self.open_outputs)]
-        layout=QVBoxLayout(self); layout.addLayout(form); layout.addWidget(QLabel('Tilgængelige rule packs')); layout.addWidget(self.packs); layout.addLayout(buttons); layout.addWidget(self.progress); layout.addWidget(self.status)
+        layout=QVBoxLayout(self); layout.addLayout(form); layout.addWidget(QLabel('Tilgængelige rule packs')); layout.addWidget(self.packs); layout.addLayout(buttons); layout.addWidget(self.progress); layout.addWidget(self.status); localize_widget_tree(self)
     def _file_row(self,edit,directory):
         row=QHBoxLayout(); row.addWidget(edit); b=QPushButton('Vælg…'); row.addWidget(b); b.clicked.connect(lambda:self._choose(edit,directory)); return row
     def _choose(self,edit,directory):
