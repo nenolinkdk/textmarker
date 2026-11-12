@@ -8,7 +8,7 @@ from textmarker.risk.rules import parse_risk_rules
 from textmarker.risk.scanner import scan_and_write
 from textmarker.docx.highlighter import CancelledError
 from textmarker.ui.result_controls import ResultRow, HelpLinks, open_help_anchor
-from textmarker.ui.ui_texts import localize_widget_tree
+from textmarker.ui.ui_texts import localize_widget_tree, message
 
 class RiskWorker(QObject):
     progress=Signal(int); done=Signal(object); error=Signal(str)
@@ -44,23 +44,23 @@ class RiskWindow(QMainWindow):
         root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3])); example=root/'data'/'examples'/'risk_rules_no_da.csv'
         target=QFileDialog.getSaveFileName(self,'Gem norsk–dansk eksempel','risk_rules_no_da.csv','CSV-filer (*.csv)')[0]
         if target:
-            try: shutil.copyfile(example,target); self.rules.setText(target); self.status.setText('Eksempel kopieret. Vælg et kilde-DOCX, og start derefter scanningen.')
-            except Exception as exc: QMessageBox.critical(self,'Kunne ikke kopiere eksempel',str(exc))
+            try: shutil.copyfile(example,target); self.rules.setText(target); self.status.setText(message('rules_shown',pack='Eksempel',rows=0,rules=0))
+            except Exception as exc: QMessageBox.critical(self,message('copy_example_failed'),message('copy_example_failed')+'\n'+str(exc))
     def begin(self):
-        if not self.source.text() or not self.rules.text(): QMessageBox.warning(self,'Mangler filer','Vælg både kilde-DOCX og CSV-filen med risikoregler.'); return
-        if not Path(self.source.text()).is_file(): QMessageBox.warning(self,'Kilden findes ikke','Vælg et eksisterende DOCX-dokument.'); return
+        if not self.source.text() or not self.rules.text(): QMessageBox.warning(self,message('missing_files'),message('missing_files_detail')); return
+        if not Path(self.source.text()).is_file(): QMessageBox.warning(self,message('source_missing'),message('source_missing_detail')); return
         try: parse_risk_rules(self.rules.text())
-        except Exception as exc: QMessageBox.warning(self,'Ugyldige risikoregler',str(exc)); return
+        except Exception as exc: QMessageBox.warning(self,message('invalid_risk_rules'),message('invalid_risk_rules')+'\n'+str(exc)); return
         out=self.output.text() or str(Path(self.source.text()).with_name(Path(self.source.text()).stem+'_risk_marked.docx')); report=str(Path(out).with_name(Path(out).stem+'_report.csv')); summary_path=str(Path(out).with_name(Path(out).stem+'_summary.csv'))
-        if Path(out).resolve()==Path(self.source.text()).resolve(): QMessageBox.warning(self,'Ugyldigt output','Output må ikke være kilden.'); return
+        if Path(out).resolve()==Path(self.source.text()).resolve(): QMessageBox.warning(self,message('invalid_output'),message('invalid_output_detail')); return
         self.output.setText(out); self.result_row.clear(); self.start.setEnabled(False); self.cancel.setEnabled(True); self.open_result.setEnabled(False); self.open_folder.setEnabled(False); self.thread=QThread(); cats={self.category_list.item(i).text() for i in range(self.category_list.count()) if self.category_list.item(i).checkState()==Qt.CheckState.Checked}; self.worker=RiskWorker((self.source.text(),self.rules.text(),out,report,summary_path,self.case.isChecked(),self.whole.isChecked(),cats)); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.done.connect(self.finished); self.worker.error.connect(self.failed); self.thread.start()
     def stop(self):
-        if self.worker:self.worker.cancel.set(); self.status.setText('Annullerer…')
+        if self.worker:self.worker.cancel.set(); self.status.setText(message('cancel_requested'))
     def finished(self,summary):
         self.cleanup()
-        if summary is None: self.status.setText('Annulleret. Ingen output blev gemt.'); return
-        rs,output,report,summary_path=summary; self.last_output=output; self.result_row.set_result(output); self.open_result.setEnabled(True); self.open_folder.setEnabled(True); self.status.setText(f'Færdig: {len(rs.findings)} mulige risici; {len(rs.warnings)} advarsler.\nForekomstrapport: {report}\nSummary: {summary_path}'); QMessageBox.information(self,'Risk Scanner',self.status.text())
-    def failed(self,msg): self.cleanup(); self.status.setText('Fejl: '+msg); QMessageBox.critical(self,'Fejl',msg)
+        if summary is None: self.status.setText(message('scan_cancelled')); return
+        rs,output,report,summary_path=summary; self.last_output=output; self.result_row.set_result(output); self.open_result.setEnabled(True); self.open_folder.setEnabled(True); self.status.setText(message('findings_done',findings=len(rs.findings),warnings=len(rs.warnings))+f'\nForekomstrapport: {report}\nSummary: {summary_path}'); QMessageBox.information(self,'Risk Scanner',self.status.text())
+    def failed(self,msg): self.cleanup(); self.status.setText(message('scan_failed')); QMessageBox.critical(self,'Fejl',message('scan_failed')+'\n'+msg)
     def cleanup(self):
         self.start.setEnabled(True); self.cancel.setEnabled(False)
         if self.thread:self.thread.quit(); self.thread.wait(); self.thread=None; self.worker=None

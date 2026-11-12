@@ -112,6 +112,29 @@ def test_dynamic_runtime_messages_are_renderable_in_each_locale():
         set_current_locale(locale); label=QLabel(message('scan_cancelled')); assert word in label.text()
         done=QLabel(message('findings_done',findings=2,warnings=1)); assert '2' in done.text() and '1' in done.text()
 
+def test_risk_validation_dialog_uses_current_locale(monkeypatch):
+    from textmarker.risk_gui_entry import RiskWindow
+    from textmarker.ui.ui_texts import set_current_locale, message
+    shown=[]; monkeypatch.setattr('textmarker.risk_gui_entry.QMessageBox.warning',lambda *args: shown.append((args[1],args[2])))
+    app=QApplication.instance() or QApplication([]); window=RiskWindow()
+    for locale in ('da','sv','nb','en','de','fr'):
+        set_current_locale(locale); window.source.clear(); window.rules.clear(); window.begin()
+        assert shown[-1][0]==message('missing_files',locale) and shown[-1][1]==message('missing_files_detail',locale)
+    window.close()
+
+def test_terminology_profile_error_dialog_uses_current_locale(monkeypatch):
+    from textmarker.ui.terminology_window import CsvMappingDialog
+    from textmarker.ui.ui_texts import set_current_locale, message
+    from types import SimpleNamespace
+    shown=[]; monkeypatch.setattr('textmarker.ui.terminology_window.QMessageBox.warning',lambda *args: shown.append((args[1],args[2])))
+    app=QApplication.instance() or QApplication([])
+    preview=SimpleNamespace(headers=('term',)); profiles=SimpleNamespace(list=lambda:[], load=lambda *args: (_ for _ in ()).throw(ValueError('bad profile')))
+    dialog=CsvMappingDialog(preview,profiles)
+    dialog.profile.addItem('broken'); dialog.profile.setCurrentText('broken')
+    for locale in ('da','sv','nb','en','de','fr'):
+        set_current_locale(locale); dialog.use_profile(); assert shown[-1][0]==message('profile_invalid',locale)
+    dialog.close()
+
 def test_all_localized_manual_sources_and_tutorials_exist():
     from pathlib import Path
     root=Path(__file__).parents[1]/'docs'/'manual'

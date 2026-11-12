@@ -35,6 +35,21 @@ _MESSAGES={
  'rules_shown':('{pack}: {rows} vist / {rules} regler','{pack}: {rows} visade / {rules} regler','{pack}: {rows} vist / {rules} regler','{pack}: {rows} shown / {rules} rules','{pack}: {rows} angezeigt / {rules} Regeln','{pack} : {rows} affichées / {rules} règles'),
  'findings_done':('Færdig: {findings} fund · {warnings} advarsler','Klar: {findings} fynd · {warnings} varningar','Ferdig: {findings} funn · {warnings} advarsler','Done: {findings} findings · {warnings} warnings','Fertig: {findings} Funde · {warnings} Warnungen','Terminé : {findings} résultats · {warnings} avertissements'),
  'import_summary':('{rows} rækker, {concepts} begreber, {terms} termer','{rows} rader, {concepts} koncept, {terms} termer','{rows} rader, {concepts} konsepter, {terms} termer','{rows} rows, {concepts} concepts, {terms} terms','{rows} Zeilen, {concepts} Konzepte, {terms} Begriffe','{rows} lignes, {concepts} concepts, {terms} termes'),
+ 'import_failed':('Import fejlede','Importen misslyckades','Importen mislyktes','Import failed','Import fehlgeschlagen','Échec de l’importation'),
+ 'export_failed':('Eksport fejlede','Exporten misslyckades','Eksporten mislyktes','Export failed','Export fehlgeschlagen','Échec de l’exportation'),
+ 'profile_invalid':('Profil passer ikke','Profilen passar inte','Profilen passer ikke','Profile is incompatible','Profil ist nicht kompatibel','Le profil est incompatible'),
+ 'invalid_risk_rules':('Ugyldige risikoregler','Ogiltiga riskregler','Ugyldige risikoregler','Invalid risk rules','Ungültige Risikoregeln','Règles de risque non valides'),
+ 'missing_files':('Mangler filer','Filer saknas','Filer mangler','Files are missing','Dateien fehlen','Fichiers manquants'),
+ 'missing_files_detail':('Vælg både kilde-DOCX og CSV-filen med risikoregler.','Välj både käll-DOCX och CSV-filen med riskregler.','Velg både kilde-DOCX og CSV-filen med risikoregler.','Choose both the source DOCX and CSV risk-rule file.','Wählen Sie Quelldokument und CSV-Risikoregeln.','Choisissez le DOCX source et le CSV de règles de risque.'),
+ 'confirm':('Bekræft','Bekräfta','Bekreft','Confirm','Bestätigen','Confirmer'),
+ 'mapping_delete_confirm':('Slet mapping-profil?','Ta bort mappningsprofil?','Slette tilordningsprofil?','Delete mapping profile?','Mapping-Profil löschen?','Supprimer le profil de mappage ?'),
+ 'concept_error':('Concept-fejl','Konceptfel','Konseptfeil','Concept error','Konzeptfehler','Erreur de concept'),
+ 'term_error':('Term-fejl','Termfel','Terminologifeil','Term error','Termfehler','Erreur de terme'),
+ 'copy_example_failed':('Kunne ikke kopiere eksempel','Kunde inte kopiera exemplet','Kunne ikke kopiere eksempelet','Could not copy example','Beispiel konnte nicht kopiert werden','Impossible de copier l’exemple'),
+ 'source_missing':('Kilden findes ikke','Källan finns inte','Kilden finnes ikke','Source does not exist','Quelle nicht gefunden','La source n’existe pas'),
+ 'source_missing_detail':('Vælg et eksisterende DOCX-dokument.','Välj ett befintligt DOCX-dokument.','Velg et eksisterende DOCX-dokument.','Choose an existing DOCX document.','Wählen Sie ein vorhandenes DOCX-Dokument.','Choisissez un document DOCX existant.'),
+ 'invalid_output':('Ugyldigt output','Ogiltig utdata','Ugyldig utdata','Invalid output','Ungültige Ausgabe','Sortie non valide'),
+ 'invalid_output_detail':('Output må ikke være kilden.','Utdata får inte vara källan.','Utdata kan ikke være kilden.','Output must not be the source.','Die Ausgabe darf nicht die Quelle sein.','La sortie ne peut pas être la source.'),
 }
 def message(key, locale=None, **values):
     locale=locale or current_locale(); variants=_MESSAGES.get(key)

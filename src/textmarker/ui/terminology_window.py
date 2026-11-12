@@ -19,13 +19,13 @@ class CsvMappingDialog(QDialog):
             item=self.profiles.load(self.profile.currentText(),tuple(self.boxes['term'].itemText(i) for i in range(1,self.boxes['term'].count())))
             for field,column in item['mapping'].items(): self.boxes[field].setCurrentText(column)
             if item.get('language'): self.language.setText(item['language'])
-        except Exception as exc: QMessageBox.warning(self,'Profil passer ikke',str(exc))
+        except Exception as exc: QMessageBox.warning(self,message('profile_invalid'),message('profile_invalid')+'\n'+str(exc))
     def save(self):
-        name,ok=QInputDialog.getText(self,'Gem mapping profile','Navn:')
+        name,ok=QInputDialog.getText(self,message('save'),message('save')+':')
         if ok and name:
             mapping,language,_=self.result(); headers=tuple(self.boxes['term'].itemText(i) for i in range(1,self.boxes['term'].count())); self.profiles.save(name,headers,mapping,language); self.profile.addItem(name)
     def delete(self):
-        if self.profile.currentText()!='(ingen)' and QMessageBox.question(self,'Bekræft','Slet mapping profile?')==QMessageBox.StandardButton.Yes: self.profiles.delete(self.profile.currentText()); self.profile.removeItem(self.profile.currentIndex())
+        if self.profile.currentText()!='(ingen)' and QMessageBox.question(self,message('confirm'),message('mapping_delete_confirm'))==QMessageBox.StandardButton.Yes: self.profiles.delete(self.profile.currentText()); self.profile.removeItem(self.profile.currentIndex())
 
 class TerminologyWindow(QMainWindow):
     def __init__(self, database=None):
@@ -47,7 +47,7 @@ class TerminologyWindow(QMainWindow):
         cid,ok=QInputDialog.getText(self,'Nyt concept','Stabilt concept ID:');
         if ok and cid:
             try: self.repo.create_concept(Concept(cid)); self.refresh()
-            except Exception as exc: QMessageBox.warning(self,'Concept-fejl',str(exc))
+            except Exception as exc: QMessageBox.warning(self,message('concept_error'),message('concept_error')+'\n'+str(exc))
     def save(self):
         if not self.current: return
         c=self.repo.get_concept(self.current); self.repo.update_concept(Concept(c.concept_id,self.definition.text(),self.subject_edit.text(),c.notes,c.client_id,c.project_id,c.source_reference,c.created_at,c.updated_at)); self.refresh()
@@ -56,7 +56,7 @@ class TerminologyWindow(QMainWindow):
     def add(self):
         if not self.current: return
         try: self.repo.add_term(TermEntry('term_'+uuid4().hex,self.current,self.term_language.text(),self.term.text(),self.term_status.currentData())); self.select(self.concepts.currentRow())
-        except Exception as exc: QMessageBox.warning(self,'Term-fejl',str(exc))
+        except Exception as exc: QMessageBox.warning(self,message('term_error'),message('term_error')+'\n'+str(exc))
     def remove(self):
         if not self.current or not self.terms.currentItem(): return
         if QMessageBox.question(self,'Bekræft','Fjern valgt term?')!=QMessageBox.StandardButton.Yes: return
@@ -73,9 +73,9 @@ class TerminologyWindow(QMainWindow):
             if not mapping.get('term'): errors.append('term skal mappes')
             if errors: raise ValueError('; '.join(errors))
             result=import_csv(self.repo,path,mapping,language,generate); self.refresh(); QMessageBox.information(self,'Import færdig',message('import_summary',**result))
-        except Exception as exc: QMessageBox.critical(self,'Import fejlede',str(exc))
+        except Exception as exc: QMessageBox.critical(self,message('import_failed'),message('import_failed')+'\n'+str(exc))
     def export_file(self):
         path=QFileDialog.getSaveFileName(self,'Eksportér terminology CSV','','CSV (*.csv)')[0]
         if path:
             try: export_csv(self.repo,path,language=self.language.text() or None,subject=self.subject.text() or None,status=self.status_filter.currentData() or None); QMessageBox.information(self,'Eksport færdig',path)
-            except Exception as exc: QMessageBox.critical(self,'Eksport fejlede',str(exc))
+            except Exception as exc: QMessageBox.critical(self,message('export_failed'),message('export_failed')+'\n'+str(exc))
