@@ -75,7 +75,7 @@ def test_danish_shell_uses_danish_control_labels_and_dashboard_opens_settings():
 def test_danish_to_bokmaal_and_back_updates_shell_labels():
     app=QApplication.instance() or QApplication([]); QSettings('Nenolink','TextTools').setValue('ui_locale','da'); shell=AppShell()
     shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('nb'))
-    assert shell.translator.locale=='nb' and shell.nav.item(8).text()=='Glossaries & Rules'
+    assert shell.translator.locale=='nb' and shell.nav.item(8).text()=='Ordlister og regler'
     shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData('da'))
     assert shell.translator.locale=='da' and shell.nav.item(8).text()=='Ordlister og regler' and shell.context_toggle.text()=='Skjul hjælp'
     shell.close()
