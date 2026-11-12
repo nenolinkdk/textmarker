@@ -130,3 +130,12 @@ def test_danish_module_introduction_does_not_fallback_to_english_prose():
     visible=' '.join(label.text() for label in page.findChildren(type(page._first)))
     assert 'Dashboard supports a systematic local workflow' not in visible
     assert 'Start med et lokalt projekt' in visible
+
+def test_non_danish_module_structured_text_does_not_use_english_fallback():
+    from textmarker.ui.module_introduction import ModuleIntroduction
+    app=QApplication.instance() or QApplication([])
+    for locale in ('sv','nb','de','fr'):
+        page=ModuleIntroduction('Dashboard',locale)
+        visible=' '.join(label.text() for label in page.findChildren(type(page._first)))
+        assert 'Purpose, input, output and workflow guidance.' not in visible
+        assert 'Generated local files or results.' not in visible
