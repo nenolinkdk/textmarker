@@ -61,3 +61,18 @@ The rows above document resource coverage, not linguistic approval. Full module-
 The shared catalog now covers the fixed application-owned strings used by the four named windows, and parameterized tests instantiate those windows under all six locales. This is an automated UI-control check, not a substitute for native linguistic review or interactive Windows acceptance.
 
 Fresh build: source commit `5f2fcbd7032b25fe64cc5d3cd843d81c984b31a3`, EXE size `51,981,902` bytes, SHA-256 `39A7A9D315DD8550C93CD3A8273F4FF2D47A3219301B51246F8F0CE579533E96`. Separate-process startup: `PASS`. Full GUI click-through and Microsoft Word: `NOT TESTED`.
+
+## Phase I.6.2e verification
+
+| Requirement | Implementation | Automated test | Packaged GUI | Word |
+|---|---|---|---|---|
+| Six-locale AppShell navigation and context controls | IMPLEMENTED | PASS (83 tests) | PASS for startup/dashboard smoke; full language click-through NOT TESTED | NOT TESTED |
+| Isolated Danish/Norsk language-switch regression | IMPLEMENTED | PASS | NOT TESTED end-to-end | NOT TESTED |
+| Fresh Windows TEST build | IMPLEMENTED | PASS | PASS: process remained alive for 5 seconds | NOT TESTED |
+| Secondary-window full localization audit | PARTIAL | Catalog/window tests PASS; legacy strings remain to audit | NOT TESTED | NOT TESTED |
+| Manuals/tutorial semantic and native-language review | PARTIAL | Resource/anchor tests PASS | NOT TESTED from packaged browser | NOT TESTED |
+
+Build commit: fe2ac6ca3c6cf14ebd461b9a90a3da8b74bc1ab7  
+EXE: dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe  
+Size: 51,987,920 bytes  
+SHA-256: E0D3A01DA51807AFCF664F3AA5181A538D1B84A1C875AEC1BA2B8BA1F6AF577
