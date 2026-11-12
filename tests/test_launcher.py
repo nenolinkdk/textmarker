@@ -87,6 +87,23 @@ def test_help_anchor_is_a_fragment_on_bundled_html_file():
     url=QUrl.fromLocalFile(str(path)); url.setFragment('scanner.overview')
     assert url.fragment()=='scanner.overview' and url.path().endswith('help.html')
 
+def test_shell_navigation_and_context_are_localized_for_all_supported_locales():
+    app=QApplication.instance() or QApplication([]); QSettings('Nenolink','TextTools').setValue('ui_locale','da'); shell=AppShell()
+    expected={'da':'Ordlister og regler','sv':'Ordlistor och regler','nb':'Ordlister og regler','en':'Glossaries & Rules','de':'Glossare und Regeln','fr':'Glossaires et règles'}
+    help_labels={'da':'Skjul hjælp','sv':'Dölj hjälp','nb':'Skjul hjelp','en':'Hide help','de':'Hilfe ausblenden','fr':'Masquer l’aide'}
+    for locale in expected:
+        shell.ui_language_header.setCurrentIndex(shell.ui_language_header.findData(locale))
+        assert shell.nav.item(8).text()==expected[locale]
+        assert shell.context_toggle.text()==help_labels[locale]
+        assert shell.header_label.text()
+    shell.close()
+
+def test_legacy_window_fixed_labels_have_translations_for_all_locales():
+    from textmarker.ui.ui_texts import _FIXED
+    for key in ('Fjern reference','Rule ID','Mapping profile','Brug profil','Gem profil','Slet profil'):
+        assert key in _FIXED
+        assert set(_FIXED[key])=={'da','sv','nb','en','de','fr'}
+
 def test_all_localized_manual_sources_and_tutorials_exist():
     from pathlib import Path
     root=Path(__file__).parents[1]/'docs'/'manual'

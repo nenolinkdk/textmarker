@@ -1,5 +1,5 @@
 from PySide6.QtCore import QSettings
-from PySide6.QtWidgets import QAbstractButton, QLabel, QLineEdit, QComboBox, QWidget
+from PySide6.QtWidgets import QAbstractButton, QLabel, QLineEdit, QComboBox, QTableWidget, QWidget
 
 _TEXT={
  'da':{'choose':'Vælg…','cancel':'Annullér','start':'Start','ready':'Klar','open':'Åbn','close':'Luk','save':'Gem','language':'Sprog','source':'Kildesprog','target':'Målsprog','output':'Output','manual':'Brugervejledning','tutorial':'Tutorial','settings':'Indstillinger','status_local':'Lokale data behandles på denne computer.'},
@@ -87,6 +87,45 @@ _FIXED={
  'Promptbibliotek':{'da':'Promptbibliotek','sv':'Promptbibliotek','nb':'Promptbibliotek','en':'Prompt Library','de':'Promptbibliothek','fr':'Bibliothèque de prompts'},
 }
 
+# Fixed application-owned labels used by legacy windows.  User-authored text,
+# imported terms and rule expressions are deliberately not included here.
+_EXTRA={
+ 'Fjern reference':('Fjern reference','Ta bort referens','Fjern referanse','Remove reference','Referenz entfernen','Supprimer la référence'),
+ 'Opdatér':('Opdatér','Uppdatera','Oppdater','Refresh','Aktualisieren','Actualiser'),
+ 'Lokale kildereferencer (filer flyttes eller slettes aldrig)':('Lokale kildereferencer (filer flyttes eller slettes aldrig)','Lokala källreferenser (filer flyttas eller raderas aldrig)','Lokale kildereferanser (filer flyttes eller slettes aldri)','Local file references (files are never moved or deleted)','Lokale Dateireferenzen (Dateien werden nie verschoben oder gelöscht)','Références de fichiers locales (les fichiers ne sont jamais déplacés ni supprimés)'),
+ 'Søg i filstier…':('Søg i filstier…','Sök i filsökvägar…','Søk i filstier…','Search file paths…','Dateipfade suchen…','Rechercher dans les chemins…'),
+ 'Rule ID':('Regel-ID','Regel-ID','Regel-ID','Rule ID','Regel-ID','ID de règle'),
+ 'Source':('Kilde','Källa','Kilde','Source','Quelle','Source'),
+ 'Target':('Mål','Mål','Mål','Target','Ziel','Cible'),
+ 'Expression':('Udtryk','Uttryck','Uttrykk','Expression','Ausdruck','Expression'),
+ 'Category':('Kategori','Kategori','Kategori','Category','Kategorie','Catégorie'),
+ 'Severity':('Alvorlighed','Allvarlighetsgrad','Alvorlighetsgrad','Severity','Schweregrad','Gravité'),
+ 'Enabled':('Aktiv','Aktiv','Aktiv','Enabled','Aktiv','Activé'),
+ 'Projektprofil JSON':('Projektprofil-JSON','Projektprofil-JSON','Prosjektprofil-JSON','Project profile JSON','Projektprofil-JSON','JSON du profil de projet'),
+ 'Projektprofil':('Projektprofil','Projektprofil','Prosjektprofil','Project profile','Projektprofil','Profil de projet'),
+ 'Tilknyt valgte packs til projekt':('Tilknyt valgte packs til projekt','Koppla valda paket till projekt','Knytt valgte pakker til prosjekt','Assign selected packs to project','Ausgewählte Pakete dem Projekt zuweisen','Associer les packs sélectionnés au projet'),
+ 'Gem projekt':('Gem projekt','Spara projekt','Lagre prosjekt','Save project','Projekt speichern','Enregistrer le projet'),
+ 'Kildesprog':('Kildesprog','Källspråk','Kildespråk','Source language','Ausgangssprache','Langue source'),
+ 'Målsprog':('Målsprog','Målspråk','Målspråk','Target language','Zielsprache','Langue cible'),
+ 'Projektnavn':('Projektnavn','Projektnamn','Prosjektnavn','Project name','Projektname','Nom du projet'),
+ 'Projektmappe':('Projektmappe','Projektmapp','Prosjektmappe','Project folder','Projektordner','Dossier du projet'),
+ 'Mapping profile':('Kortlægningsprofil','Mappningsprofil','Tilordningsprofil','Mapping profile','Mapping-Profil','Profil de mappage'),
+ '(ingen)':('(ingen)','(ingen)','(ingen)','(none)','(keine)','(aucun)'),
+ 'Brug profil':('Brug profil','Använd profil','Bruk profil','Use profile','Profil verwenden','Utiliser le profil'),
+ 'Gem profil':('Gem profil','Spara profil','Lagre profil','Save profile','Profil speichern','Enregistrer le profil'),
+ 'Slet profil':('Slet profil','Ta bort profil','Slett profil','Delete profile','Profil löschen','Supprimer le profil'),
+ 'Søg term eller concept ID':('Søg term eller concept-ID','Sök term eller koncept-ID','Søk etter term eller konsept-ID','Search term or concept ID','Term oder Konzept-ID suchen','Rechercher un terme ou un identifiant de concept'),
+ 'Alle':('Alle','Alla','Alle','All','Alle','Tous'),
+ 'Nyt concept':('Nyt concept','Nytt koncept','Nytt konsept','New concept','Neues Konzept','Nouveau concept'),
+ 'Terminology':('Terminologi','Terminologi','Terminologi','Terminology','Terminologie','Terminologie'),
+ 'Glossaries & Rules':('Ordlister og regler','Ordlistor och regler','Ordlister og regler','Glossaries & Rules','Glossare und Regeln','Glossaires et règles'),
+ 'Prompt Builder':('Promptbygger','Promptbyggare','Promptbygger','Prompt Builder','Prompt-Builder','Constructeur de prompts'),
+ 'Word Index':('Ordfrekvens','Ordfrekvens','Ordfrekvens','Word Index','Wortindex','Index des mots'),
+ 'DA-interferensscan — Nenolink Text Tools v0.3':('DA-interferensscan — Nenolink Text Tools v0.3','DA-interferensskanning — Nenolink Text Tools v0.3','DA-interferansskanning — Nenolink Text Tools v0.3','DA interference scan — Nenolink Text Tools v0.3','DA-Interferenzscan — Nenolink Text Tools v0.3','Analyse des interférences DA — Nenolink Text Tools v0.3'),
+}
+for _key, _values in _EXTRA.items():
+    _FIXED[_key]=dict(zip(('da','sv','nb','en','de','fr'),_values))
+
 def localize_widget_tree(root: QWidget, locale=None):
     locale=locale or current_locale()
     def translate(value): return _FIXED.get(value,{}).get(locale,value)
@@ -98,4 +137,9 @@ def localize_widget_tree(root: QWidget, locale=None):
             child.setPlaceholderText(translate(child.placeholderText()))
         elif isinstance(child,QComboBox):
             for i in range(child.count()): child.setItemText(i,translate(child.itemText(i)))
+        elif isinstance(child,QTableWidget):
+            header=child.horizontalHeader()
+            for i in range(child.columnCount()):
+                item=child.horizontalHeaderItem(i)
+                if item: item.setText(translate(item.text()))
     return root
