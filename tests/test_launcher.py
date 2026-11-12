@@ -122,3 +122,11 @@ def test_localization_audit_is_machine_readable_and_complete_for_registered_wind
     assert audit['locales']==['da','sv','nb','en','de','fr']
     assert len(audit['entries']) >= 10
     assert all(set(entry['coverage'])==set(audit['locales']) for entry in audit['entries'])
+
+def test_danish_module_introduction_does_not_fallback_to_english_prose():
+    from textmarker.ui.module_introduction import ModuleIntroduction
+    app=QApplication.instance() or QApplication([])
+    page=ModuleIntroduction('Dashboard','da')
+    visible=' '.join(label.text() for label in page.findChildren(type(page._first)))
+    assert 'Dashboard supports a systematic local workflow' not in visible
+    assert 'Start med et lokalt projekt' in visible
