@@ -109,3 +109,8 @@ Verifikation: `93 passed` lokalt med `QT_QPA_PLATFORM=offscreen`. Ny EXE blev by
 StepGuide viser nu konkrete eksempel- og fejlfindingstekster, lokaliseret på seks sprog. Text Marker-vejledningen har handlingerne `Vis eksempel` og `Gem eksempel som…`, der åbner eller kopierer de bundtede DOCX/TXT-eksempler. Der er tilføjet regressionstest for de seks sprogs Text Marker-vejledning.
 
 Verifikation: `94 passed`. Ny EXE fra commit `c6b0cc1ee6a8f75b76fbb43f85a049e76365d0af`, 52,040,229 bytes, SHA-256 `51E06AD5018492A6BB04A25F16EC5FB4B769965F7B0AC6111725223206470227`. Pakket processtart er ikke visuelt navigeret i CUA; screenshots og Microsoft Word-kontrol er derfor fortsat ikke testet.
+## Phase I.6.3d — layout og trin-specifik fejlfinding
+
+Modulintroduktionerne bruger nu 12 px top/side-margin, ensartet 10 px spacing, `SetMinimumSize` og naturlig widgethøjde uden stretch. StepGuide har kompakt resizable standardstørrelse og konkrete fejlfindingstekster for Text Marker og Project Workflow.
+
+Verifikation: `96 passed`. EXE fra commit `8167a083556b817ebb500ff610628dce787768d0`, 52,042,127 bytes, SHA-256 `2A75212189A753061D50280361A872A7C3DE52252EF1821803EE3C1422AEF817`. Pakket visuel kontrol og screenshots er ikke gennemført i CUA; Microsoft Word er ikke testet.

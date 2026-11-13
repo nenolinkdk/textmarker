@@ -105,3 +105,6 @@ Automated: 93 passed, 0 failed. Windows build from commit `3a7daee9c0575d2d61746
 ## Phase I.6.3c
 
 The guide now exposes localized example actions for Text Marker and replaces its generic fallback troubleshooting with concrete file/status guidance. Automated regression suite: 94 passed. Build commit `c6b0cc1ee6a8f75b76fbb43f85a049e76365d0af`; EXE size 52,040,229 bytes; SHA-256 `51E06AD5018492A6BB04A25F16EC5FB4B769965F7B0AC6111725223206470227`. Packaged visual navigation and screenshots were not testable through the available CUA window index; Word validation remains manual/not tested.
+## Phase I.6.3d
+
+Layout was corrected with explicit compact margins, spacing, size policies and natural-height pastel cards. StepGuide now has a compact resizable window and step-specific troubleshooting for Text Marker and Project Workflow. Automated tests: 96 passed. Build commit `8167a083556b817ebb500ff610628dce787768d0`; EXE size 52,042,127 bytes; SHA-256 `2A75212189A753061D50280361A872A7C3DE52252EF1821803EE3C1422AEF817`. Packaged visual acceptance and screenshots were not performed; Microsoft Word remains not tested.
