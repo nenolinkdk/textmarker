@@ -202,3 +202,36 @@ def test_non_danish_module_structured_text_does_not_use_english_fallback():
         visible=' '.join(label.text() for label in page.findChildren(type(page._first)))
         assert 'Purpose, input, output and workflow guidance.' not in visible
         assert 'Generated local files or results.' not in visible
+
+def test_step_guide_has_real_text_marker_steps_and_preserves_position():
+    from textmarker.ui.step_guide import StepGuide
+    app=QApplication.instance() or QApplication([])
+    guide=StepGuide('Text Marker','da')
+    assert guide.number.text() == 'Trin 1 af 6'
+    assert 'Manuskript' in guide.instruction.text()
+    guide.forward(); guide.forward(); guide.forward(); guide.forward(); guide.forward()
+    assert guide.number.text() == 'Trin 6 af 6'
+    assert 'Åbn resultat' in guide.instruction.text()
+    guide.refresh('en')
+    assert guide.number.text() == 'Step 6 of 6'
+    guide.previous(); assert guide.number.text() == 'Step 5 of 6'
+    guide.close()
+
+def test_project_workflow_guide_names_all_required_controls_and_scrolls():
+    from textmarker.ui.step_guide import StepGuide
+    app=QApplication.instance() or QApplication([])
+    guide=StepGuide('Project Workflow','da')
+    text=[]
+    for i in range(6):
+        text.append(guide.instruction.text()); guide.forward()
+    combined=' '.join(text)
+    for term in ('Projektnavn','Projektmappe','Kildesprog','Målsprog','Input DOCX','Importér rule pack','Aktivér valgte packs','Start scanning','Åbn outputs'):
+        assert term in combined
+    assert guide.scroll.widgetResizable()
+    guide.close()
+
+def test_text_marker_example_term_list_is_bundled():
+    from pathlib import Path
+    example=Path(__file__).parents[1]/'data'/'examples'/'textmarker_terms.txt'
+    assert example.is_file()
+    assert 'oversættelse' in example.read_text(encoding='utf-8')

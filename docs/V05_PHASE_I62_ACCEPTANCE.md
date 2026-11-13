@@ -96,3 +96,9 @@ Automated tests: **90 passed, 0 failed**
 EXE: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`  
 Size: `51,995,817` bytes  
 SHA-256: `7B5DB2A00F6EA4CEF0349E5D9B3896841DF9B2C58007C50C5A46D5D993E09043`
+
+## Phase I.6.3b — acceptance note
+
+The former four-item HTML list was replaced by `StepGuide`, a modeless scrollable Qt guide. Text Marker exposes six concrete steps and Project Workflow exposes six concrete steps naming the visible controls. The current step is retained by the module introduction while navigating and changing locale. Project Workflow is placed inside a scroll area. Bundled Text Marker examples are present in `data/examples/`.
+
+Automated: 93 passed, 0 failed. Windows build: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 52,037,149 bytes, SHA-256 `4591D0939495E9424624C263ACA2DE41CCBC3072971DC7723F9ED984F62321AC`. Packaged process launch was observed. Visual packaged Previous/Next, scrollbar and screenshot acceptance were not completed because the CUA window index did not expose the launched window; Microsoft Word acceptance remains manual/not tested.

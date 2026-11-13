@@ -2,7 +2,7 @@ from pathlib import Path
 import sys
 from PySide6.QtCore import Qt, QSettings, QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QApplication,QComboBox,QFormLayout,QHBoxLayout,QLabel,QListWidget,QLineEdit,QMainWindow,QPushButton,QSplitter,QStackedWidget,QVBoxLayout,QWidget
+from PySide6.QtWidgets import QApplication,QComboBox,QFormLayout,QHBoxLayout,QLabel,QListWidget,QLineEdit,QMainWindow,QPushButton,QScrollArea,QSplitter,QStackedWidget,QVBoxLayout,QWidget
 from textmarker.ui.main_window import MainWindow as TextMarkerWindow
 from textmarker.risk_gui_entry import RiskWindow
 from textmarker.ui.word_index_window import WordIndexWindow
@@ -40,7 +40,7 @@ class AppShell(QMainWindow):
     def _build_pages(self):
         dash=ModuleIntroduction('Dashboard',self.translator.locale,lambda:self.nav.setCurrentRow(10),parent=self); self.pages.addWidget(dash)
         settings=QWidget(); form=QFormLayout(settings); self.ui_language=QComboBox(); [self.ui_language.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values()]; self.ui_language.setCurrentIndex(self.ui_language.findData(self.translator.locale)); self.ui_language.currentIndexChanged.connect(self.sync_language_from_settings); self.source_language=QComboBox(); self.target_language=QComboBox(); [c.addItem(language_name(x.code,self.translator.locale),x.code) for x in LANGUAGES.values() for c in (self.source_language,self.target_language)]; self.source_language.setCurrentText(language_name('en',self.translator.locale)); self.target_language.setCurrentText(language_name('da',self.translator.locale)); self.project_name=QLineEdit('Lokalt projekt'); self.project_dir=QLineEdit(str(Path.home())); save=QPushButton('Gem projekt'); save.clicked.connect(self.save_project); form.addRow('UI-sprog',self.ui_language); form.addRow('Kildesprog',self.source_language); form.addRow('Målsprog',self.target_language); form.addRow('Projektnavn',self.project_name); form.addRow('Projektmappe',self.project_dir); form.addRow('',save); self.pages.addWidget(settings)
-        workflow_page=QWidget(); wl=QVBoxLayout(workflow_page); wl.addWidget(ModuleIntroduction('Project Workflow',self.translator.locale,parent=self)); workflow=ProjectWorkflow(); self.workflow=workflow; wl.addWidget(workflow); self.pages.addWidget(workflow_page)
+        workflow_page=QWidget(); wl=QVBoxLayout(workflow_page); wl.addWidget(ModuleIntroduction('Project Workflow',self.translator.locale,parent=self)); workflow=ProjectWorkflow(); self.workflow=workflow; workflow_scroll=QScrollArea(); workflow_scroll.setWidgetResizable(True); workflow_scroll.setWidget(workflow); wl.addWidget(workflow_scroll); self.workflow_scroll=workflow_scroll; self.pages.addWidget(workflow_page)
         for name in ['Text Marker','Translation Risk Scanner','Language Interference Scanner','Word Index','File Inventory']:
             page=ModuleIntroduction(name,self.translator.locale,lambda n=name:self.open_module(self.factories[n]),parent=self); self.pages.addWidget(page)
         page=ModuleIntroduction('Terminology',self.translator.locale,lambda:self.open_module(TerminologyWindow),parent=self); self.pages.addWidget(page)
