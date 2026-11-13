@@ -235,3 +235,14 @@ def test_text_marker_example_term_list_is_bundled():
     example=Path(__file__).parents[1]/'data'/'examples'/'textmarker_terms.txt'
     assert example.is_file()
     assert 'oversættelse' in example.read_text(encoding='utf-8')
+
+def test_text_marker_guide_exposes_example_actions_and_no_generic_fallback():
+    from textmarker.ui.step_guide import StepGuide, _steps
+    app=QApplication.instance() or QApplication([])
+    for locale in ('da','sv','nb','en','de','fr'):
+        guide=StepGuide('Text Marker', locale)
+        assert not guide.show_example.isHidden() and not guide.save_example.isHidden()
+        content=' '.join(' '.join(step) for step in _steps('Text Marker', locale))
+        assert 'Kør hovedproceduren' not in content
+        assert 'Gennemgå output' not in content
+        guide.close()

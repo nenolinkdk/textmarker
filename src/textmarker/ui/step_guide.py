@@ -1,5 +1,7 @@
+import os, shutil, sys
+from pathlib import Path
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QScrollArea, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFileDialog, QDialog, QHBoxLayout, QLabel, QPushButton, QScrollArea, QVBoxLayout, QWidget
 
 
 _UI = {
@@ -81,19 +83,20 @@ class StepGuide(QDialog):
         for label in (self.instruction, self.example, self.expected, self.troubleshooting): label.setWordWrap(True)
         for label in (self.number, self.title, self.instruction, self.example, self.expected, self.troubleshooting): self.body_layout.addWidget(label)
         self.scroll.setWidget(self.body)
-        self.back = QPushButton(); self.next = QPushButton(); self.indicator = QLabel(); self.back.clicked.connect(self.previous); self.next.clicked.connect(self.forward)
+        self.back = QPushButton(); self.next = QPushButton(); self.indicator = QLabel(); self.show_example = QPushButton(); self.save_example = QPushButton(); self.back.clicked.connect(self.previous); self.next.clicked.connect(self.forward); self.show_example.clicked.connect(self._show_example); self.save_example.clicked.connect(self._save_example)
         buttons = QHBoxLayout(); buttons.addWidget(self.back); buttons.addWidget(self.indicator); buttons.addWidget(self.next)
-        root = QVBoxLayout(self); root.addWidget(self.scroll); root.addLayout(buttons)
+        examples = QHBoxLayout(); examples.addWidget(self.show_example); examples.addWidget(self.save_example); root = QVBoxLayout(self); root.addWidget(self.scroll); root.addLayout(examples); root.addLayout(buttons)
         self.refresh(self.locale)
 
     def refresh(self, locale):
         self.locale = locale if locale in _UI else "en"
-        labels = _UI[self.locale]; self.setWindowTitle(labels[0]); self.back.setText(labels[1]); self.next.setText(labels[2])
+        labels = _UI[self.locale]; self.setWindowTitle(labels[0]); self.back.setText(labels[1]); self.next.setText(labels[2]); self.show_example.setText({'da':'Vis eksempel','sv':'Visa exempel','nb':'Vis eksempel','en':'Show example','de':'Beispiel anzeigen','fr':'Afficher l’exemple'}[self.locale]); self.save_example.setText({'da':'Gem eksempel som…','sv':'Spara exempel som…','nb':'Lagre eksempel som…','en':'Save example as…','de':'Beispiel speichern unter…','fr':'Enregistrer l’exemple sous…'}[self.locale]); self.show_example.setVisible(self.module == 'Text Marker'); self.save_example.setVisible(self.module == 'Text Marker')
         self._render()
 
     def _render(self):
         labels = _UI[self.locale]; steps = _steps(self.module, self.locale); self.index = max(0, min(self.index, len(steps)-1)); title, instruction, example, expected = steps[self.index]
-        self.number.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.title.setText(title); self.instruction.setText(instruction); self.example.setText(f"{labels[4]}: {example}"); self.expected.setText(f"{labels[5]}: {expected}"); self.troubleshooting.setText(f"{labels[6]}: Hvis feltet eller knappen mangler, kontrollér at det rigtige modul er åbnet og at filformatet er understøttet.")
+        troubleshooting={'da':'Hvis filen ikke vises, kontrollér filtypen og vælg en ny sti. Hvis output ikke åbner, kontrollér status og at filen findes.','sv':'Om filen inte visas, kontrollera filtypen och välj en ny sökväg. Om utdata inte öppnas, kontrollera status och att filen finns.','nb':'Hvis filen ikke vises, kontroller filtypen og velg en ny sti. Hvis utdata ikke åpnes, kontroller status og at filen finnes.','en':'If the file is not shown, check its type and choose a new path. If output will not open, check the status and file existence.','de':'Wenn die Datei nicht angezeigt wird, prüfen Sie den Dateityp und wählen Sie einen neuen Pfad. Wenn die Ausgabe nicht geöffnet wird, prüfen Sie Status und Datei.','fr':'Si le fichier ne s’affiche pas, vérifiez son type et choisissez un nouveau chemin. Si la sortie ne s’ouvre pas, vérifiez l’état et l’existence du fichier.'}[self.locale]
+        self.number.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.title.setText(title); self.instruction.setText(instruction); self.example.setText(f"{labels[4]}: {example}"); self.expected.setText(f"{labels[5]}: {expected}"); self.troubleshooting.setText(f"{labels[6]}: {troubleshooting}")
         self.back.setEnabled(self.index > 0); self.next.setEnabled(self.index < len(steps)-1); self.indicator.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.stepChanged.emit(self.index)
 
     def previous(self):
@@ -101,3 +104,16 @@ class StepGuide(QDialog):
 
     def forward(self):
         if self.index < len(_steps(self.module, self.locale))-1: self.index += 1; self._render()
+
+    def _example_paths(self):
+        root=Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[3])); return root/'data'/'examples'/'textmarker_sample.docx', root/'data'/'examples'/'textmarker_terms.txt'
+
+    def _show_example(self):
+        doc, _ = self._example_paths()
+        if doc.exists(): os.startfile(doc)
+
+    def _save_example(self):
+        target=QFileDialog.getExistingDirectory(self, 'Gem eksempelfiler')
+        if not target: return
+        for source in self._example_paths():
+            if source.exists(): shutil.copy2(source, Path(target)/source.name)
