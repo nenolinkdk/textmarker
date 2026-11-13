@@ -114,3 +114,8 @@ Verifikation: `94 passed`. Ny EXE fra commit `c6b0cc1ee6a8f75b76fbb43f85a049e763
 Modulintroduktionerne bruger nu 12 px top/side-margin, ensartet 10 px spacing, `SetMinimumSize` og naturlig widgethøjde uden stretch. StepGuide har kompakt resizable standardstørrelse og konkrete fejlfindingstekster for Text Marker og Project Workflow.
 
 Verifikation: `96 passed`. EXE fra commit `8167a083556b817ebb500ff610628dce787768d0`, 52,042,127 bytes, SHA-256 `2A75212189A753061D50280361A872A7C3DE52252EF1821803EE3C1422AEF817`. Pakket visuel kontrol og screenshots er ikke gennemført i CUA; Microsoft Word er ikke testet.
+## Phase I.6.3e — termlisteformat og eksempler
+
+Trin 2 i Text Marker dokumenterer nu parserens faktiske format: TXT/MD bruger én term pr. linje, mens CSV kræver `expression` og accepterer valgfrie `category`, `color` og `enabled`. Der er tilføjet `data/examples/textmarker_terms.csv` med fem gyldige termer og et detaljeret dansk tutorialsafsnit med tabel og eksempler.
+
+Verifikation: `97 passed`. EXE fra commit `4912be5f4abdb89bd8c396973decb9733e61b8c4`, 52,044,186 bytes, SHA-256 `F76ED5E92FD2813CE8955E1F3254F522D920FCFC59BA7FA4C16B1BF069FD7E34`. Pakket GUI og Microsoft Word er ikke manuelt testet.

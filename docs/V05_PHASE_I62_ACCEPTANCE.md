@@ -108,3 +108,6 @@ The guide now exposes localized example actions for Text Marker and replaces its
 ## Phase I.6.3d
 
 Layout was corrected with explicit compact margins, spacing, size policies and natural-height pastel cards. StepGuide now has a compact resizable window and step-specific troubleshooting for Text Marker and Project Workflow. Automated tests: 96 passed. Build commit `8167a083556b817ebb500ff610628dce787768d0`; EXE size 52,042,127 bytes; SHA-256 `2A75212189A753061D50280361A872A7C3DE52252EF1821803EE3C1422AEF817`. Packaged visual acceptance and screenshots were not performed; Microsoft Word remains not tested.
+## Phase I.6.3e
+
+Text Marker step 2 now documents the actual parser contract: TXT/MD uses one expression per line; CSV requires `expression` and supports optional `category`, `color` and `enabled`. Added a valid five-term bundled CSV example and a detailed Danish tutorial section. Automated tests: 97 passed. Build commit `4912be5f4abdb89bd8c396973decb9733e61b8c4`; EXE size 52,044,186 bytes; SHA-256 `F76ED5E92FD2813CE8955E1F3254F522D920FCFC59BA7FA4C16B1BF069FD7E34`. Packaged GUI and Microsoft Word remain not manually tested.
