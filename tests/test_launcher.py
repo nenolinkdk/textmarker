@@ -269,3 +269,16 @@ def test_step_guide_uses_step_specific_troubleshooting():
     assert 'samme fil som Manuskript' in messages[2]
     assert 'ikke automatisk en oversættelsesfejl' in messages[5]
     guide.close()
+
+def test_term_list_step_documents_real_parser_and_example_csv_loads():
+    from textmarker.ui.step_guide import StepGuide
+    from textmarker.input.terms import parse_terms
+    from pathlib import Path
+    app=QApplication.instance() or QApplication([])
+    guide=StepGuide('Text Marker','da'); guide.forward();
+    assert guide.title.text() == 'Vælg termliste'
+    assert 'obligatorisk expression' in guide.example.text()
+    assert 'én term pr. linje' in guide.example.text()
+    terms=parse_terms(Path(__file__).parents[1]/'data'/'examples'/'textmarker_terms.csv')
+    assert len(terms) == 5 and terms[0].expression == 'oversættelse'
+    guide.close()

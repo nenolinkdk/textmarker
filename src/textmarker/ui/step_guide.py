@@ -95,6 +95,18 @@ def _troubleshooting(module, index, locale):
     return values[index] if values and index < len(values) else localized.get(locale, localized['en']).get('Text Marker', ['Check the selected input and file permissions.'])[0]
 
 
+def _term_list_step(locale):
+    values = {
+        'da': ('Vælg termliste', 'Klik på Vælg… ud for feltet Termliste i vinduet Tekstmarkering. Vælg en TXT-, MD- eller CSV-fil med de ord og udtryk, der skal fremhæves. Vis eksempel åbner textmarker_terms.txt; Gem eksempel som… kopierer den til din egen mappe.', 'TXT/MD: én term pr. linje; tomme linjer og #-kommentarer ignoreres. MD accepterer også “- term” og “* term”. CSV: obligatorisk expression; valgfrie category, color og enabled. Eksempel: expression,category,color,enabled\\noversættelse,terminologi,yellow,true\\nmanuskript,genre,cyan,true\\nterminologi,terminologi,green,true\\nreview,arbejde,magenta,true\\nroman,genre,blue,true', 'Stien vises i Termliste, og filen er klar til brug.'),
+        'sv': ('Välj termlista', 'Klicka på Välj… vid Termlista i Text Marker. Välj TXT, MD eller CSV. Visa exempel öppnar textmarker_terms.txt; Spara exempel som… kopierar filen.', 'TXT/MD använder en term per rad; tomma rader och # ignoreras. CSV kräver expression; category, color och enabled är valfria. color är en Word-färg och enabled kan vara true/false.', 'Sökvägen visas i Termlista och listan kan användas.'),
+        'nb': ('Velg termliste', 'Klikk Vælg… ved Termliste i Tekstmarkering. Velg TXT, MD eller CSV. Vis eksempel åpner textmarker_terms.txt; Lagre eksempel som… kopierer filen.', 'TXT/MD bruker én term per linje; tomme linjer og # ignoreres. CSV krever expression; category, color og enabled er valgfrie. color er en Word-farge og enabled kan være true/false.', 'Stien vises i Termliste, og listen er klar.'),
+        'en': ('Select term list', 'Click Select… beside Termliste in Text Marker. Choose TXT, MD or CSV. Show example opens textmarker_terms.txt; Save example as… copies it to your folder.', 'TXT/MD uses one expression per line; blank lines and # comments are ignored. CSV requires expression; category, color and enabled are optional. color must be a supported Word palette name and enabled accepts true/false.', 'The path appears in Termliste and the list is ready.'),
+        'de': ('Termliste wählen', 'Klicken Sie in Text Marker bei Termliste auf Auswählen… und wählen Sie TXT, MD oder CSV. Beispiel anzeigen öffnet textmarker_terms.txt; Beispiel speichern unter… kopiert die Datei.', 'TXT/MD verwendet einen Ausdruck pro Zeile; leere Zeilen und # werden ignoriert. CSV benötigt expression; category, color und enabled sind optional. enabled akzeptiert true/false.', 'Der Pfad erscheint in Termliste und die Liste ist bereit.'),
+        'fr': ('Choisir la liste de termes', 'Dans Text Marker, cliquez sur Choisir… près de Termliste et sélectionnez TXT, MD ou CSV. Afficher l’exemple ouvre textmarker_terms.txt; Enregistrer l’exemple sous… le copie.', 'TXT/MD utilise une expression par ligne; les lignes vides et # sont ignorées. Le CSV exige expression; category, color et enabled sont facultatifs. enabled accepte true/false.', 'Le chemin apparaît dans Termliste et la liste est prête.'),
+    }
+    return values.get(locale, values['en'])
+
+
 class StepGuide(QDialog):
     stepChanged = Signal(int)
 
@@ -127,6 +139,7 @@ class StepGuide(QDialog):
 
     def _render(self):
         labels = _UI[self.locale]; steps = _steps(self.module, self.locale); self.index = max(0, min(self.index, len(steps)-1)); title, instruction, example, expected = steps[self.index]
+        if self.module == 'Text Marker' and self.index == 1: title, instruction, example, expected = _term_list_step(self.locale)
         troubleshooting={'da':'Hvis filen ikke vises, kontrollér filtypen og vælg en ny sti. Hvis output ikke åbner, kontrollér status og at filen findes.','sv':'Om filen inte visas, kontrollera filtypen och välj en ny sökväg. Om utdata inte öppnas, kontrollera status och att filen finns.','nb':'Hvis filen ikke vises, kontroller filtypen og velg en ny sti. Hvis utdata ikke åpnes, kontroller status og at filen finnes.','en':'If the file is not shown, check its type and choose a new path. If output will not open, check the status and file existence.','de':'Wenn die Datei nicht angezeigt wird, prüfen Sie den Dateityp und wählen Sie einen neuen Pfad. Wenn die Ausgabe nicht geöffnet wird, prüfen Sie Status und Datei.','fr':'Si le fichier ne s’affiche pas, vérifiez son type et choisissez un nouveau chemin. Si la sortie ne s’ouvre pas, vérifiez l’état et l’existence du fichier.'}[self.locale]
         self.number.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.title.setText(title); self.instruction.setText(instruction); self.example.setText(f"{labels[4]}: {example}"); self.expected.setText(f"{labels[5]}: {expected}"); self.troubleshooting.setText(f"{labels[6]}: {_troubleshooting(self.module, self.index, self.locale)}")
         self.back.setEnabled(self.index > 0); self.next.setEnabled(self.index < len(steps)-1); self.indicator.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.stepChanged.emit(self.index)

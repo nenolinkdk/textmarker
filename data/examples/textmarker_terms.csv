@@ -1,0 +1,6 @@
+expression,category,color,enabled
+oversættelse,terminologi,yellow,true
+manuskript,genre,cyan,true
+terminologi,terminologi,green,true
+review,arbejde,magenta,true
+roman,genre,blue,true
