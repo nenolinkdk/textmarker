@@ -304,7 +304,16 @@ def test_csv_example_library_has_five_types_and_local_prompt_copy():
     for locale in ('da','sv','nb','en','de','fr'):
         window=CsvExampleLibraryWindow(locale)
         assert len(_ITEMS) == 5
-        assert len(window.findChildren(QPushButton)) == 25
-        window.copy_prompt(_ITEMS[0][2], _ITEMS[0][3])
+        assert len(window.findChildren(QPushButton)) == 30
+        window.copy_prompt(_ITEMS[0][2], 0)
         assert _ITEMS[0][2] in app.clipboard().text()
         window.close()
+
+def test_csv_prompts_are_localized_for_all_thirty_combinations():
+    from textmarker.ui.csv_library_window import _ITEMS, _DESCRIPTIONS, _prompt
+    foreign_fragments=('obligatoire','facultatives','obligatoriska','obligatoriske','erforderlich','obligatoires')
+    for locale in ('da','sv','nb','en','de','fr'):
+        for index,(_,_,header,_,_) in enumerate(_ITEMS):
+            prompt=_prompt(locale,header,_DESCRIPTIONS[locale][index])
+            assert header in prompt
+            assert not any(fragment in prompt and fragment not in _DESCRIPTIONS[locale][index] for fragment in foreign_fragments if fragment not in _DESCRIPTIONS[locale][index])
