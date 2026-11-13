@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QPushButton
 from PySide6.QtCore import QSettings
 from textmarker.ui.launcher import Launcher, WordIndexPlaceholder
 from textmarker.ui.word_index_window import WordIndexWindow
@@ -297,3 +297,14 @@ def test_csv_example_library_validates_with_actual_parsers():
     assert RulePackStore(root).detect_schema(root/'canonical_rule_pack.csv') == 'v0.4'
     preview=preview_csv(root/'terminology_import.csv')
     assert len(preview.rows) == 5 and 'concept_id' in preview.headers
+
+def test_csv_example_library_has_five_types_and_local_prompt_copy():
+    from textmarker.ui.csv_library_window import CsvExampleLibraryWindow, _ITEMS
+    app=QApplication.instance() or QApplication([])
+    for locale in ('da','sv','nb','en','de','fr'):
+        window=CsvExampleLibraryWindow(locale)
+        assert len(_ITEMS) == 5
+        assert len(window.findChildren(QPushButton)) == 25
+        window.copy_prompt(_ITEMS[0][2], _ITEMS[0][3])
+        assert _ITEMS[0][2] in app.clipboard().text()
+        window.close()

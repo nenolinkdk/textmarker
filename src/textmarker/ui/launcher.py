@@ -19,6 +19,7 @@ from textmarker.ui.terminology_window import TerminologyWindow
 from textmarker.ui.module_introduction import ModuleIntroduction
 from textmarker.ui.ui_texts import set_current_locale
 from textmarker.ui.prompt_builder_window import PromptBuilderWindow
+from textmarker.ui.csv_library_window import CsvExampleLibraryWindow
 from textmarker.version import WINDOW_TITLE, APP_VERSION
 WordIndexPlaceholder = WordIndexWindow
 _SHELL_TEXT={'da':{'ui':'Grænsefladesprog','hide':'Skjul hjælp','show':'Vis hjælp','context':'Vælg en funktion i navigationen.','dashboard':'Åbn projektindstillinger'},'sv':{'ui':'Gränssnittsspråk','hide':'Dölj hjälp','show':'Visa hjälp','context':'Välj en funktion i navigationen.','dashboard':'Öppna projektinställningar'},'nb':{'ui':'Grensesnittspråk','hide':'Skjul hjelp','show':'Vis hjelp','context':'Velg en funksjon i navigasjonen.','dashboard':'Åpne prosjektinnstillinger'},'en':{'ui':'Interface language','hide':'Hide help','show':'Show help','context':'Choose a function in navigation.','dashboard':'Open project settings'},'de':{'ui':'Oberflächensprache','hide':'Hilfe ausblenden','show':'Hilfe anzeigen','context':'Wählen Sie eine Funktion in der Navigation.','dashboard':'Projekteinstellungen öffnen'},'fr':{'ui':'Langue de l’interface','hide':'Masquer l’aide','show':'Afficher l’aide','context':'Choisissez une fonction dans la navigation.','dashboard':'Ouvrir les paramètres du projet'}}
@@ -47,7 +48,7 @@ class AppShell(QMainWindow):
         for name,factory in [('Glossaries & Rules',RulePackWindow),('Prompt Library',PromptLibraryWindow)]:
             page=ModuleIntroduction(name,self.translator.locale,lambda f=factory:self.open_module(f),parent=self); self.pages.addWidget(page)
         page=QWidget(); l=QVBoxLayout(page); l.addWidget(ModuleIntroduction('Settings',self.translator.locale,parent=self)); form=QFormLayout(); form.addRow('UI-sprog',self.ui_language); form.addRow('Kildesprog',self.source_language); form.addRow('Målsprog',self.target_language); form.addRow('Projektnavn',self.project_name); form.addRow('Projektmappe',self.project_dir); form.addRow('',save); l.addLayout(form); self.pages.addWidget(page)
-        page=ModuleIntroduction('Help',self.translator.locale,parent=self); self.pages.addWidget(page)
+        page=ModuleIntroduction('Help',self.translator.locale,lambda:self.open_module(CsvExampleLibraryWindow),parent=self); self.pages.addWidget(page)
     def select_page(self,row):
         if row<0: return
         page_by_nav=[0,2,3,4,5,6,7,8,9,10,11,12]; index=page_by_nav[row]; self.pages.setCurrentIndex(index); name=self.nav.item(row).text(); page=self.pages.widget(index); intro=page if isinstance(page,ModuleIntroduction) else page.findChild(ModuleIntroduction); labels=_SHELL_TEXT.get(self.translator.locale,_SHELL_TEXT['en']); self.context.setText(f'{name}\n\n{intro._purpose.text()}\n\n{labels["context"]}\n{intro._input.text()}\n{intro._output.text()}') if intro else self.context.setText(f'{name}\n\n{labels["context"]}')
