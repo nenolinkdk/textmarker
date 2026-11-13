@@ -104,3 +104,8 @@ Known limitation: migration backups are retained beside the database and are not
 Implementeret lokalt: modulintroduktionerne åbner nu en modeless, scrollbar trinvis vejledning med Forrige/Næste, bevaret trinposition og konkrete kontrolnavne. Text Marker har seks trin, Projektworkflow har seks trin, og workflow-formularen ligger i en egen scroll-container. Der er tilføjet bundtede Text Marker-eksempler (`data/examples/textmarker_sample.docx` og `textmarker_terms.txt`).
 
 Verifikation: `93 passed` lokalt med `QT_QPA_PLATFORM=offscreen`. Ny EXE blev bygget fra commit `3a7daee9c0575d2d6174624c60efde7404338227` med Python 3.12.14 og PyInstaller 6.11.1. Filstørrelse er 52,038,454 bytes; SHA-256 er `A0902080817556A8C938A9CE97E38EC8FF9731C4269C5AB7D0476613DD374E8B`. GUI-processen startede som separat Windows-proces; CUA kunne ikke indeksere vinduet i denne kørsel, så visuel navigation og screenshots er ikke markeret som gennemført.
+## Phase I.6.3c — layout og konkrete brugerprocedurer
+
+StepGuide viser nu konkrete eksempel- og fejlfindingstekster, lokaliseret på seks sprog. Text Marker-vejledningen har handlingerne `Vis eksempel` og `Gem eksempel som…`, der åbner eller kopierer de bundtede DOCX/TXT-eksempler. Der er tilføjet regressionstest for de seks sprogs Text Marker-vejledning.
+
+Verifikation: `94 passed`. Ny EXE fra commit `c6b0cc1ee6a8f75b76fbb43f85a049e76365d0af`, 52,040,229 bytes, SHA-256 `51E06AD5018492A6BB04A25F16EC5FB4B769965F7B0AC6111725223206470227`. Pakket processtart er ikke visuelt navigeret i CUA; screenshots og Microsoft Word-kontrol er derfor fortsat ikke testet.
