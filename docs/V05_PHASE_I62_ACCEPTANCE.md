@@ -117,3 +117,6 @@ Added validated local CSV examples for all CSV-based functions and an offline ex
 ## Phase I.6.3h
 
 Added a compact CSV example-library GUI with five schema cards and actions for preview, safe copy, prompt copy, column descriptions and parser validation. It is opened from Help and reuses existing resources/parsers. Automated tests: 99 passed. Build commit `e78f350a9f3a06cdbc5d0b79e85a0098130f88cf`; EXE size 52,053,189 bytes; SHA-256 `8A17504447AE6E185F8CAB5DCE15D3C5BCCE4E2418B9F1CB153549A9A9D8F9A1`. Packaged GUI remains not manually tested.
+## Phase I.6.3j
+
+Fixed mixed-language CSV prompts by replacing fixed French descriptions with locale-specific text. Technical headers and parser values remain unchanged; View prompt and Copy prompt share the same localized prompt builder. Automated tests: 100 passed, including all 30 schema/locale combinations. Build commit `449d8e72b0af8ae78b18461125a771baab72b69a`; EXE size 52,054,920 bytes; SHA-256 `60D941CF7D9D0AEBD95E11AB75935777B27EBBD8D26FCF064F10C53249BF0142`. Packaged GUI remains not manually tested.

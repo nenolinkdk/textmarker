@@ -129,3 +129,8 @@ Verifikation: `98 passed`. EXE fra commit `30bcebe`, 52,046,899 bytes, SHA-256 `
 Tilføjet `CsvExampleLibraryWindow` med fem kort: forhåndsvisning, Gem eksempel som…, Kopiér prompt, Vis kolonner og Validér CSV. Vinduet åbnes fra Hjælp og bruger de eksisterende eksempelfiler og parserfunktioner. Ingen fil importeres automatisk, og programmet uploader ikke dokumenter.
 
 Verifikation: `99 passed`. EXE fra commit `e78f350a9f3a06cdbc5d0b79e85a0098130f88cf`, 52,053,189 bytes, SHA-256 `8A17504447AE6E185F8CAB5DCE15D3C5BCCE4E2418B9F1CB153549A9A9D8F9A1`. Pakket GUI er ikke manuelt gennemgået.
+## Phase I.6.3j — lokaliserede CSV-prompts
+
+Årsagen til blandede sprog var faste franske beskrivelser i `_ITEMS`, som blev genbrugt af alle locales. Promptbygningen bruger nu locale-specifikke beskrivelser og afslutninger; tekniske headere og værdier er uændrede. Vis prompt og Kopiér prompt bruger samme funktion.
+
+Verifikation: `100 passed`, inklusive 30 kombinationer (5 skemaer × 6 sprog). EXE fra commit `449d8e72b0af8ae78b18461125a771baab72b69a`, 52,054,920 bytes, SHA-256 `60D941CF7D9D0AEBD95E11AB75935777B27EBBD8D26FCF064F10C53249BF0142`. Pakket GUI er ikke manuelt testet.
