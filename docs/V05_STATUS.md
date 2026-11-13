@@ -124,3 +124,8 @@ Verifikation: `97 passed`. EXE fra commit `4912be5f4abdb89bd8c396973decb9733e61b
 Tilføjet fælles bibliotek med validerede eksempler for Text Marker, Translation Risk Scanner, DA-interferens, canonical rule packs og terminologi. Tilføjet offline HTML-oversigt med faktiske kolonner og en lokal prompt til CSV-generering. Der er ingen AI-upload eller API-integration.
 
 Verifikation: `98 passed`. EXE fra commit `30bcebe`, 52,046,899 bytes, SHA-256 `05B35C2AB0B4017702EE424D1A8ECAEC718475A92F1834CB964BD67AF71E651A`. Pakket GUI er ikke manuelt gennemgået.
+## Phase I.6.3h — CSV-bibliotek GUI
+
+Tilføjet `CsvExampleLibraryWindow` med fem kort: forhåndsvisning, Gem eksempel som…, Kopiér prompt, Vis kolonner og Validér CSV. Vinduet åbnes fra Hjælp og bruger de eksisterende eksempelfiler og parserfunktioner. Ingen fil importeres automatisk, og programmet uploader ikke dokumenter.
+
+Verifikation: `99 passed`. EXE fra commit `e78f350a9f3a06cdbc5d0b79e85a0098130f88cf`, 52,053,189 bytes, SHA-256 `8A17504447AE6E185F8CAB5DCE15D3C5BCCE4E2418B9F1CB153549A9A9D8F9A1`. Pakket GUI er ikke manuelt gennemgået.

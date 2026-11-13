@@ -114,3 +114,6 @@ Text Marker step 2 now documents the actual parser contract: TXT/MD uses one exp
 ## Phase I.6.3g
 
 Added validated local CSV examples for all CSV-based functions and an offline example-library page. The examples use the actual parser schemas: Text Marker, seven-column risk rules, nine-column DA-interference rules, eleven-column canonical packs and ten-column terminology import. Added a local CSV-generation prompt; no AI upload or API integration exists. Automated tests: 98 passed. Build commit `30bcebe`; EXE size 52,046,899 bytes; SHA-256 `05B35C2AB0B4017702EE424D1A8ECAEC718475A92F1834CB964BD67AF71E651A`. Packaged GUI remains not manually tested.
+## Phase I.6.3h
+
+Added a compact CSV example-library GUI with five schema cards and actions for preview, safe copy, prompt copy, column descriptions and parser validation. It is opened from Help and reuses existing resources/parsers. Automated tests: 99 passed. Build commit `e78f350a9f3a06cdbc5d0b79e85a0098130f88cf`; EXE size 52,053,189 bytes; SHA-256 `8A17504447AE6E185F8CAB5DCE15D3C5BCCE4E2418B9F1CB153549A9A9D8F9A1`. Packaged GUI remains not manually tested.
