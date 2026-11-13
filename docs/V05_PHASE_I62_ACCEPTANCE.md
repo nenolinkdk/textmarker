@@ -76,3 +76,23 @@ Build commit: fe2ac6ca3c6cf14ebd461b9a90a3da8b74bc1ab7
 EXE: dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe  
 Size: 51,987,920 bytes  
 SHA-256: E0D3A01DA51807AFCF664F3AA5181A538D1B84A1C875AEC1BA2B8BA1F6AF577
+
+## Phase I.6.3 GUI acceptance
+
+| Requirement | Automated | Packaged GUI | Status / evidence |
+|---|---|---|---|
+| Compact introduction layout without large vertical spacers | PASS, 90 tests | PASS | Shared `ModuleIntroduction` uses compact margins, cards and no stretch spacer in the central workspace. |
+| Pastel information cards with dark-theme contrast | PASS | PASS | Introduction, workflow and result cards use shared Qt styling; dark-theme screenshot visually checked. |
+| Numbered guidance on every module introduction | PASS for all six locales | PASS for Dashboard and Translation Risk Scanner | Four concrete numbered steps are visible and localized; full twelve-module manual click-through remains NOT TESTED. |
+| Module-specific right help panel | PASS | PASS | Panel includes selected module title, purpose, input and output; full workflow-specific wording for all locales remains NOT TESTED. |
+| Preserve module fields across navigation | PASS | NOT TESTED across all modules | Open module instances are cached and reused; regression test verifies Risk Scanner file selection survives navigation. |
+| Preserve state across UI-language switching | PASS for AppShell/introduction state | NOT TESTED manually in packaged EXE | Existing language-switch tests plus new state tests pass. |
+| Six-language manuals/tutorials | Resource tests pass | NOT TESTED | Existing localized resources are bundled; full linguistic/manual workflow review remains pending. |
+| Fresh Windows TEST.exe | PASS | PASS | Separate process remained alive for 5 seconds. |
+| Microsoft Word DOCX acceptance | Existing DOCX tests pass | NOT TESTED | Requires manual opening in Microsoft Word. |
+
+Phase I.6.3 code/build commit: `324598ea6ec60e25138bf53584a08ea4f9bc9470`  
+Automated tests: **90 passed, 0 failed**  
+EXE: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`  
+Size: `51,995,817` bytes  
+SHA-256: `7B5DB2A00F6EA4CEF0349E5D9B3896841DF9B2C58007C50C5A46D5D993E09043`
