@@ -119,3 +119,8 @@ Verifikation: `96 passed`. EXE fra commit `8167a083556b817ebb500ff610628dce78776
 Trin 2 i Text Marker dokumenterer nu parserens faktiske format: TXT/MD bruger én term pr. linje, mens CSV kræver `expression` og accepterer valgfrie `category`, `color` og `enabled`. Der er tilføjet `data/examples/textmarker_terms.csv` med fem gyldige termer og et detaljeret dansk tutorialsafsnit med tabel og eksempler.
 
 Verifikation: `97 passed`. EXE fra commit `4912be5f4abdb89bd8c396973decb9733e61b8c4`, 52,044,186 bytes, SHA-256 `F76ED5E92FD2813CE8955E1F3254F522D920FCFC59BA7FA4C16B1BF069FD7E34`. Pakket GUI og Microsoft Word er ikke manuelt testet.
+## Phase I.6.3g — CSV-eksempelbibliotek og lokale AI-prompts
+
+Tilføjet fælles bibliotek med validerede eksempler for Text Marker, Translation Risk Scanner, DA-interferens, canonical rule packs og terminologi. Tilføjet offline HTML-oversigt med faktiske kolonner og en lokal prompt til CSV-generering. Der er ingen AI-upload eller API-integration.
+
+Verifikation: `98 passed`. EXE fra commit `30bcebe`, 52,046,899 bytes, SHA-256 `05B35C2AB0B4017702EE424D1A8ECAEC718475A92F1834CB964BD67AF71E651A`. Pakket GUI er ikke manuelt gennemgået.

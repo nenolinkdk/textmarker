@@ -111,3 +111,6 @@ Layout was corrected with explicit compact margins, spacing, size policies and n
 ## Phase I.6.3e
 
 Text Marker step 2 now documents the actual parser contract: TXT/MD uses one expression per line; CSV requires `expression` and supports optional `category`, `color` and `enabled`. Added a valid five-term bundled CSV example and a detailed Danish tutorial section. Automated tests: 97 passed. Build commit `4912be5f4abdb89bd8c396973decb9733e61b8c4`; EXE size 52,044,186 bytes; SHA-256 `F76ED5E92FD2813CE8955E1F3254F522D920FCFC59BA7FA4C16B1BF069FD7E34`. Packaged GUI and Microsoft Word remain not manually tested.
+## Phase I.6.3g
+
+Added validated local CSV examples for all CSV-based functions and an offline example-library page. The examples use the actual parser schemas: Text Marker, seven-column risk rules, nine-column DA-interference rules, eleven-column canonical packs and ten-column terminology import. Added a local CSV-generation prompt; no AI upload or API integration exists. Automated tests: 98 passed. Build commit `30bcebe`; EXE size 52,046,899 bytes; SHA-256 `05B35C2AB0B4017702EE424D1A8ECAEC718475A92F1834CB964BD67AF71E651A`. Packaged GUI remains not manually tested.
