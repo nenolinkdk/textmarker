@@ -246,3 +246,26 @@ def test_text_marker_guide_exposes_example_actions_and_no_generic_fallback():
         assert 'Kør hovedproceduren' not in content
         assert 'Gennemgå output' not in content
         guide.close()
+
+def test_module_layout_has_compact_geometry_after_layout_pass():
+    from PySide6.QtCore import QCoreApplication
+    from textmarker.ui.module_introduction import ModuleIntroduction
+    app=QApplication.instance() or QApplication([])
+    for name in ('Dashboard','Text Marker','Project Workflow'):
+        page=ModuleIntroduction(name,'da'); page.resize(760,480); page.show(); app.processEvents()
+        assert page._title.geometry().top() <= 16
+        assert page._intro_card.geometry().top() - page._title.geometry().bottom() <= 24
+        assert page._intro_card.height() >= page._first.sizeHint().height()
+        page.close()
+
+def test_step_guide_uses_step_specific_troubleshooting():
+    from textmarker.ui.step_guide import StepGuide
+    app=QApplication.instance() or QApplication([])
+    guide=StepGuide('Text Marker','da')
+    messages=[]
+    for _ in range(6):
+        messages.append(guide.troubleshooting.text()); guide.forward()
+    assert len(set(messages)) == 6
+    assert 'samme fil som Manuskript' in messages[2]
+    assert 'ikke automatisk en oversættelsesfejl' in messages[5]
+    guide.close()

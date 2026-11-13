@@ -66,6 +66,35 @@ def _steps(module, locale):
     return base
 
 
+def _troubleshooting(module, index, locale):
+    localized = {
+        'da': {
+            'Text Marker': [
+                'Hvis DOCX/TXT ikke kan vælges, kontrollér filtypen, at filen ikke er låst af Word, og prøv en lokal kopi.',
+                'Hvis termlisten ikke indlæses, kontrollér UTF-8, én term pr. linje i TXT/MD eller gyldige kolonner i CSV.',
+                'Vælg en skrivbar mappe og et nyt filnavn. Output må ikke være den samme fil som Manuskript.',
+                'Skelningsfølsom skelner mellem store og små bogstaver. Kun hele ord matcher fx “term”, men ikke “termisk”.',
+                'Klik Start først når Manuskript og Termliste er udfyldt. Færdig betyder, at den separate outputfil er skrevet.',
+                'Åbn output i Word, læs den markerede sætning i sammenhæng, kontrollér betydning og terminologi, afgør om en rettelse kræves, og brug rapporten som sporbar støtte. En markering er ikke automatisk en oversættelsesfejl.',
+            ],
+            'Project Workflow': [
+                'Hvis projektet ikke gemmes, vælg en skrivbar Projektmappe og udfyld Projektnavn.',
+                'Vælg et faktisk kilde- og målsprog; et forkert par kan gøre rule packs inkompatible.',
+                'Hvis Input DOCX ikke kan læses, luk dokumentet i Word og vælg en lokal kopi.',
+                'Hvis listen er tom, klik Importér rule pack og vælg en kompatibel CSV, før du aktiverer packs.',
+                'Start scanning kræver et gemt projekt, input-DOCX og mindst én aktiv kompatibel pack. Læs status ved fejl.',
+                'Hvis outputs ikke åbnes, kontrollér at scanningen er Færdig; gennemgå markeret DOCX og begge CSV-rapporter separat.',
+            ],
+        },
+        'en': {
+            'Text Marker': ['If DOCX/TXT cannot be selected, check the type, close the file in Word, and try a local copy.', 'If the term list is not loaded, check UTF-8, one term per TXT/MD line, or valid CSV columns.', 'Choose a writable folder and a new filename. Output must not be the same file as Manuscript.', 'Case-sensitive distinguishes upper/lower case. Whole words match “term”, not “thermal”.', 'Click Start only after Manuscript and Termliste are filled. Completed means the separate output exists.', 'Open the DOCX in Word, read each highlighted sentence in context, check meaning and terminology, decide whether correction is needed, and use the report for traceability. A highlight is not automatically a translation error.'],
+            'Project Workflow': ['Choose a writable Project folder and enter a project name if saving fails.', 'Select the actual source and target languages; an incorrect pair can make packs incompatible.', 'Close the DOCX in Word and choose a local copy if it cannot be read.', 'If the list is empty, click Import rule pack and select a compatible CSV before activating packs.', 'Scanning requires a saved project, input DOCX and at least one compatible active pack.', 'If outputs do not open, check that scanning is complete and review the DOCX and both CSV reports separately.'],
+        }
+    }
+    values = localized.get(locale, localized['en']).get(module)
+    return values[index] if values and index < len(values) else localized.get(locale, localized['en']).get('Text Marker', ['Check the selected input and file permissions.'])[0]
+
+
 class StepGuide(QDialog):
     stepChanged = Signal(int)
 
@@ -75,7 +104,8 @@ class StepGuide(QDialog):
         self.locale = locale if locale in _UI else "en"
         self.index = 0
         self.setModal(False)
-        self.resize(560, 560)
+        self.setMinimumSize(420, 300)
+        self.resize(560, 420)
         self.scroll = QScrollArea(); self.scroll.setWidgetResizable(True)
         self.body = QWidget(); self.body_layout = QVBoxLayout(self.body); self.body_layout.setAlignment(Qt.AlignTop)
         self.number = QLabel(); self.title = QLabel(); self.instruction = QLabel(); self.example = QLabel(); self.expected = QLabel(); self.troubleshooting = QLabel()
@@ -87,6 +117,8 @@ class StepGuide(QDialog):
         buttons = QHBoxLayout(); buttons.addWidget(self.back); buttons.addWidget(self.indicator); buttons.addWidget(self.next)
         examples = QHBoxLayout(); examples.addWidget(self.show_example); examples.addWidget(self.save_example); root = QVBoxLayout(self); root.addWidget(self.scroll); root.addLayout(examples); root.addLayout(buttons)
         self.refresh(self.locale)
+        self.adjustSize()
+        self.resize(560, min(640, max(360, self.sizeHint().height())))
 
     def refresh(self, locale):
         self.locale = locale if locale in _UI else "en"
@@ -96,7 +128,7 @@ class StepGuide(QDialog):
     def _render(self):
         labels = _UI[self.locale]; steps = _steps(self.module, self.locale); self.index = max(0, min(self.index, len(steps)-1)); title, instruction, example, expected = steps[self.index]
         troubleshooting={'da':'Hvis filen ikke vises, kontrollér filtypen og vælg en ny sti. Hvis output ikke åbner, kontrollér status og at filen findes.','sv':'Om filen inte visas, kontrollera filtypen och välj en ny sökväg. Om utdata inte öppnas, kontrollera status och att filen finns.','nb':'Hvis filen ikke vises, kontroller filtypen og velg en ny sti. Hvis utdata ikke åpnes, kontroller status og at filen finnes.','en':'If the file is not shown, check its type and choose a new path. If output will not open, check the status and file existence.','de':'Wenn die Datei nicht angezeigt wird, prüfen Sie den Dateityp und wählen Sie einen neuen Pfad. Wenn die Ausgabe nicht geöffnet wird, prüfen Sie Status und Datei.','fr':'Si le fichier ne s’affiche pas, vérifiez son type et choisissez un nouveau chemin. Si la sortie ne s’ouvre pas, vérifiez l’état et l’existence du fichier.'}[self.locale]
-        self.number.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.title.setText(title); self.instruction.setText(instruction); self.example.setText(f"{labels[4]}: {example}"); self.expected.setText(f"{labels[5]}: {expected}"); self.troubleshooting.setText(f"{labels[6]}: {troubleshooting}")
+        self.number.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.title.setText(title); self.instruction.setText(instruction); self.example.setText(f"{labels[4]}: {example}"); self.expected.setText(f"{labels[5]}: {expected}"); self.troubleshooting.setText(f"{labels[6]}: {_troubleshooting(self.module, self.index, self.locale)}")
         self.back.setEnabled(self.index > 0); self.next.setEnabled(self.index < len(steps)-1); self.indicator.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.stepChanged.emit(self.index)
 
     def previous(self):
