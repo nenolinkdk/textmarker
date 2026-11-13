@@ -1,0 +1,6 @@
+rule_pack_id,rule_pack_version,rule_id,source_language,target_language,expression,category,severity,explanation,suggested_review,enabled
+demo-pack,1,RP001,eventual,da,eventuelt,possible_false_friend,medium,Norsk form kræver kontekstuel kontrol,Sammenlign kilde og måltekst,true
+demo-pack,1,RP002,eventual,da,aktuell,meaning_shift,high,Betydningen kan forskydes,Sammenlign betydningen i begge sprog,true
+demo-pack,1,RP003,eventual,da,rolig,shared_word,low,Fælles ord er ikke nødvendigvis fejl,Læs sætningen i kontekst,true
+demo-pack,1,RP004,eventual,da,tilbud,terminology,medium,Kontrollér terminologisk konsistens,Sammenlign termbase,true
+demo-pack,1,RP005,eventual,da,eventyr,context,low,Litterær brug kræver vurdering,Kontrollér hele afsnittet,true

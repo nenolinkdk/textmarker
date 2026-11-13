@@ -282,3 +282,18 @@ def test_term_list_step_documents_real_parser_and_example_csv_loads():
     terms=parse_terms(Path(__file__).parents[1]/'data'/'examples'/'textmarker_terms.csv')
     assert len(terms) == 5 and terms[0].expression == 'oversættelse'
     guide.close()
+
+def test_csv_example_library_validates_with_actual_parsers():
+    from pathlib import Path
+    from textmarker.input.terms import parse_terms
+    from textmarker.risk.rules import parse_risk_rules
+    from textmarker.da_interference import load_rules
+    from textmarker.multilingual.rule_packs import RulePackStore
+    from textmarker.terminology.csv_io import preview_csv
+    root=Path(__file__).parents[1]/'data'/'examples'
+    assert len(parse_terms(root/'textmarker_terms.csv')) == 5
+    assert len(parse_risk_rules(root/'risk_rules_no_da.csv')) == 5
+    assert len(load_rules(root/'da_interference_rules.csv')) == 5
+    assert RulePackStore(root).detect_schema(root/'canonical_rule_pack.csv') == 'v0.4'
+    preview=preview_csv(root/'terminology_import.csv')
+    assert len(preview.rows) == 5 and 'concept_id' in preview.headers

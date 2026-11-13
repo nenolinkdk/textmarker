@@ -37,4 +37,4 @@ def test_generated_concept_ids_are_stable_for_import_batch(tmp_path):
 
 def test_bundled_da_rules_example_has_actual_supported_schema():
     from textmarker.da_interference import load_rules
-    rules=load_rules('data/examples/da_interference_rules.csv'); assert len(rules)==3 and rules[0].rule_id=='DA001'
+    rules=load_rules('data/examples/da_interference_rules.csv'); assert len(rules)==5 and rules[0].rule_id=='DA001'

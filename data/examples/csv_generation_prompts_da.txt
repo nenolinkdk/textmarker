@@ -1,0 +1,10 @@
+PROMPT: Opret CSV til Nenolink Text Tools
+
+Brug det vedhæftede dokument som eneste dokumentationsgrundlag. Medtag kun ord og udtryk, der faktisk forekommer i materialet, medmindre jeg udtrykkeligt beder om en generel risikoliste. Skeln mellem mulig risiko og bekræftet fejl; erklær aldrig en oversættelsesfejl bekræftet uden nødvendigt sammenligningsgrundlag. Fjern dubletter.
+
+Vælg én af disse outputtyper og returnér kun CSV-data uden forklarende tekst:
+1) Text Marker: præcis header expression,category,color,enabled. expression er obligatorisk; category, color og enabled er valgfrie. Brug kun gyldige Word-farver og true/false.
+2) Translation Risk Scanner: præcis header expression,category,color,severity,explanation,suggestion,enabled. Alle syv kolonner er obligatoriske; color skal være en gyldig Word-farve, severity low, medium, high eller critical, enabled true/false.
+3) DA-interference: præcis header rule_id,expression,language,category,severity,color,explanation,suggestion,enabled. Alle ni kolonner er obligatoriske; language no, nb, da eller mixed; category RED, ORANGE eller YELLOW; severity low, medium eller high; color red, orange eller yellow.
+
+Brug UTF-8, komma som separator og kolonnerækkefølgen ovenfor. Hvis dokumentet er for langt, foreslå først opdeling i nummererede dele og behandl én del ad gangen. Hvis systemet kan oprette en fil, gem den; ellers returnér CSV-indholdet, som jeg selv kan gemme som UTF-8 CSV.

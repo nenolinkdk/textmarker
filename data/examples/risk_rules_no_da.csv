@@ -1,4 +1,6 @@
 expression,category,color,severity,explanation,suggestion,enabled
 eventuelt,possible_false_friend,yellow,medium,"Norsk eventuelt kan kreve kontroll mot dansk eventuelt eller muligvis.","Kontrollér betydningen i norsk kilde og dansk måltekst.",true
 rolig,misleading_similarity,green,medium,"Kontrollér om rolig har samme betydning i den aktuelle norsk-danske kontekst.","Sammenlign betydning og stilniveau i begge sprog.",true
-aktuell,language_interference,red,high,"Kontrollér om norsk aktuell er overført uden passende dansk formulering.","Vurder dansk aktuel eller en mere præcis omskrivning efter kontekst.",true
+aktuell,possible_false_friend,red,high,"Norsk aktuell kan bety relevant eller nåværende.","Sammenlign med den danske måltekst.",true
+eventyr,contextual_expression,cyan,low,"Kontrollér betydningen i litterær kontekst.","Læs hele sætningen før en rettelse.",true
+tilbud,terminology,magenta,medium,"Kontrollér om tilbud bruges med samme betydning på dansk.","Sammenlign termbase og kontekst.",true

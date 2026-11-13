@@ -9,7 +9,7 @@ from textmarker.ui.ui_texts import set_current_locale
 
 def test_bundled_norwegian_danish_risk_example_matches_seven_column_schema():
     rules = parse_risk_rules(Path(__file__).parents[1] / "data" / "examples" / "risk_rules_no_da.csv")
-    assert [r.expression for r in rules] == ["eventuelt", "rolig", "aktuell"]
+    assert [r.expression for r in rules] == ["eventuelt", "rolig", "aktuell", "eventyr", "tilbud"]
 
 
 def test_risk_window_exposes_file_result_help_and_example_actions():

@@ -1,0 +1,6 @@
+concept_id,term_id,language,term,definition,subject_field,source_reference,approval_status,client_id,project_id
+CON001,TERM001,nb,eventuelt,Mulig betydning i kontekst,translation,example,proposed,demo,demo
+CON002,TERM002,nb,aktuell,Relevant eller nåværende,translation,example,proposed,demo,demo
+CON003,TERM003,da,tilbud,Offer eller proposition,terminology,example,approved,demo,demo
+CON004,TERM004,da,manuskript,Dokument under revision,editorial,example,approved,demo,demo
+CON005,TERM005,da,terminologi,Fagets ordforråd,terminology,example,admitted,demo,demo

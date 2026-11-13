@@ -1,4 +1,6 @@
 rule_id,expression,language,category,severity,color,explanation,suggestion,enabled
 DA001,eventuelt,nb,ORANGE,medium,orange,Norsk eventuelt kan få en anden betydning på dansk,Kontrollér konteksten og den danske formulering,true
 DA002,aktuell,nb,RED,high,red,Falsk ven mellem norsk og dansk,Kontrollér den tilsigtede betydning i kildeteksten,true
-DA003,skal,nb,YELLOW,low,yellow,Modalitet bør vurderes i målteksten,Kontrollér register og modalitet,true
+DA003,rolig,nb,YELLOW,medium,yellow,Kan være korrekt fælles ord,Kontrollér betydningen i sammenhæng,true
+DA004,tilbud,nb,ORANGE,low,orange,Norsk form kan påvirke dansk formulering,Kontrollér måltekstens idiomatik,true
+DA005,eventyr,nb,YELLOW,low,yellow,Litterær kontekst kræver menneskelig vurdering,Læs hele afsnittet før rettelse,true
