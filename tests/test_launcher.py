@@ -135,6 +135,21 @@ def test_terminology_profile_error_dialog_uses_current_locale(monkeypatch):
         set_current_locale(locale); dialog.use_profile(); assert shown[-1][0]==message('profile_invalid',locale)
     dialog.close()
 
+def test_module_introductions_have_compact_cards_and_numbered_steps_in_all_locales():
+    from textmarker.ui.module_introduction import ModuleIntroduction
+    app=QApplication.instance() or QApplication([])
+    for locale in ('da','sv','nb','en','de','fr'):
+        page=ModuleIntroduction('Translation Risk Scanner',locale)
+        assert page._layout.count() < 10 and '1.' in page._steps.text() and '4.' in page._steps.text()
+        assert page._intro_card.objectName()=='introCard' and page._workflow_card.objectName()=='workflowCard'
+        page.close()
+
+def test_context_help_is_module_specific_and_module_windows_are_reused(tmp_path):
+    from textmarker.ui.launcher import AppShell
+    app=QApplication.instance() or QApplication([]); QSettings('Nenolink','TextTools').setValue('ui_locale','da'); shell=AppShell()
+    shell.select_page(3); assert 'DOCX' in shell.context.text() and 'risik' in shell.context.text().lower()
+    shell.open_module(shell.factories['Translation Risk Scanner']); first=shell.modules['RiskWindow']; first.source.setText(str(tmp_path/'input.docx')); shell.select_page(4); shell.select_page(3); shell.open_module(shell.factories['Translation Risk Scanner']); assert shell.modules['RiskWindow'] is first and first.source.text().endswith('input.docx'); shell.close()
+
 def test_all_localized_manual_sources_and_tutorials_exist():
     from pathlib import Path
     root=Path(__file__).parents[1]/'docs'/'manual'
