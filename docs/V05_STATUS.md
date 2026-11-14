@@ -153,3 +153,24 @@ Risk Scanner har nu to uafhængige synlige handlinger: `Kopiér eksempel-DOCX` o
 Verifikation: `109 passed` (1 PytestCacheWarning om skriveadgang til `.pytest_cache`). Den nye test kontrollerer eksempel-DOCX’ens struktur, mindst ti fund, to uafhængige eksempelknapper og én synlig dokumentationsknap. Pakket visuel Windows-kontrol og Microsoft Word/OnlyOffice er endnu ikke udført og skal markeres NOT TESTED.
 
 TEST-build fra kodecommit `4506ecacad9d31a270c881881573eae09de75ed2`: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 52.095.518 bytes, SHA-256 `E4A3D1D3CA55CA35C11691ED9AE1FD79C13DAF2C1B37435FD4DE2CB6F2DEB808`. Pakket visuel kontrol, screenshots og Microsoft Word/OnlyOffice er ikke udført i dette miljø.
+
+## Kontrol af samlet vejledning — I.7.3C
+
+Den samlede vejledning åbnes nu fra én `Vejledning og tutorial`-knap i sekundærvinduerne. Indholdet genereres lokalt fra StepGuide-modellen for det valgte modul og UI-sprog og indeholder alle trin med instruktion, eksempel, forventet resultat og trinets fejlfinding. Den genererede HTML gemmes kun som en lokal visningskopi i systemets midlertidige mappe; bundtede manualer og brugerens projektfiler ændres ikke.
+
+| Modul | Antal StepGuide-trin | Alle trin i samlet vejledning? | Seks sprog OK? |
+|---|---:|---|---|
+| Dashboard | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Project Workflow | 6 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Text Marker | 6 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Translation Risk Scanner | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Language Interference Scanner | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Word Index | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| File Inventory | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Terminology | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Glossaries & Rules | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Prompt Library | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Settings | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+| Help | 4 | PASS — automatisk kontrolleret | PASS — da/sv/nb/en/de/fr |
+
+Verifikation: `111 passed` (1 PytestCacheWarning om manglende skriveadgang til `.pytest_cache`). Pakket visuel browserkontrol og Microsoft Word er ikke udført i denne kontrol.
