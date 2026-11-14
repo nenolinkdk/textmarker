@@ -134,3 +134,8 @@ Verifikation: `99 passed`. EXE fra commit `e78f350a9f3a06cdbc5d0b79e85a0098130f8
 Årsagen til blandede sprog var faste franske beskrivelser i `_ITEMS`, som blev genbrugt af alle locales. Promptbygningen bruger nu locale-specifikke beskrivelser og afslutninger; tekniske headere og værdier er uændrede. Vis prompt og Kopiér prompt bruger samme funktion.
 
 Verifikation: `100 passed`, inklusive 30 kombinationer (5 skemaer × 6 sprog). EXE fra commit `449d8e72b0af8ae78b18461125a771baab72b69a`, 52,054,920 bytes, SHA-256 `60D941CF7D9D0AEBD95E11AB75935777B27EBBD8D26FCF064F10C53249BF0142`. Pakket GUI er ikke manuelt testet.
+## Phase I.7.1 — Text Marker layout og individuelle farver
+
+TXT-termlister understøtter nu `udtryk%farve`; `%%` er escape for bogstaveligt procenttegn. Uden farve bruges `yellow`. CSV-kolonnen `color` fortsætter med at styre Word-fremhævningen via `TermSpec.highlight_color` og `w:highlight`. Trin 2 viser den faktiske palette dynamisk og med rigtige linjeskift.
+
+Verifikation: `104 passed`. EXE fra commit `a20d469b7dfcc550a4df3255378e8ad0ee7b9111`, 52,056,063 bytes, SHA-256 `7D6BE44F26A91EA558CD301359EFDACC47C79F6E82B85AF4F4CC0A8E0BC14DD8`. Microsoft Word og OnlyOffice er ikke testet.

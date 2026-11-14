@@ -120,3 +120,6 @@ Added a compact CSV example-library GUI with five schema cards and actions for p
 ## Phase I.6.3j
 
 Fixed mixed-language CSV prompts by replacing fixed French descriptions with locale-specific text. Technical headers and parser values remain unchanged; View prompt and Copy prompt share the same localized prompt builder. Automated tests: 100 passed, including all 30 schema/locale combinations. Build commit `449d8e72b0af8ae78b18461125a771baab72b69a`; EXE size 52,054,920 bytes; SHA-256 `60D941CF7D9D0AEBD95E11AB75935777B27EBBD8D26FCF064F10C53249BF0142`. Packaged GUI remains not manually tested.
+## Phase I.7.1
+
+Text Marker now supports optional TXT colors using `expression%color`, with `%%` as the literal-percent escape. CSV colors continue to drive `w:highlight`; the step-2 palette is generated from the actual `PALETTE`. Automated tests: 104 passed, including invalid colors, literal percent signs, CSV colors, deterministic overlaps and OOXML values. Build commit `a20d469b7dfcc550a4df3255378e8ad0ee7b9111`; EXE size 52,056,063 bytes; SHA-256 `7D6BE44F26A91EA558CD301359EFDACC47C79F6E82B85AF4F4CC0A8E0BC14DD8`. Microsoft Word and OnlyOffice remain NOT TESTED.
