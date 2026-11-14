@@ -26,11 +26,11 @@ class RiskWorker(QObject):
 class RiskWindow(QMainWindow):
     def __init__(self):
         super().__init__(); self.setWindowTitle('Nenolink Translation Risk Scanner v0.1'); self.thread=None; self.worker=None
-        self.source=QLineEdit(); self.rules=QLineEdit(); self.output=QLineEdit(); self.category_list=QListWidget(); self.category_list.setMaximumHeight(90); self.case=QCheckBox('Skeln mellem store og små bogstaver'); self.whole=QCheckBox('Match kun hele ord'); self.whole.setChecked(True); self.progress=QProgressBar(); self.status=QLabel('Vælg et kilde-DOCX og en CSV-fil med risikoregler.'); self.start=QPushButton('Start scanning'); self.cancel=QPushButton('Annullér'); self.cancel.setEnabled(False); self.open_result=QPushButton('Åbn markeret DOCX'); self.open_folder=QPushButton('Åbn outputmappe'); self.use_example=QPushButton('Kopiér norsk–dansk eksempel'); self.guide=QPushButton('Brugervejledning'); self.tutorial=QPushButton('Tutorial'); self.open_result.setEnabled(False); self.open_folder.setEnabled(False); self.result_row=ResultRow(); self.help_links=HelpLinks([('Brugervejledning','scanner.rules'),('Tutorial','scanner.tutorial')]); self.rules.textChanged.connect(self.populate_categories); self.use_example.clicked.connect(self.copy_example); self.open_result.clicked.connect(self.open_result_file); self.open_folder.clicked.connect(self.open_output_folder); self.guide.clicked.connect(lambda:self.open_help('scanner.rules')); self.tutorial.clicked.connect(lambda:self.open_help('scanner.tutorial'))
+        self.source=QLineEdit(); self.rules=QLineEdit(); self.output=QLineEdit(); self.category_list=QListWidget(); self.category_list.setMaximumHeight(90); self.case=QCheckBox('Skeln mellem store og små bogstaver'); self.whole=QCheckBox('Match kun hele ord'); self.whole.setChecked(True); self.progress=QProgressBar(); self.status=QLabel('Vælg et kilde-DOCX og en CSV-fil med risikoregler.'); self.start=QPushButton('Start scanning'); self.cancel=QPushButton('Annullér'); self.cancel.setEnabled(False); self.open_result=QPushButton('Åbn markeret DOCX'); self.open_folder=QPushButton('Åbn outputmappe'); self.use_example_docx=QPushButton('Kopiér eksempel-DOCX'); self.use_example_csv=QPushButton('Kopiér eksempel-CSV'); self.use_example=QPushButton('Kopiér norsk–dansk eksempel'); self.use_example.setVisible(False); self.guide=QPushButton('Brugervejledning'); self.tutorial=QPushButton('Tutorial'); self.guide.setVisible(False); self.tutorial.setVisible(False); self.open_result.setEnabled(False); self.open_folder.setEnabled(False); self.result_row=ResultRow(); self.help_links=HelpLinks([('Vejledning og tutorial','scanner.overview')]); self.rules.textChanged.connect(self.populate_categories); self.use_example_docx.clicked.connect(self.copy_example_docx); self.use_example_csv.clicked.connect(self.copy_example_csv); self.open_result.clicked.connect(self.open_result_file); self.open_folder.clicked.connect(self.open_output_folder); self.guide.clicked.connect(lambda:self.open_help('scanner.overview')); self.tutorial.clicked.connect(lambda:self.open_help('scanner.overview'))
         form=QFormLayout()
         for label,edit,filters,save in [('Kilde-DOCX',self.source,'Word-dokument (*.docx)',False),('Risikoregler (CSV)',self.rules,'CSV-filer (*.csv)',False),('Output-DOCX',self.output,'Word-dokument (*.docx)',True)]:
             b=QPushButton('Vælg…'); b.clicked.connect(lambda _,e=edit,f=filters,s=save:self.choose(e,f,s)); row=QHBoxLayout(); row.addWidget(edit); row.addWidget(b); form.addRow(label,row)
-        form.addRow('Kategorier',self.category_list); form.addRow('',self.use_example); form.addRow(self.case); form.addRow(self.whole); buttons=QHBoxLayout(); buttons.addWidget(self.start); buttons.addWidget(self.cancel); buttons.addWidget(self.open_result); buttons.addWidget(self.open_folder); form.addRow(buttons); form.addRow(self.progress); form.addRow(self.result_row); form.addRow(self.help_links); form.addRow(self.status); w=QWidget(); w.setLayout(form); self.setCentralWidget(w); self.start.clicked.connect(self.begin); self.cancel.clicked.connect(self.stop); localize_widget_tree(self)
+        example_row=QHBoxLayout(); example_row.addWidget(self.use_example_docx); example_row.addWidget(self.use_example_csv); form.addRow('Eksempler',example_row); form.addRow(self.case); form.addRow(self.whole); buttons=QHBoxLayout(); buttons.addWidget(self.start); buttons.addWidget(self.cancel); buttons.addWidget(self.open_result); buttons.addWidget(self.open_folder); form.addRow(buttons); form.addRow(self.progress); form.addRow(self.result_row); form.addRow(self.help_links); form.addRow(self.status); w=QWidget(); w.setLayout(form); self.setCentralWidget(w); self.start.clicked.connect(self.begin); self.cancel.clicked.connect(self.stop); localize_widget_tree(self)
     def populate_categories(self,path):
         try: cats=sorted({r.category for r in parse_risk_rules(path)})
         except Exception: return
@@ -40,12 +40,24 @@ class RiskWindow(QMainWindow):
     def choose(self,e,f,save):
         p=(QFileDialog.getSaveFileName if save else QFileDialog.getOpenFileName)(self,'Vælg fil','',f)[0]
         if p:e.setText(p)
+    def _example_root(self):
+        return Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3]))/'data'/'examples'
+    def _copy_example(self, filename, caption, filter_text):
+        source=self._example_root()/filename
+        target=QFileDialog.getSaveFileName(self,caption,filename,filter_text)[0]
+        if not target: return None
+        target_path=Path(target)
+        if target_path.exists() and QMessageBox.question(self,message('confirm'),f'{target_path.name} findes allerede. Overskriv?') != QMessageBox.StandardButton.Yes: return None
+        try: shutil.copyfile(source,target_path); return target_path
+        except Exception as exc: QMessageBox.critical(self,message('copy_example_failed'),message('copy_example_failed')+'\n'+str(exc)); return None
+    def copy_example_docx(self):
+        target=self._copy_example('risk_sample_no.docx','Gem norsk eksempel-DOCX','Word-dokument (*.docx)')
+        if target: self.source.setText(str(target)); self.status.setText(f'Eksempel-DOCX kopieret: {target.name}')
+    def copy_example_csv(self):
+        target=self._copy_example('risk_rules_no_da.csv','Gem norsk–dansk eksempel-CSV','CSV-filer (*.csv)')
+        if target: self.rules.setText(str(target)); self.status.setText(message('rules_shown',pack='Eksempel',rows=0,rules=0))
     def copy_example(self):
-        root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3])); example=root/'data'/'examples'/'risk_rules_no_da.csv'
-        target=QFileDialog.getSaveFileName(self,'Gem norsk–dansk eksempel','risk_rules_no_da.csv','CSV-filer (*.csv)')[0]
-        if target:
-            try: shutil.copyfile(example,target); self.rules.setText(target); self.status.setText(message('rules_shown',pack='Eksempel',rows=0,rules=0))
-            except Exception as exc: QMessageBox.critical(self,message('copy_example_failed'),message('copy_example_failed')+'\n'+str(exc))
+        self.copy_example_csv()
     def begin(self):
         if not self.source.text() or not self.rules.text(): QMessageBox.warning(self,message('missing_files'),message('missing_files_detail')); return
         if not Path(self.source.text()).is_file(): QMessageBox.warning(self,message('source_missing'),message('source_missing_detail')); return
