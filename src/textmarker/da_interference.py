@@ -90,10 +90,11 @@ def _mark_paragraph(p, spans, rules):
 def _reserve(path):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True); fd=os.open(path,os.O_CREAT|os.O_EXCL|os.O_WRONLY); os.close(fd)
 
-def scan_and_write(source, rules, output, report, *, summary_path=None, categories=None, cancel=None, progress=None):
+def scan_and_write(source, rules, output, report, *, summary_path=None, categories=None, cancel=None, progress=None, overwrite=False):
     source,output,report=map(Path,(source,output,report)); summary_path=Path(summary_path) if summary_path else None; finals=[output,report]+([summary_path] if summary_path else [])
     if len({p.resolve() for p in finals})!=len(finals) or any(p.resolve()==source.resolve() for p in finals): raise ValueError('Outputstier skal være forskellige og må ikke være kilden')
-    if any(p.exists() for p in finals): raise FileExistsError('Outputfil findes allerede')
+    existing=[p for p in finals if p.exists()]
+    if existing and not overwrite: raise FileExistsError('Outputfil findes allerede: '+', '.join(str(p) for p in existing))
     for final in finals: final.parent.mkdir(parents=True,exist_ok=True)
     terms=[TermSpec(r.expression,r.category,r.color,r.enabled,r.ordinal) for r in rules if r.enabled and (categories is None or r.category in categories)]
     by_term=[r for r in rules if r.enabled and (categories is None or r.category in categories)]; warnings=[]; findings=[]
@@ -112,7 +113,7 @@ def scan_and_write(source, rules, output, report, *, summary_path=None, categori
         if spans: _mark_paragraph(p,spans,by_term)
         if progress: progress(int(n/max(1,len(paragraphs))*100))
     files['word/document.xml']=etree.tostring(root,xml_declaration=True,encoding='UTF-8',standalone=True)
-    temps=[]; published=[]
+    temps=[]; published=[]; backups=[]
     try:
         for final in finals:
             temp=Path(NamedTemporaryFile(dir=final.parent,prefix=final.name+'.',suffix='.tmp',delete=False).name); temps.append((temp,final))
@@ -126,12 +127,22 @@ def scan_and_write(source, rules, output, report, *, summary_path=None, categori
             with temps[2][0].open('w',encoding='utf-8-sig',newline='') as f:
                 w=csv.writer(f); w.writerow(['rule_id','category','occurrence_count']); w.writerows((*key,count) for key,count in sorted(counts.items()))
         if cancel and cancel.is_set(): return None
-        for temp,final in temps: _reserve(final); os.replace(temp,final); published.append(final)
+        for temp,final in temps:
+            if final.exists():
+                backup=Path(NamedTemporaryFile(dir=final.parent,prefix=final.name+'.',suffix='.bak',delete=False).name)
+                backup.unlink(); os.replace(final,backup); backups.append((backup,final))
+            else:
+                _reserve(final)
+            os.replace(temp,final); published.append(final)
         return DAScanResult(tuple(findings),tuple(warnings))
     except Exception:
         for p in published:
             if p.exists(): p.unlink()
+        for backup,final in backups:
+            if backup.exists(): os.replace(backup,final)
         raise
     finally:
         for temp,_ in temps:
             if temp.exists(): temp.unlink()
+        for backup,_ in backups:
+            if backup.exists(): backup.unlink()

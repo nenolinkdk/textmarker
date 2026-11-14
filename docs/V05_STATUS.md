@@ -194,6 +194,12 @@ Sproginterferens har nu `Vejledning`, `Kopiér eksempel-DOCX` og `Kopiér eksemp
 
 Verifikation: `114 passed` (1 PytestCacheWarning). Pakket visuel Windows-kontrol, screenshots og Microsoft Word/OnlyOffice er ikke udført.
 
+## Fase I.7.4A — sikker outputgruppe i Sproginterferens
+
+Årsagen til fejlen var, at scanneren afviste enhver eksisterende DOCX-, findings- eller summary-fil uden brugerbeslutning. `scan_and_write` understøtter nu eksplicit `overwrite=True` med backup/rollback af hele outputgruppen. GUI’en viser eksisterende fulde stier og tilbyder `Overskriv eksisterende resultatfiler`, `Gem med nyt navn` eller `Annuller`. Nummererede navne bruges kun til et nyt, ledigt outputgruppe-sæt.
+
+Verifikation: `116 passed` (1 PytestCacheWarning). Tests dækker tom mappe, eksisterende enkeltfiler og samlet outputgruppe, overskrivning, bevarelse ved afvisning og inputbeskyttelse. Pakket GUI og Microsoft Word er ikke testet endnu.
+
 ## Fase I.7.3F — build
 
 Kodecommit: `b55a29f2666d4c9ac4753e90e598748429dfde2a`. Ny TEST.exe: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 52.135.156 bytes, SHA-256 `60B27DC2E30E15EEA0CF9FD8BC46B408F50DBE083CE74DA69B4F33A0BEB82C28`. Pakket processtart bestået i fire sekunder uden rapporteret traceback. Manuel Windows GUI, screenshots, Microsoft Word og OnlyOffice er `NOT TESTED`.

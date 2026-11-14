@@ -8,17 +8,21 @@ from textmarker.file_inventory import FileInventory
 from textmarker.ui.result_controls import ResultRow, HelpLinks
 from textmarker.ui.ui_texts import localize_widget_tree, message
 
+def output_group(folder, stem, index=None):
+    suffix='' if index is None else f'_{index}'
+    return (Path(folder)/(stem+f'_DA-marked{suffix}.docx'), Path(folder)/(stem+f'_DA-findings{suffix}.csv'), Path(folder)/(stem+f'_DA-summary{suffix}.csv'))
+
 class DAWorker(QObject):
     progress=Signal(int); finished=Signal(object); failed=Signal(str)
-    def __init__(self, source, rules, output_dir, categories):
-        super().__init__(); self.source=Path(source); self.rules=Path(rules); self.output_dir=Path(output_dir); self.categories=categories; self.cancel_event=Event()
+    def __init__(self, source, rules, output_dir, categories, overwrite=False, index=None):
+        super().__init__(); self.source=Path(source); self.rules=Path(rules); self.output_dir=Path(output_dir); self.categories=categories; self.overwrite=overwrite; self.index=index; self.cancel_event=Event()
     @Slot()
     def run(self):
         try:
-            rules=load_rules(self.rules); stem=self.source.stem
-            result=scan_and_write(self.source,rules,self.output_dir/(stem+'_DA-marked.docx'),self.output_dir/(stem+'_DA-findings.csv'),summary_path=self.output_dir/(stem+'_DA-summary.csv'),categories=self.categories,cancel=self.cancel_event,progress=self.progress.emit)
+            rules=load_rules(self.rules); stem=self.source.stem; outputs=output_group(self.output_dir,stem,self.index)
+            result=scan_and_write(self.source,rules,*outputs[:2],summary_path=outputs[2],categories=self.categories,cancel=self.cancel_event,progress=self.progress.emit,overwrite=self.overwrite)
             if result is None: self.finished.emit(None); return
-            paths=(self.source,self.rules,self.output_dir/(stem+'_DA-marked.docx'),self.output_dir/(stem+'_DA-findings.csv'),self.output_dir/(stem+'_DA-summary.csv'))
+            paths=(self.source,self.rules,*outputs)
             self.finished.emit((result,paths))
         except Exception as exc: self.failed.emit(str(exc))
     def cancel(self): self.cancel_event.set()
@@ -69,7 +73,16 @@ class DAInterferenceWindow(QMainWindow):
         if not self.source.text() or not self.rules.text() or not self.output.text(): QMessageBox.warning(self,'Manglende valg','Vælg DOCX, CSV-regler og outputmappe.'); return
         self.output_dir=Path(self.output.text()); self.categories={self.category_list.item(i).data(Qt.UserRole) for i in range(self.category_list.count()) if self.category_list.item(i).isSelected()}
         if not self.categories: QMessageBox.warning(self,'Manglende kategorier','Vælg mindst én kategori.'); return
-        self.result_row.clear(); self.thread=QThread(self); self.worker=DAWorker(self.source.text(),self.rules.text(),self.output_dir,self.categories); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.done); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.start_button.setEnabled(False); self.cancel_button.setEnabled(True); self.open_button.setEnabled(False); self.status.setText('Scanner…'); self.thread.start()
+        overwrite=False; index=None; existing=output_group(self.output_dir,Path(self.source.text()).stem)
+        existing=[p for p in existing if p.exists()]
+        if existing:
+            dialog=QMessageBox(self); dialog.setIcon(QMessageBox.Warning); dialog.setWindowTitle('Resultatfiler findes allerede'); dialog.setText('Der findes allerede resultatfiler i den valgte outputmappe.'); dialog.setInformativeText('\n'.join(str(p) for p in existing)); overwrite_button=dialog.addButton('Overskriv eksisterende resultatfiler',QMessageBox.AcceptRole); new_button=dialog.addButton('Gem med nyt navn',QMessageBox.ActionRole); dialog.addButton('Annuller',QMessageBox.RejectRole); dialog.exec()
+            if dialog.clickedButton() is overwrite_button: overwrite=True
+            elif dialog.clickedButton() is new_button:
+                index=1
+                while any(p.exists() for p in output_group(self.output_dir,Path(self.source.text()).stem,index)): index+=1
+            else: return
+        self.result_row.clear(); self.thread=QThread(self); self.worker=DAWorker(self.source.text(),self.rules.text(),self.output_dir,self.categories,overwrite,index); self.worker.moveToThread(self.thread); self.thread.started.connect(self.worker.run); self.worker.progress.connect(self.progress.setValue); self.worker.finished.connect(self.done); self.worker.failed.connect(self.failed); self.thread.finished.connect(self.thread.deleteLater); self.start_button.setEnabled(False); self.cancel_button.setEnabled(True); self.open_button.setEnabled(False); self.status.setText('Scanner…'); self.thread.start()
     def cancel(self):
         if self.worker: self.worker.cancel(); self.status.setText(message('cancel_requested'))
     def done(self,payload):

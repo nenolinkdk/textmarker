@@ -1,4 +1,5 @@
 import csv, hashlib
+import pytest
 from zipfile import ZipFile
 from docx import Document
 from textmarker.da_interference import load_rules, scan_and_write
@@ -30,6 +31,21 @@ def test_no_overwrite_and_cancellation(tmp_path):
     try: scan_and_write(source,rules,output,tmp_path/'r.csv'); assert False
     except FileExistsError: pass
     cancelled=__import__('threading').Event(); cancelled.set(); assert scan_and_write(source,rules,tmp_path/'m.docx',tmp_path/'r.csv',cancel=cancelled) is None
+
+def test_existing_output_group_can_be_overwritten_atomically(tmp_path):
+    source=tmp_path/'source.docx'; doc=Document(); doc.add_paragraph('eventuelt'); doc.save(source)
+    rules=load_rules(rules_file(tmp_path/'rules.csv')); outputs=(tmp_path/'m.docx',tmp_path/'r.csv',tmp_path/'s.csv')
+    for path in outputs: path.write_text('old',encoding='utf-8')
+    scan_and_write(source,rules,*outputs[:2],summary_path=outputs[2],overwrite=True)
+    assert all(path.exists() and path.read_bytes()!=b'old' for path in outputs)
+    assert source.read_bytes()
+
+def test_existing_output_group_is_preserved_when_overwrite_is_not_allowed(tmp_path):
+    source=tmp_path/'source.docx'; doc=Document(); doc.add_paragraph('eventuelt'); doc.save(source)
+    rules=load_rules(rules_file(tmp_path/'rules.csv')); outputs=(tmp_path/'m.docx',tmp_path/'r.csv',tmp_path/'s.csv')
+    for path in outputs: path.write_text('keep',encoding='utf-8')
+    with pytest.raises(FileExistsError): scan_and_write(source,rules,*outputs[:2],summary_path=outputs[2])
+    assert all(path.read_text(encoding='utf-8')=='keep' for path in outputs)
 
 def test_overlap_repeated_unicode_and_run_formatting(tmp_path):
     doc=Document(); p=doc.add_paragraph(); a=p.add_run('ikke ikke '); a.bold=True; p.add_run('eventuelt æble')
