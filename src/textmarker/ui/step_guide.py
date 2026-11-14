@@ -14,8 +14,38 @@ _UI = {
     "fr": ("Guide étape par étape", "Précédent", "Suivant", "Étape {n} sur {total}", "Exemple", "Résultat attendu", "Dépannage"),
 }
 
+_MODULE_GUIDE = {
+    "Dashboard": ("Vælg projekt", "Klik på Projektworkflow, vælg Projektnavn og Projektmappe, og kontrollér Kildesprog og Målsprog.", "Eksempel: projektet Norsk roman – dansk.", "Projektet er valgt, og du kan åbne den relevante scanner."),
+    "Translation Risk Scanner": ("Vælg kilde og risikoregler", "Klik på Vælg… ved Kilde-DOCX, vælg den norske eksempeltekst, og klik derefter på Vælg… ved Risikoregler (CSV).", "Eksempel: risk_rules_no_da.csv.", "Kilde-DOCX og den validerede syvkolonne-CSV står i felterne."),
+    "Language Interference Scanner": ("Vælg dokument og regler", "Klik på Vælg… ved Kilde-DOCX og Regler (CSV), og vælg en DOCX samt DA-interference-regler med RED, ORANGE eller YELLOW.", "Eksempel: da_interference_rules.csv.", "Begge filer er valgt, og kategorifiltrene kan bruges."),
+    "Word Index": ("Vælg dokument og sprog", "Klik på Vælg… ved Input, vælg DOCX eller TXT, vælg Dansk eller Norsk bokmål, og markér Stopord efter behov.", "Eksempel: textmarker_sample.docx og den danske eller norske stopordsliste.", "Dokumentet er klar til optælling med den valgte stopordsindstilling."),
+    "File Inventory": ("Find en filreference", "Skriv et filnavn i Søg, vælg en reference i listen, og klik Åbn eller Genbrug. Brug Fjern reference for kun at fjerne inventarposten.", "En manglende fil markeres, før du forsøger at åbne den.", "Den valgte eksisterende fil åbnes, eller den manglende reference vises tydeligt."),
+    "Terminology": ("Opret et concept", "Klik Nyt concept, udfyld Concept-ID, Definition og Subject field, og brug Tilføj term til at angive term, Language og Approval status.", "Importer eventuelt terminology_import.csv via Importér CSV.", "Conceptet kan søges, redigeres og eksporteres som canonical CSV."),
+    "Glossaries & Rules": ("Importer et rule pack", "Klik Importér, vælg canonical_rule_pack.csv, kontrollér schema og language pair, og brug tabellen til at søge, redigere eller aktivere regler.", "Eksempel: canonical_rule_pack.csv.", "Et valideret rule pack vises med stabile IDs og regelantal."),
+    "Prompt Library": ("Konfigurér en prompt", "Vælg en skabelon, angiv source language, target language og domain, redigér QA criteria, og klik Preview før Gem eller Kopiér.", "Eksempel: Terminology consistency for norsk bokmål → dansk.", "Den komplette prompt vises redigerbar og kan gemmes lokalt uden AI-kald."),
+    "Settings": ("Vælg arbejdskontekst", "Vælg UI-sprog, Source language, Target language, aktivt projekt og arbejdsmapper, og klik Gem.", "Brug en skrivbar projektmappe under Dokumenter.", "Indstillingerne bruges ved næste åbning uden at ændre manuskripter."),
+    "Help": ("Åbn en modulvejledning", "Klik på CSV-eksempelbibliotek, vælg et modul, og brug Vis eksempel, Gem eksempel som… eller Kopiér prompt.", "Eksempel: risk_rules_no_da.csv viser den faktiske syvkolonne-struktur.", "Hjælpen viser kun kompatible filer og forklarer, hvordan output skal tolkes."),
+}
+
+def _concrete_steps(module, locale):
+    da = _MODULE_GUIDE[module]
+    labels = {
+        "sv": ("Öppna arbetsflödet", "Välj filen och kontrollera formatet", "Kör funktionen", "Kontrollera resultatet"),
+        "nb": ("Åpne arbeidsflyten", "Velg filen og kontroller formatet", "Kjør funksjonen", "Kontroller resultatet"),
+        "en": ("Open the workflow", "Select the file and check the format", "Run the function", "Check the result"),
+        "de": ("Arbeitsablauf öffnen", "Datei wählen und Format prüfen", "Funktion ausführen", "Ergebnis prüfen"),
+        "fr": ("Ouvrir le flux", "Choisir le fichier et vérifier le format", "Exécuter la fonction", "Vérifier le résultat"),
+    }
+    if locale == "da":
+        titles = (da[0], "Kontrollér input", "Kør funktionen", "Gennemgå output")
+        return [da, (titles[1], da[1], da[2], da[3]), (titles[2], f"Brug den konkrete hovedknap i {module}, og følg statusfeltet.", "Vent på status Færdig, før du åbner output.", "Resultatet er skrevet uden at overskrive input."), (titles[3], "Åbn det viste resultat fra modulets resultatkontrol og vurder fundene i sammenhæng.", "Sammenhold output med den valgte inputfil.", "Automatiske fund er reviewsignaler og kræver menneskelig vurdering.")]
+    t = labels.get(locale, labels["en"])
+    return [(t[0], da[1], da[2], da[3]), (t[1], da[1], da[2], da[3]), (t[2], f"Use the main action in {module} and follow its status message.", "Wait until the operation reports completion before opening output.", "The result is written separately from the input."), (t[3], "Open the displayed result and assess each finding against the selected input.", "Compare the output with the example and its documented format.", "Automatic findings are review signals and require human assessment.")]
+
 
 def _steps(module, locale):
+    if module in _MODULE_GUIDE:
+        return _concrete_steps(module, locale)
     # The labels deliberately name the controls users see in the corresponding window.
     da = {
         "Text Marker": [
@@ -93,7 +123,17 @@ def _troubleshooting(module, index, locale):
         }
     }
     values = localized.get(locale, localized['en']).get(module)
-    return values[index] if values and index < len(values) else localized.get(locale, localized['en']).get('Text Marker', ['Check the selected input and file permissions.'])[0]
+    if values and index < len(values):
+        return values[index]
+    fallback = {
+        'da': f'Kontrollér de viste felter i {module}, at filformatet passer til funktionen, og at målmapperne er skrivbare. Læs den konkrete statusmeddelelse, før du prøver igen.',
+        'sv': f'Kontrollera fälten i {module}, att filformatet stöds och att målmappen är skrivbar. Läs statusmeddelandet innan du försöker igen.',
+        'nb': f'Kontroller feltene i {module}, at filformatet støttes og at målmappen kan skrives til. Les statusmeldingen før du prøver igjen.',
+        'en': f'Check the fields in {module}, confirm the format is supported, and use a writable destination. Read the specific status message before trying again.',
+        'de': f'Prüfen Sie die Felder in {module}, das unterstützte Format und einen beschreibbaren Zielordner. Lesen Sie die konkrete Statusmeldung, bevor Sie es erneut versuchen.',
+        'fr': f'Verifiez les champs de {module}, le format pris en charge et un dossier cible accessible en écriture. Lisez le message d’état avant de recommencer.',
+    }
+    return fallback.get(locale, fallback['en'])
 
 
 def _term_list_step(locale):
@@ -106,6 +146,32 @@ def _term_list_step(locale):
         'fr': ('Choisir la liste de termes', 'Dans Text Marker, cliquez sur Choisir… près de Termliste et sélectionnez TXT, MD ou CSV. Afficher l’exemple ouvre textmarker_terms.txt; Enregistrer l’exemple sous… le copie.', 'TXT/MD utilise une expression par ligne; les lignes vides et # sont ignorées. Le CSV exige expression; category, color et enabled sont facultatifs. enabled accepte true/false.', 'Le chemin apparaît dans Termliste et la liste est prête.'),
     }
     return values.get(locale, values['en'])
+
+_EXAMPLE_FILES = {
+    'Text Marker': ('textmarker_sample.docx', 'textmarker_terms.txt', 'textmarker_terms.csv'),
+    'Translation Risk Scanner': ('risk_rules_no_da.csv',),
+    'Language Interference Scanner': ('da_interference_rules.csv',),
+    'Glossaries & Rules': ('canonical_rule_pack.csv',),
+    'Terminology': ('terminology_import.csv',),
+}
+
+def example_files_for_module(module):
+    """Return bundled example paths for *module* without exposing _MEIPASS as storage."""
+    root = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[3])) / 'data' / 'examples'
+    return tuple(root / name for name in _EXAMPLE_FILES.get(module, ()))
+
+def copy_module_examples(module, destination):
+    """Copy a module's bundled examples to a user-owned project directory."""
+    target = Path(destination)
+    target.mkdir(parents=True, exist_ok=True)
+    copied = []
+    for source in example_files_for_module(module):
+        if not source.is_file():
+            raise FileNotFoundError(f'Missing bundled example: {source.name}')
+        destination_file = target / source.name
+        shutil.copy2(source, destination_file)
+        copied.append(destination_file)
+    return tuple(copied)
 
 
 class StepGuide(QDialog):
@@ -135,7 +201,7 @@ class StepGuide(QDialog):
 
     def refresh(self, locale):
         self.locale = locale if locale in _UI else "en"
-        labels = _UI[self.locale]; self.setWindowTitle(labels[0]); self.back.setText(labels[1]); self.next.setText(labels[2]); self.show_example.setText({'da':'Vis eksempel','sv':'Visa exempel','nb':'Vis eksempel','en':'Show example','de':'Beispiel anzeigen','fr':'Afficher l’exemple'}[self.locale]); self.save_example.setText({'da':'Gem eksempel som…','sv':'Spara exempel som…','nb':'Lagre eksempel som…','en':'Save example as…','de':'Beispiel speichern unter…','fr':'Enregistrer l’exemple sous…'}[self.locale]); self.show_example.setVisible(self.module == 'Text Marker'); self.save_example.setVisible(self.module == 'Text Marker')
+        labels = _UI[self.locale]; self.setWindowTitle(labels[0]); self.back.setText(labels[1]); self.next.setText(labels[2]); self.show_example.setText({'da':'Vis eksempel','sv':'Visa exempel','nb':'Vis eksempel','en':'Show example','de':'Beispiel anzeigen','fr':'Afficher l’exemple'}[self.locale]); self.save_example.setText({'da':'Gem eksempel som…','sv':'Spara exempel som…','nb':'Lagre eksempel som…','en':'Save example as…','de':'Beispiel speichern unter…','fr':'Enregistrer l’exemple sous…'}[self.locale]); available = bool(_EXAMPLE_FILES.get(self.module)); self.show_example.setVisible(available); self.save_example.setVisible(available)
         self._render()
 
     def _render(self):
@@ -156,14 +222,13 @@ class StepGuide(QDialog):
         if self.index < len(_steps(self.module, self.locale))-1: self.index += 1; self._render()
 
     def _example_paths(self):
-        root=Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[3])); return root/'data'/'examples'/'textmarker_sample.docx', root/'data'/'examples'/'textmarker_terms.txt'
+        return example_files_for_module(self.module)
 
     def _show_example(self):
-        doc, _ = self._example_paths()
-        if doc.exists(): os.startfile(doc)
+        paths = self._example_paths()
+        if paths and paths[0].exists(): os.startfile(paths[0])
 
     def _save_example(self):
         target=QFileDialog.getExistingDirectory(self, 'Gem eksempelfiler')
         if not target: return
-        for source in self._example_paths():
-            if source.exists(): shutil.copy2(source, Path(target)/source.name)
+        copy_module_examples(self.module, target)

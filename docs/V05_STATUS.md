@@ -139,3 +139,9 @@ Verifikation: `100 passed`, inklusive 30 kombinationer (5 skemaer × 6 sprog). E
 TXT-termlister understøtter nu `udtryk%farve`; `%%` er escape for bogstaveligt procenttegn. Uden farve bruges `yellow`. CSV-kolonnen `color` fortsætter med at styre Word-fremhævningen via `TermSpec.highlight_color` og `w:highlight`. Trin 2 viser den faktiske palette dynamisk og med rigtige linjeskift.
 
 Verifikation: `104 passed`. EXE fra commit `a20d469b7dfcc550a4df3255378e8ad0ee7b9111`, 52,056,063 bytes, SHA-256 `7D6BE44F26A91EA558CD301359EFDACC47C79F6E82B85AF4F4CC0A8E0BC14DD8`. Microsoft Word og OnlyOffice er ikke testet.
+
+## Fase I.7.3A — fælles layout, konkrete vejledninger og eksempelfiler
+
+Modulintroduktionerne bruger nu kompakte, indholdstilpassede kort uden `SetMinimumSize`, stretch eller faste minimumshøjder. Trinvis vejledning bruger eksplicitte modulspecifikke trin for alle 12 moduler og seks UI-sprog; de tidligere generiske fallback-tekster er ikke længere standard. Eksempelfiler kan kopieres til en bruger-valgt projektmappe via den fælles `copy_module_examples`-funktion, mens bundtede originaler forbliver uændrede. Tekst Marker, risikoscanner, interferensscanner, rule packs og terminologi har konkrete eksempelressourcer.
+
+Automatiseret verifikation: `107 passed` forventes efter den fulde lokale kørsel; den nye regressionsfil kontrollerer konkrete trin, seks sprog, eksempelfiler og byte-for-byte bevarelse af bundtede originaler. Pakket GUI, screenshots og Microsoft Word/OnlyOffice er ikke verificeret i dette miljø.
