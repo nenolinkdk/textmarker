@@ -194,4 +194,8 @@ Sproginterferens har nu `Vejledning`, `Kopiér eksempel-DOCX` og `Kopiér eksemp
 
 Verifikation: `114 passed` (1 PytestCacheWarning). Pakket visuel Windows-kontrol, screenshots og Microsoft Word/OnlyOffice er ikke udført.
 
+## Fase I.7.3F — build
+
+Kodecommit: `b55a29f2666d4c9ac4753e90e598748429dfde2a`. Ny TEST.exe: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 52.135.156 bytes, SHA-256 `60B27DC2E30E15EEA0CF9FD8BC46B408F50DBE083CE74DA69B4F33A0BEB82C28`. Pakket processtart bestået i fire sekunder uden rapporteret traceback. Manuel Windows GUI, screenshots, Microsoft Word og OnlyOffice er `NOT TESTED`.
+
 Ny TEST-build fra kodecommit `4cbea07e0badfa1676bf55c0572458859f3bf36f`: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 52.098.135 bytes, SHA-256 `414E26A369FE93653695C925ED589CE600B5110B1E9D4EF3AAB6ECA944FB4933`. Processtart bestået i fire sekunder uden rapporteret traceback; window title kunne ikke aflæses i den ikke-interaktive kontrol. Manuel Windows GUI, screenshots, Microsoft Word og OnlyOffice er `NOT TESTED`.
