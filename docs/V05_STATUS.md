@@ -186,4 +186,12 @@ Audit: `ModuleIntroduction` er den eneste introduktionskort-implementering. Der 
 
 Verifikation efter rettelse: `111 passed` (1 PytestCacheWarning). Pakket GUI, screenshots og manuel Windows/Word/OnlyOffice-kontrol er ikke udført endnu.
 
+## Fase I.7.3F — layoutmåling og Sproginterferens-eksempler
+
+Layoutårsagen var parent-layoutets fordeling af ekstra højde til kortwidgets uden eksplicit topjustering. `ModuleIntroduction` sætter nu topjustering på yderlayoutet og alle kortlayouts, samt `QSizePolicy.Preferred/Minimum`; kortene får ikke længere ekstra lodret plads mellem afsnittene. Regressionstesten måler faktiske geometrier efter layoutaktivering ved 760×480 og 480×300.
+
+Sproginterferens har nu `Vejledning`, `Kopiér eksempel-DOCX` og `Kopiér eksempel-CSV`. DOCX-eksemplet er syntetisk dansk med overskrifter, afsnit, nummereret liste og tabel; CSV’en valideres med den eksisterende ni-kolonne-parser. Knapperne bruger aktiv projektmappe fra QSettings, ellers brugervalgt mappe, og spørger før overskrivning.
+
+Verifikation: `114 passed` (1 PytestCacheWarning). Pakket visuel Windows-kontrol, screenshots og Microsoft Word/OnlyOffice er ikke udført.
+
 Ny TEST-build fra kodecommit `4cbea07e0badfa1676bf55c0572458859f3bf36f`: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 52.098.135 bytes, SHA-256 `414E26A369FE93653695C925ED589CE600B5110B1E9D4EF3AAB6ECA944FB4933`. Processtart bestået i fire sekunder uden rapporteret traceback; window title kunne ikke aflæses i den ikke-interaktive kontrol. Manuel Windows GUI, screenshots, Microsoft Word og OnlyOffice er `NOT TESTED`.

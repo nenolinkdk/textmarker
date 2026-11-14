@@ -26,3 +26,16 @@ def test_examples_exist_for_csv_modules():
     for module in ("Translation Risk Scanner", "Language Interference Scanner", "Glossaries & Rules", "Terminology"):
         paths = example_files_for_module(module)
         assert paths and all(path.exists() for path in paths)
+
+
+def test_intro_cards_follow_content_and_stay_top_aligned_offscreen():
+    from PySide6.QtWidgets import QApplication
+    app = QApplication.instance() or QApplication([])
+    for size in ((760, 480), (480, 300)):
+        page = __import__('textmarker.ui.module_introduction', fromlist=['ModuleIntroduction']).ModuleIntroduction('Dashboard', 'da')
+        page.resize(*size)
+        page.show(); app.processEvents(); page.layout().activate()
+        assert page._intro_card.y() <= page._result_card.y()
+        assert page._intro_card.geometry().height() <= page._intro_card.sizeHint().height() + 12
+        assert page._result_card.geometry().height() <= page._result_card.sizeHint().height() + 12
+        page.close()

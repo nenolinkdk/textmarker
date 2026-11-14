@@ -1,6 +1,7 @@
 from pathlib import Path
+import shutil, sys
 from threading import Event
-from PySide6.QtCore import QObject, QThread, Signal, Slot, Qt
+from PySide6.QtCore import QObject, QThread, Signal, Slot, Qt, QSettings
 from PySide6.QtWidgets import QCheckBox, QFileDialog, QHBoxLayout, QLabel, QLineEdit, QListWidget, QMessageBox, QPushButton, QProgressBar, QVBoxLayout, QWidget, QMainWindow
 from textmarker.da_interference import load_rules, scan_and_write
 from textmarker.file_inventory import FileInventory
@@ -31,8 +32,11 @@ class DAInterferenceWindow(QMainWindow):
         for value,label in [('RED','RED — mulig betydningsfejl'),('ORANGE','ORANGE — norsk interferens'),('YELLOW','YELLOW — terminologi/review')]:
             item=self.category_list.addItem(label); self.category_list.item(self.category_list.count()-1).setData(Qt.UserRole,value); self.category_list.item(self.category_list.count()-1).setSelected(True)
         form=QVBoxLayout(); form.addWidget(QLabel('Dansk DOCX')); form.addLayout(self._row(self.source,False)); form.addWidget(QLabel('CSV-regler')); form.addLayout(self._row(self.rules,False)); form.addWidget(QLabel('Outputmappe')); form.addLayout(self._row(self.output,True)); form.addWidget(QLabel('Kategorier')); form.addWidget(self.category_list)
+        self.use_example_docx=QPushButton('Kopiér eksempel-DOCX'); self.use_example_csv=QPushButton('Kopiér eksempel-CSV')
+        examples=QHBoxLayout(); examples.addWidget(self.use_example_docx); examples.addWidget(self.use_example_csv); form.addWidget(QLabel('Eksempler')); form.addLayout(examples)
         self.start_button=QPushButton('Start scan'); self.cancel_button=QPushButton('Annullér'); self.cancel_button.setEnabled(False); self.open_button=QPushButton('Åbn resultater'); self.open_button.setEnabled(False)
-        self.result_row=ResultRow(); self.help_links=HelpLinks([('Brugervejledning','interference.overview'),('Tutorial','interference.rules')])
+        self.result_row=ResultRow(); self.help_links=HelpLinks([('Vejledning','interference.overview')])
+        self.use_example_docx.clicked.connect(self.copy_example_docx); self.use_example_csv.clicked.connect(self.copy_example_csv)
         self.start_button.clicked.connect(self.start); self.cancel_button.clicked.connect(self.cancel); self.open_button.clicked.connect(self.open_results)
         buttons=QHBoxLayout(); buttons.addWidget(self.start_button); buttons.addWidget(self.cancel_button); buttons.addWidget(self.open_button); form.addLayout(buttons); form.addWidget(self.progress); form.addWidget(self.result_row); form.addWidget(self.help_links); form.addWidget(self.status)
         root=QWidget(); root.setLayout(form); self.setCentralWidget(root); self.result_paths=(); localize_widget_tree(self)
@@ -41,6 +45,26 @@ class DAInterferenceWindow(QMainWindow):
     def _choose(self, edit, directory):
         fn=QFileDialog.getExistingDirectory(self,'Vælg outputmappe') if directory else QFileDialog.getOpenFileName(self,'Vælg fil',filter='DOCX/CSV (*.docx *.csv)')[0]
         if fn: edit.setText(fn)
+    def _example_root(self):
+        return Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[3])) / 'data' / 'examples'
+    def _copy_example(self, filename):
+        destination=QSettings('Nenolink','TextTools').value('project_dir','')
+        if not destination or not Path(destination).is_dir():
+            destination=QFileDialog.getExistingDirectory(self,'Vælg destinationsmappe')
+        if not destination: return None
+        target=Path(destination)/filename
+        if target.exists() and QMessageBox.question(self,'Bekræft',f'{filename} findes allerede. Overskriv?') != QMessageBox.StandardButton.Yes: return None
+        try: shutil.copy2(self._example_root()/filename,target); return target
+        except Exception as exc: QMessageBox.critical(self,'Eksempel kunne ikke kopieres',f'Eksempel kunne ikke kopieres.\n{exc}'); return None
+    def copy_example_docx(self):
+        target=self._copy_example('interference_sample_da.docx')
+        if target: self.source.setText(str(target)); self.status.setText(f'Eksempel-DOCX kopieret: {target.name}')
+    def copy_example_csv(self):
+        target=self._copy_example('da_interference_rules.csv')
+        if target:
+            try: load_rules(target)
+            except Exception as exc: QMessageBox.critical(self,'Ugyldige interferensregler',str(exc)); return
+            self.rules.setText(str(target)); self.status.setText(f'Eksempel-CSV kopieret: {target.name}')
     def start(self):
         if not self.source.text() or not self.rules.text() or not self.output.text(): QMessageBox.warning(self,'Manglende valg','Vælg DOCX, CSV-regler og outputmappe.'); return
         self.output_dir=Path(self.output.text()); self.categories={self.category_list.item(i).data(Qt.UserRole) for i in range(self.category_list.count()) if self.category_list.item(i).isSelected()}
