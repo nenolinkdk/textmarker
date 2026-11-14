@@ -13,19 +13,23 @@ _ANCHOR_MODULES = {
 }
 
 def combined_guide_path(anchor, locale=None):
-    module = _ANCHOR_MODULES.get(anchor)
-    if not module:
-        return resource_file('docs/manual/help.html')
     from textmarker.ui.step_guide import _steps, _troubleshooting
     locale = locale or current_locale()
     titles = {'da':'Samlet vejledning','sv':'Samlad guide','nb':'Samlet veiledning','en':'Combined guide','de':'Gesamtanleitung','fr':'Guide complet'}
-    body = [f'<!doctype html><meta charset="utf-8"><title>{html.escape(titles.get(locale, titles["en"]))} — {html.escape(module)}</title><style>body{{font:16px system-ui;line-height:1.55;max-width:900px;margin:2rem auto;padding:0 1rem}}article{{margin-bottom:2rem}}code{{background:#eee;padding:.1rem .25rem}}</style><h1>{html.escape(module)}</h1>']
-    for index, (title, instruction, example, expected) in enumerate(_steps(module, locale)):
-        troubleshooting = _troubleshooting(module, index, locale)
-        body.append(f'<article id="step-{index+1}"><h2>{index+1}. {html.escape(title)}</h2><p><strong>{html.escape(instruction)}</strong></p><p><b>Example:</b> {html.escape(example)}</p><p><b>Expected result:</b> {html.escape(expected)}</p><p><b>Troubleshooting:</b> {html.escape(troubleshooting)}</p></article>')
+    labels = {'da':('Eksempel','Forventet resultat','Fejlfinding'),'sv':('Exempel','Förväntat resultat','Felsökning'),'nb':('Eksempel','Forventet resultat','Feilsøking'),'en':('Example','Expected result','Troubleshooting'),'de':('Beispiel','Erwartetes Ergebnis','Fehlerbehebung'),'fr':('Exemple','Résultat attendu','Dépannage')}[locale if locale in titles else 'en']
+    body = [f'<!doctype html><meta charset="utf-8"><title>{html.escape(titles.get(locale, titles["en"]))}</title><style>body{{font:16px system-ui;line-height:1.55;max-width:900px;margin:2rem auto;padding:0 1rem}}nav{{background:#eef3f7;padding:1rem;position:sticky;top:0}}nav a{{margin-right:1rem}}article{{margin-bottom:2rem}}code{{background:#eee;padding:.1rem .25rem}}</style><h1>{html.escape(titles.get(locale, titles["en"]))}</h1><nav>']
+    for module_anchor, module in _ANCHOR_MODULES.items():
+        body.append(f'<a href="#{module_anchor}">{html.escape(module)}</a> ')
+    body.append('</nav>')
+    for module_anchor, module in _ANCHOR_MODULES.items():
+        body.append(f'<section id="{module_anchor}"><h2>{html.escape(module)}</h2>')
+        for index, (title, instruction, example, expected) in enumerate(_steps(module, locale)):
+            troubleshooting = _troubleshooting(module, index, locale)
+            body.append(f'<article id="{module_anchor}.step-{index+1}"><h3>{index+1}. {html.escape(title)}</h3><p><strong>{html.escape(instruction)}</strong></p><p><b>{labels[0]}:</b> {html.escape(example)}</p><p><b>{labels[1]}:</b> {html.escape(expected)}</p><p><b>{labels[2]}:</b> {html.escape(troubleshooting)}</p></article>')
+        body.append('</section>')
     root = Path(tempfile.gettempdir()) / 'Nenolink' / 'TextTools' / 'guides'
     root.mkdir(parents=True, exist_ok=True)
-    target = root / f'{module.lower().replace(" ", "_").replace("&", "and")}_{locale}.html'
+    target = root / f'nenolink_text_tools_manual_{locale}.html'
     target.write_text('\n'.join(body), encoding='utf-8')
     return target
 

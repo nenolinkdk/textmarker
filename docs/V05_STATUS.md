@@ -180,3 +180,8 @@ Verifikation: `111 passed` (1 PytestCacheWarning om manglende skriveadgang til `
 Build-kilde: `dce7b3f7ea0745ace8a4cb2e18d2e00e5be6f07f`. PyInstaller 6.11.1 / Python 3.12.14 inkluderede `data`, `docs/manual` og lokaliseringsressourcer via den eksisterende `build_v05.ps1`. EXE: `dist-text-tools-0.5/Nenolink-Text-Tools-0.5-TEST.exe`, 52.098.077 bytes, SHA-256 `A528FDBFC7229ADA2284E6F556DE34DA9C2C48E8FB1D90176036077E127DD926`.
 
 Pakket processtart blev kontrolleret: processen startede og forblev aktiv i fire sekunder uden rapporteret Python-traceback. Window-title kunne ikke aflæses i denne ikke-interaktive kontrol. Manuel Windows GUI, screenshots, Microsoft Word og OnlyOffice er `NOT TESTED`.
+## Fase I.7.3E — samlet manual og GUI-oprydning
+
+Audit: `ModuleIntroduction` er den eneste introduktionskort-implementering. Der blev ikke fundet `QSpacerItem`, `SetMinimumSize` eller faste højder i kortlayoutet; den resterende `addStretch` ligger kun i AppShells hjælpepanel/header og påvirker ikke informationskortene. Kortene bruger `QSizePolicy.Preferred/Minimum`, topjusteret indhold og ensartede små margener. Den fælles manual genereres fra StepGuide for alle 12 moduler og seks sprog med én navigationsmenu og modulankre. Sekundærvinduer bruger én `Vejledning`-knap.
+
+Verifikation efter rettelse: `111 passed` (1 PytestCacheWarning). Pakket GUI, screenshots og manuel Windows/Word/OnlyOffice-kontrol er ikke udført endnu.

@@ -4,6 +4,7 @@ from PySide6.QtCore import QUrl
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import QFormLayout, QGroupBox, QLabel, QPushButton, QVBoxLayout, QWidget, QFrame, QSizePolicy
 from textmarker.ui.step_guide import StepGuide, _steps
+from textmarker.ui.result_controls import open_help_anchor
 
 _TEXT={
 'da': {'Dashboard':('Overblik','Start her for at vælge projekt og sprog.','Ingen fil kræves.','Projektstatus og modulvalg.','Planlæg reviewarbejdet.','Vælg projekt → kontrollér sprog → åbn modul.'),'Project Workflow':('Projektworkflow','Kør et projektbaseret review med aktive rule packs.','DOCX, canonical rule-pack CSV.','Markeret DOCX og CSV-rapporter.','Gentagelige, sporbare reviewkørsler.','Opret projekt → importér packs → scan → åbn rapporter.'),'Text Marker':('Text Marker','Markér udtryk i et separat Word-dokument.','DOCX/TXT og ordliste.','Markeret DOCX og rapport.','Visuel redaktionel gennemgang.','Vælg input → vælg ordliste → markér → gennemgå.'),'Translation Risk Scanner':('Translation Risk Scanner','Find regelbaserede oversættelsesrisici.','DOCX og risikoregler.','Fund og rapporter.','Prioritér menneskelig kvalitetssikring.','Vælg filer → scan → gennemgå fund.'),'Language Interference Scanner':('Language Interference Scanner','Find sproginterferens i dokumentet.','Dansk DOCX og CSV-regler.','Farvemarkeret DOCX og CSV.','Fokuseret sproglig revision.','Vælg DOCX → vælg regler → scan → kontrollér.'),'Word Index':('Word Index','Lav frekvensbaserede ordindeks.','DOCX/TXT.','Frekvensliste eller CSV/TXT.','Terminologi- og stilgennemgang.','Vælg tekst → vælg sprog → eksportér.'),'File Inventory':('File Inventory','Find og genbrug lokale filreferencer.','Lokale filstier.','Søgbart inventar.','Sikker genbrug af arbejdsfiler.','Søg → vælg fil → åbn eller genbrug.'),'Terminology':('Terminology','Vedligehold en konceptbaseret termbase.','Lokalt termbase-DB eller CSV.','Concepts, termer og canonical CSV.','Konsistent flersproget terminologi.','Opret concept → tilføj termer → søg → eksportér.'),'Glossaries & Rules':('Glossaries & Rules','Administrér validerede rule packs.','CSV-rule packs.','Lokale rule packs.','Kontrolleret regelstyring.','Importér → validér → redigér → tilknyt.'),'Prompt Library':('Prompt Library','Gem lokale promptskabeloner til reviewarbejde.','Lokale tekstskabeloner.','Redigerbare prompts.','Standardisér manuelle analyseprocedurer.','Vælg skabelon → redigér → gem lokalt.'),'Settings':('Settings','Konfigurér interface, projekt og sprog.','Projektindstillinger.','Gemte lokale præferencer.','Gentagelig opsætning.','Vælg UI-sprog → vælg par → gem.'),'Help':('Help','Åbn manual og introduktion.','Ingen fil kræves.','Offline vejledning.','Lær workflowet uden netværk.','Åbn guide → vælg sektion → følg trin.')},
@@ -70,17 +71,12 @@ class ModuleIntroduction(QWidget):
         if self.module in ('Dashboard','Project Workflow','Terminology','Help') and self._layout.indexOf(self.tutorial)<0: self._layout.addWidget(self.tutorial)
         if self.module not in ('Dashboard','Project Workflow','Terminology','Help'): self.tutorial.setParent(None)
         self.tutorial.hide()
-        self.guide.setText({'da':'Trinvis vejledning','sv':'Stegvis vägledning','nb':'Trinnvis veiledning','en':'Step-by-step guide','de':'Schritt-für-Schritt-Anleitung','fr':'Guide étape par étape'}.get(locale,'Step-by-step guide'))
+        self.guide.setText({'da':'Vejledning','sv':'Guide','nb':'Veiledning','en':'Guide','de':'Anleitung','fr':'Guide'}.get(locale,'Guide'))
     def _numbered_steps(self,locale,text):
         headings={'da':'TRINVIS VEJLEDNING','sv':'STEG FÖR STEG','nb':'TRINNVIS VEILEDNING','en':'STEP-BY-STEP','de':'SCHRITT FÜR SCHRITT','fr':'GUIDE ÉTAPE PAR ÉTAPE'}
         steps = _steps(self.module, locale)
         return '<b>' + headings.get(locale, headings['en']) + '</b><br>' + '<br>'.join(f'{i}. <b>{title}</b> — {instruction}' for i,(title,instruction,_example,_expected) in enumerate(steps, 1))
     def open_guide(self):
-        if not hasattr(self, '_guide_window') or self._guide_window is None:
-            self._guide_window = StepGuide(self.module, self.locale, self)
-            self._guide_window.stepChanged.connect(lambda i: setattr(self, '_guide_step', i))
-        self._guide_window.index = getattr(self, '_guide_step', 0)
-        self._guide_window.refresh(self.locale)
-        self._guide_window.show(); self._guide_window.raise_(); self._guide_window.activateWindow()
+        open_help_anchor(self.help_id, self, self.locale)
     def open_tutorial(self):
         self.open_guide()
