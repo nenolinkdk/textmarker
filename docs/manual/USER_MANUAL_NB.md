@@ -27,3 +27,4 @@ File Inventory lagrer filstier og kan åpne eller gjenbruke filer, men er ingen 
 ## Feilsøking
 
 Blandede eller ugyldige CSV-skjema avvises. Manglende input, eksisterende output og kansellering skal ikke gi ufullstendige publiserte filer. Åpne DOCX i Word for siste kontroll av reparasjonsvarsel og formatering. All behandling foregår lokalt.
+Text Marker-farger: TXT kan bruke `uttrykk%farge`, og CSV bruker kolonnen `color`. Uten farge brukes `yellow`. Bruk `%%` for et bokstavelig prosenttegn.

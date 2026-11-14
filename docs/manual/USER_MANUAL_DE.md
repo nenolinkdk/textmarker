@@ -25,3 +25,4 @@ File Inventory speichert lokale Pfade und kennzeichnet fehlende Dateien. Termino
 ## Grenzen
 
 Ungültige oder gemischte CSV-Schemata werden abgelehnt. Automatische Treffer müssen linguistisch geprüft werden. Die Word-Reparatur- und Formatprüfung ist ein manueller Akzeptanzschritt.
+Text-Marker-Farben: TXT kann `Ausdruck%Farbe` verwenden, CSV die Spalte `color`. Ohne Farbe wird `yellow` verwendet. Für ein wörtliches Prozentzeichen verwenden Sie `%%`.

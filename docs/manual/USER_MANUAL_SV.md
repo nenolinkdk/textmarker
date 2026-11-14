@@ -38,3 +38,4 @@ Skapa eller välj ett projekt, ange arbetsmapp och välj språkpar. Text Marker 
 ## Begränsningar och felsökning
 
 Felaktiga eller blandade CSV-scheman avvisas. Saknade filer, befintliga outputfiler och avbrutna körningar publicerar inte ofullständiga resultat. DOCX bör öppnas i Microsoft Word för manuell kontroll av reparationsvarningar och formatering. All behandling är lokal.
+Text Marker-färger: TXT kan använda `uttryck%färg` och CSV använder kolumnen `color`. Utan färg används `yellow`. Använd `%%` för ett bokstavligt procenttecken.

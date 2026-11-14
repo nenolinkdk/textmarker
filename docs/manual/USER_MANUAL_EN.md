@@ -31,3 +31,4 @@ Use unique output names, confirm that rule packs match the project pair, and rem
 ## Limitations
 
 TBX, TMX and XLIFF are not supported. Rule coverage is pack-dependent. Microsoft Word repair-warning verification remains a manual acceptance step.
+Text Marker colors: TXT may use `expression%color`, while CSV uses the `color` column. Without a color, `yellow` is used. Use `%%` for a literal percent sign.

@@ -1,4 +1,5 @@
-oversættelse
-manuskript
-terminologi
-review
+oversættelse%yellow
+manuskript%cyan
+terminologi%green
+review%magenta
+roman%blue

@@ -21,3 +21,4 @@ Rød, orange og gul angiver review-prioritet, ikke bekræftede oversættelsesfej
 ## Fejlfinding og begrænsninger
 
 Brug unikke outputnavne, kontrollér at rule packs passer til projektets sprogpar, og vær opmærksom på warnings for ikke-understøttede DOCX-strukturer. TBX, TMX og XLIFF er ikke implementeret. Microsoft Word-verifikation er stadig manuel.
+Text Marker-farver: TXT kan bruge `udtryk%farve`, og CSV bruger kolonnen `color`. Uden farve bruges `yellow`. Brug `%%` for et bogstaveligt procenttegn. Farverne kommer fra programmets Word-palette og kontrolleres ved indlæsning.

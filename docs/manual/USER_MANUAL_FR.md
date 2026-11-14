@@ -25,3 +25,4 @@ File Inventory conserve les chemins locaux et indique les fichiers manquants. Te
 ## Limites
 
 Les schémas CSV invalides sont refusés. Chaque résultat automatique exige une vérification linguistique et l’ouverture finale dans Word reste un contrôle manuel.
+Couleurs de Text Marker : le TXT peut utiliser `expression%couleur` et le CSV la colonne `color`. Sans couleur, `yellow` est utilisé. Utilisez `%%` pour un signe pourcentage littéral.

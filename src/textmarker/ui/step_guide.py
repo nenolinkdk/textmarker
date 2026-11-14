@@ -2,6 +2,7 @@ import os, shutil, sys
 from pathlib import Path
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QFileDialog, QDialog, QHBoxLayout, QLabel, QPushButton, QScrollArea, QVBoxLayout, QWidget
+from textmarker.core.models import PALETTE
 
 
 _UI = {
@@ -140,6 +141,10 @@ class StepGuide(QDialog):
     def _render(self):
         labels = _UI[self.locale]; steps = _steps(self.module, self.locale); self.index = max(0, min(self.index, len(steps)-1)); title, instruction, example, expected = steps[self.index]
         if self.module == 'Text Marker' and self.index == 1: title, instruction, example, expected = _term_list_step(self.locale)
+        if self.module == 'Text Marker' and self.index == 1:
+            example=example.replace('\\n','\n')
+            palette=', '.join(sorted(PALETTE))
+            example += f"\n\nUnderstøttede tekniske farvekoder: {palette}. Standard uden angivet farve: yellow. TXT bruger ord%farve; skriv %% for et bogstaveligt procenttegn. CSV bruger kolonnen color."
         troubleshooting={'da':'Hvis filen ikke vises, kontrollér filtypen og vælg en ny sti. Hvis output ikke åbner, kontrollér status og at filen findes.','sv':'Om filen inte visas, kontrollera filtypen och välj en ny sökväg. Om utdata inte öppnas, kontrollera status och att filen finns.','nb':'Hvis filen ikke vises, kontroller filtypen og velg en ny sti. Hvis utdata ikke åpnes, kontroller status og at filen finnes.','en':'If the file is not shown, check its type and choose a new path. If output will not open, check the status and file existence.','de':'Wenn die Datei nicht angezeigt wird, prüfen Sie den Dateityp und wählen Sie einen neuen Pfad. Wenn die Ausgabe nicht geöffnet wird, prüfen Sie Status und Datei.','fr':'Si le fichier ne s’affiche pas, vérifiez son type et choisissez un nouveau chemin. Si la sortie ne s’ouvre pas, vérifiez l’état et l’existence du fichier.'}[self.locale]
         self.number.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.title.setText(title); self.instruction.setText(instruction); self.example.setText(f"{labels[4]}: {example}"); self.expected.setText(f"{labels[5]}: {expected}"); self.troubleshooting.setText(f"{labels[6]}: {_troubleshooting(self.module, self.index, self.locale)}")
         self.back.setEnabled(self.index > 0); self.next.setEnabled(self.index < len(steps)-1); self.indicator.setText(labels[3].format(n=self.index + 1, total=len(steps))); self.stepChanged.emit(self.index)

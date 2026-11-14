@@ -13,12 +13,23 @@ def parse_terms(path: str | Path) -> list[TermSpec]:
     p = Path(path); text = p.read_text(encoding="utf-8-sig")
     if p.suffix.lower() in {".txt", ".md"}:
         out=[]
-        for line in text.splitlines():
+        for line_no, line in enumerate(text.splitlines(), 1):
             s=line.strip()
             if not s or s.startswith("#"): continue
             if p.suffix.lower()==".md" and s.startswith(("- ","* ")): s=s[2:].strip()
             if p.suffix.lower()==".md" and s.startswith("#"): continue
-            out.append(TermSpec(s, ordinal=len(out)))
+            # TXT/MD supports ``expression%color``. A doubled percent is the
+            # backwards-compatible escape for a literal percent character.
+            protected=s.replace("%%", "\0")
+            if "%" in protected:
+                expression, color = protected.rsplit("%", 1)
+                if not expression or color not in PALETTE:
+                    raise ValueError(f"Ugyldig farve på linje {line_no}: {color}")
+                s=expression.replace("\0", "%")
+                out.append(TermSpec(s, highlight_color=color, ordinal=len(out)))
+            else:
+                s=protected.replace("\0", "%")
+                out.append(TermSpec(s, ordinal=len(out)))
         if not out: raise ValueError("Termlisten er tom")
         return out
     if p.suffix.lower() != ".csv": raise ValueError("Termlisten skal være TXT, MD eller CSV")
